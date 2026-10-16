@@ -107,6 +107,15 @@ button{font:inherit;color:inherit}
 .row .ds{grid-column:1;margin:0;font-size:13px;color:var(--paper-dim)}
 .buy{grid-column:2;grid-row:1/3;font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:7px 10px;background:var(--paper-ink);color:var(--paper);border:1px solid var(--paper-ink);border-radius:2px;cursor:pointer;min-width:74px}
 .buy.ghost{background:transparent;color:var(--paper-ink)}
+.bpair{grid-column:2;grid-row:1/3;display:flex;gap:6px;align-items:center}
+.bpair .buy{grid-column:auto;grid-row:auto;min-width:0;padding:7px 9px}
+.row.tr .buy,.row.sp2 .buy{grid-row:1/4}
+.row .ds.down{color:#a8323a}
+.row.tr.on .tline .nm{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.row.sp2{padding:8px 10px;border:1px dashed var(--paper-ink);margin:0 -4px}
+button.chip{background:none;cursor:pointer;font-family:var(--display)}
+button.chip:hover{background:rgba(255,255,255,.06)}
+.wcard .forecast{margin:0}
 .buy:disabled{opacity:.3;cursor:default}
 .modgun{display:grid;gap:8px;align-content:start}
 .modgun h4{font-size:13px}
@@ -251,7 +260,7 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
         <li><b>Clear night.</b> Dark past the lamps. Your flashlight follows your aim.</li>
         <li><b>Scorching day.</b> Full visibility. Tumbleweeds.</li>
         <li><b>Thunderstorm.</b> Dark and wet. Fire burns half as long, and lightning sometimes strikes one of them.</li>
-        <li><b>Full moon.</b> Rare, from shift 3. You turn into a werewolf: 35% faster, double melee damage, 20% less damage taken. A flock of pigeons pecks at the zombies all night.</li>
+        <li><b>Full moon.</b> Rare (1 shift in 20), from shift 3. You turn into a werewolf: 35% faster, double melee damage, 20% less damage taken. A flock of pigeons pecks at the zombies all night.</li>
         <li><b>Sandstorm.</b> You only see what is near you. Everything walks 15% slower.</li>
       </ul>
       <p>The stockroom shows the forecast for the next shift.</p>
@@ -304,26 +313,43 @@ const GUNS={
   hunter:{type:'hit',name:'Hunting rifle',short:'Hunting',dmg:95,rate:.85,mag:5,reload:3.1,spread:0,pellets:1,range:520,pierce:3,kb:110,price:1300,shake:2,len:16,snd:'hunter',desc:'Punches through four of them in a line.'},
   blunder:{type:'hit',name:'Blunderbuss',short:'Blunder',dmg:16,rate:1.2,mag:1,reload:2.3,spread:.32,pellets:12,range:135,pierce:0,kb:150,price:1600,shake:3,len:13,snd:'boomgun',tracer:'#d9c7a0',desc:'A brass bell full of scrap. One enormous blast, then a long reload.'},
   rifle:{type:'hit',name:'Assault rifle',short:'Rifle',dmg:17,rate:.095,mag:30,reload:2.7,spread:.05,pellets:1,range:420,pierce:0,kb:28,price:1900,shake:.6,len:14,snd:'rifle',desc:'Thirty rounds, fully automatic.'},
+  pir:{type:'hit',name:'PIR',short:'PIR',dmg:16,rate:.11,mag:35,reload:2.6,spread:.04,pellets:1,range:430,pierce:0,kb:26,price:3800,shake:.6,len:15,snd:'rifle',tracer:'#7fe8ff',desc:'A futuristic AK-47. Every zombie it kills makes it fire 5% faster for the rest of the shift, with no limit.'},
   goo:{type:'goo',name:'Xeno gloop launcher',short:'Gloop',dmg:20,rate:.9,mag:3,reload:2.6,spread:0,range:300,pierce:0,kb:0,price:2400,shake:1,len:12,snd:'goo',desc:'Alien tech. Lobs walls of mucus that last 12 seconds. Zombies wade through at 30% speed, bosses at 80%.'},
   flamer:{type:'flame',name:'Flamethrower',short:'Flamer',dmg:7,rate:.05,mag:120,reload:3.2,spread:.25,range:95,pierce:0,kb:6,price:2900,shake:.2,len:13,snd:'flame',desc:'Short range. Sets everything in the cone on fire.'},
   arc:{type:'arc',name:'Arc caster',short:'Arc',dmg:45,rate:.5,mag:8,reload:2.4,spread:0,range:260,pierce:0,kb:20,price:3600,shake:1,len:12,chains:4,snd:'zap',desc:'Lightning that jumps to four more of them and stuns each one.'},
   minigun:{type:'hit',name:'Minigun',short:'Minigun',dmg:13,rate:.045,mag:200,reload:5.2,spread:.09,pellets:1,range:400,pierce:0,kb:24,price:4500,shake:.8,spin:.45,len:15,snd:'minigun',desc:'Spins up for half a second, then never stops.'},
   rail:{type:'rail',name:'Rail driver',short:'Rail',dmg:260,rate:1.3,mag:3,reload:3.4,spread:0,range:700,pierce:99,kb:160,price:6500,shake:4,len:17,charge:.55,snd:'rail',desc:'Hold to charge for half a second. The beam goes through everything on the road.'}
 };
-const ORDER=['pistol','nailgun','shotgun','bow','hunter','blunder','rifle','goo','flamer','arc','minigun','rail'];
+const ORDER=['pistol','nailgun','shotgun','bow','hunter','blunder','rifle','pir','goo','flamer','arc','minigun','rail'];
 const MODS={
-  pistol:{mag:['Extended mag',6,220],rate:['Hair trigger',260],dmg:['+P rounds',240],sp:{name:'Hollow points',desc:'+30% pistol damage.',price:650}},
-  nailgun:{mag:['Nail strip',20,250],rate:['Overdrive spring',300],dmg:['Tempered nails',280],sp:{name:'Anchor nails',desc:'Each nail pins them in place for a moment.',price:800}},
-  shotgun:{mag:['Tube extension',2,300],rate:['Slick pump',350],dmg:['Magnum shells',340],sp:{name:'Incendiary shells',desc:'Every pellet sets them on fire for 3 seconds.',price:1100}},
-  bow:{mag:['Bigger quiver',3,280],rate:['Sight pin',320],dmg:['Heavy string',330],sp:{name:'Broadhead arrows',desc:'Arrows pass through four of them instead of two.',price:950}},
-  hunter:{mag:['Box magazine',2,380],rate:['Smooth bolt',400],dmg:['Bigger caliber',420],sp:{name:'Explosive rounds',desc:'Every hit bursts and damages whatever is next to it.',price:1400}},
-  blunder:{mag:['Double bell',1,500],rate:['Powder horn',450],dmg:['Extra powder',460],sp:{name:'Rusty shrapnel',desc:'Every piece of scrap passes through one more.',price:1500}},
-  rifle:{mag:['Extended mag',10,400],rate:['Tuned trigger',450],dmg:['Hardpoint rounds',460],sp:{name:'Armor-piercing rounds',desc:'Every bullet passes through one more.',price:1600}},
-  goo:{mag:['Bigger gland',2,500],rate:['Pressure sac',500],dmg:['Thick mucus',480],sp:{name:'Acid gloop',desc:'Mucus walls also burn 12 damage a second.',price:1250}},
-  flamer:{mag:['Bigger tank',60,550],rate:['Wide nozzle',500],dmg:['Hotter mix',560],sp:{name:'Napalm',desc:'Burns last twice as long.',price:1700}},
-  arc:{mag:['Capacitor bank',4,600],rate:['Fast coil',600],dmg:['High voltage',650],sp:{name:'Forked arcs',desc:'Chains to seven targets instead of five.',price:1750}},
-  minigun:{mag:['Longer belt',50,620],rate:['Overclocked motor',650],dmg:['Heavy rounds',700],sp:{name:'Hot start',desc:'Starts firing almost instantly, without waiting for the barrels to spin up.',price:2000}},
-  rail:{mag:['Extra cell',1,800],rate:['Supercooled rails',750],dmg:['Twin coils',850],sp:{name:'Overcharge',desc:'The beam stuns everything it passes through for a second.',price:2500}}
+  pistol:{mag:['Extended mag',6,220],rate:['Hair trigger',260],dmg:['+P rounds',240],sp:{name:'Hollow points',desc:'+30% pistol damage.',price:650},
+    sp2:{name:'Pulsargun',desc:'Bullets become holes of light. Every hit has a 20% chance to erase a normal zombie outright, and a 5% chance to tear 10% off a boss\'s health (once every 25 seconds).',price:8000},
+    tr:[{id:'akimbo',name:'Akimbo',desc:'A second pistol in your other hand: every shot fires two bullets.',down:'Spread triples and reloads take 40% longer.',price:900}]},
+  nailgun:{mag:['Nail strip',20,250],rate:['Overdrive spring',300],dmg:['Tempered nails',280],sp:{name:'Anchor nails',desc:'Each nail pins them in place for a moment.',price:800},
+    tr:[{id:'staple',name:'Rail staples',desc:'Nails pass through two more zombies.',down:'Fires 30% slower.',price:900}]},
+  shotgun:{mag:['Tube extension',2,300],rate:['Slick pump',350],dmg:['Magnum shells',340],sp:{name:'Incendiary shells',desc:'Every pellet sets them on fire for 3 seconds.',price:1100},
+    tr:[{id:'slug',name:'Slug rounds',desc:'Fires one heavy slug instead of pellets: seven times the damage of a pellet, passes through two more, and reaches far.',down:'No spread, so it only hits what you aim at.',price:1200}]},
+  bow:{mag:['Bigger quiver',3,280],rate:['Sight pin',320],dmg:['Heavy string',330],sp:{name:'Broadhead arrows',desc:'Arrows pass through four of them instead of two.',price:950},
+    tr:[{id:'boom',name:'Explosive arrows',desc:'Arrows blow up on impact and hurt everything nearby.',down:'They stop at the first zombie and you draw 40% slower.',price:1300}]},
+  hunter:{mag:['Box magazine',2,380],rate:['Smooth bolt',400],dmg:['Bigger caliber',420],sp:{name:'Explosive rounds',desc:'Every hit bursts and damages whatever is next to it.',price:1400},
+    tr:[{id:'scope',name:'Marksman scope',desc:'Headshots deal four times damage instead of double.',down:'Body and leg shots deal half damage.',price:1400}]},
+  blunder:{mag:['Double bell',1,500],rate:['Powder horn',450],dmg:['Extra powder',460],sp:{name:'Rusty shrapnel',desc:'Every piece of scrap passes through one more.',price:1500},
+    tr:[{id:'dragon',name:"Dragon's breath",desc:'Every pellet sets them on fire for 3 seconds.',down:'Range drops by 40%.',price:1400}]},
+  rifle:{mag:['Extended mag',10,400],rate:['Tuned trigger',450],dmg:['Hardpoint rounds',460],sp:{name:'Armor-piercing rounds',desc:'Every bullet passes through one more.',price:1600},
+    tr:[{id:'bump',name:'Bump fire',desc:'Fires 80% faster.',down:'Spread is 2.5 times wider and each bullet does 20% less.',price:1500}]},
+  pir:{mag:['Drum mag',15,450],rate:['Light bolt',500],dmg:['Plasma tips',520],sp:{name:'Cooling fins',desc:'Reloads 40% faster.',price:1500},
+    tr:[{id:'hyper',name:'Hyper core',desc:'Each kill adds 10% fire rate instead of 5%.',down:'Spread grows with every stack, and reloading wipes the stacks.',price:2200}]},
+  goo:{mag:['Bigger gland',2,500],rate:['Pressure sac',500],dmg:['Thick mucus',480],sp:{name:'Acid gloop',desc:'Mucus walls also burn 12 damage a second.',price:1250},
+    tr:[{id:'sticky',name:'Sticky bombs',desc:'Gloop sticks to the zombie it hits and explodes 1.2 seconds later for big damage.',down:'No more slowing mucus walls.',price:1600}]},
+  flamer:{mag:['Bigger tank',60,550],rate:['Wide nozzle',500],dmg:['Hotter mix',560],sp:{name:'Napalm',desc:'Burns last twice as long.',price:1700},
+    tr:[{id:'long',name:'Long nozzle',desc:'Flames reach 60% further.',down:'The cone is narrower and flames do 25% less damage.',price:1500},
+        {id:'green',name:'Green flames',desc:'Green fire: 80% more damage and burns 50% hotter against normal zombies.',down:'Only 30% damage against bosses.',price:2000}]},
+  arc:{mag:['Capacitor bank',4,600],rate:['Fast coil',600],dmg:['High voltage',650],sp:{name:'Forked arcs',desc:'Chains to seven targets instead of five.',price:1750},
+    tr:[{id:'static',name:'Static field',desc:'The bolt no longer chains. It fries everything within 50 of the first target for 70% damage.',down:'Range drops by 40%.',price:1800}]},
+  minigun:{mag:['Longer belt',50,620],rate:['Overclocked motor',650],dmg:['Heavy rounds',700],sp:{name:'Hot start',desc:'Starts firing almost instantly, without waiting for the barrels to spin up.',price:2000},
+    tr:[{id:'tripod',name:'Tripod',desc:'+60% damage and much tighter spread.',down:'You cannot walk while firing.',price:2200}]},
+  rail:{mag:['Extra cell',1,800],rate:['Supercooled rails',750],dmg:['Twin coils',850],sp:{name:'Overcharge',desc:'The beam stuns everything it passes through for a second.',price:2500},
+    tr:[{id:'split',name:'Splitter',desc:'Every shot fires three beams in a fan.',down:'Each beam does 45% damage.',price:2600}]}
 };
 const MODMAX=3;
 
@@ -373,6 +399,7 @@ const PETS={
   wolf:{name:'Coyote wolf',price:2000,dmg:42,rate:.6,speed:145,reach:12,pounce:true,desc:'Pounces from range and knocks them flat.'},
   vulture:{name:'Vulture',price:2500,dmg:55,desc:'Dive-bombs from the sky, hunts flyers first, and fetches amulets for you.'},
   redeagle:{name:'Red eagle',price:3200,dmg:90,desc:'A blood-red eagle. Dives faster and hits harder than the vulture, and also fetches amulets.'},
+  horse:{name:'Wally',price:2800,dmg:70,rate:1.1,speed:150,reach:14,desc:'A horse called Wally. Not for riding. Gallops at them and kicks with both back legs.'},
   bear:{name:'Grizzly',price:3500,dmg:95,rate:1.05,speed:80,reach:16,swipe:true,desc:'Slow, but every swipe hits everything in front of it.'}
 };
 const PORDER=Object.keys(PETS);
@@ -384,6 +411,7 @@ const LORE={
   hunter:'Bolt-action with a scope, the kind used for coyotes. It hunts something else now.',
   blunder:'A brass antique someone traded for discount vouchers. Load it through the muzzle with nuts, nails and whatever else is lying around.',
   rifle:'Turned up in the trunk of a car abandoned in the parking lot. Better not to ask.',
+  pir:'Nobody knows who made it. The serial number is a date that has not happened yet, and the cyan strip gets brighter the more it kills.',
   goo:'Fell out of the sky one night in a puddle of green slime. It pulses when you hold it and smells awful.',
   flamer:'Built from a propane tank and a garden hose. Not exactly certified.',
   arc:'A copper-coil prototype that never stops humming. The manual is in a language nobody recognizes.',
@@ -399,18 +427,25 @@ const LORE={
   chainsaw:'Gas, chain and noise. Needs no introduction.',
   capote:'A real bullfighter\'s capote, magenta on one side, yellow on the other. Wave it and they forget which way they were going.'
 };
+const LORE2={
+  item:{barricade:'Two crates of canned peaches from the back. Stacked right, they hold a surprising amount of dead weight.',spikes:'Sold as a driveway security strip. Works just as well on feet that stopped feeling pain years ago.',propane:'Barbecue gas from the patio aisle. The label says keep away from heat. The zombies did not read it.',turret:'A tripod, a motion sensor and a lot of ammo. The manager calls it the night supervisor.',medkit:'Plasters, gauze, iodine and a lollipop. The lollipop is the important part.',libro:'Teresa\'s textbook, three kilos of homework and something that ticks. Nobody wants to know what is inside.',copasa:'A 25 kilo sack of COPASA pig feed. The pigs smell it from the next county and they arrive hungry.',lunch:'Someone left it in the staff fridge with a note: DO NOT OPEN. It hums, it is warm to the touch and the fridge light stopped working.',hermana:'A wooden cross from Hermana Sole\'s chapel down the road. Hold it up and she comes.'},
+  armor:{vest:'Blue, polyester, with the Alcampo logo on the back. Smells like the stockroom.',track:'Bought at a petrol station for running away. Now it is for running back.',leather:'Hand-stitched by a hunter who lived out on the mesa. The sleeves still smell of campfire.',bando:'Loops for every shell and magazine you own. Clinks when you walk.',padded:'Hockey pads, a bike helmet and three rolls of duct tape.',cashier:'The red tabard of a cashier of the month. Customers tip better. So do zombies, somehow.',fire:'From the volunteer fire station. A little singed, still certified.',dictator:'Found in a costume shop that went out of business. The medals are plastic, but the authority feels real.',riot:'Police surplus. Heavy, hot and almost nothing gets through.'},
+  pet:{chicken:'She has laid explosive eggs ever since she ate a bag of fertilizer. Nobody asks how.',dog:'Showed up behind the bins and never left. Bites first, asks later.',armadillo:'Rolls into a ball when scared. Nothing scares it anymore, it just likes rolling.',rabbit:'Too fat to hop, so it rolls. It still hits like a sack of potatoes.',goat:'America died once and came back angrier. Her horns are the hardest thing in the desert.',wolf:'Half coyote, half wolf, all teeth.',vulture:'Circles the store all night waiting for leftovers. You are paying it in leftovers.',redeagle:'Nobody has seen another eagle this color. It came down out of a sunset and stayed.',horse:'Wally wandered in from a ranch nobody owns anymore. He will not let anyone ride him, but he will kick anything that gets close to you.',bear:'A grizzly who learned that supermarket staff share their lunch.'},
+  up:{str:'Lifting crates of water all day finally pays off.',dmg:'Fewer shaky hands, more holes in the right places.',hp:'A thicker jacket from the staff locker. Teeth slip right off it.',reload:'Practice in the break room with an empty magazine.',door:'More planks, more nails and a bigger lock.'},
+  amu:{quick:'A cord tied in seven knots. Your hands remember things they never learned.',might:'A bone carved with marks nobody can read. It is heavier than it looks.',swift:'A roadrunner feather. Beep beep.',bulwark:'A stone that never moves, no matter how hard you push.',vital:'A red stone that beats like a heart when you hold it to your ear.',midas:'Everything it touches turns a little more valuable.',leech:'A tooth that still wants to bite.',eagle:'A glass eye that sees through dust and dark.',ember:'Warm to the touch, always.',tinker:'A gear from a machine that fixed itself.'}
+};
 const GTYPE={hit:'Bullets',arrow:'Arrows',goo:'Mucus shot',flame:'Flames',arc:'Chain lightning',rail:'Charged beam'};
 const AMULETS={
-  quick:{name:'Quickhand charm',desc:'Reload 10% faster',c:'#7fd3ff'},
-  might:{name:'Bone of might',desc:'+10% damage',c:'#ff6a5a'},
-  swift:{name:'Roadrunner feather',desc:'+10% walking speed',c:'#ffd27a'},
-  bulwark:{name:'Mortar stone',desc:'Crates and doors take 20% less damage',c:'#b9a27a'},
-  vital:{name:'Heart of the mesa',desc:'+20 max health',c:'#e05a8a'},
-  midas:{name:'Coin of Midas',desc:'+10% tips',c:'#f5c542'},
-  leech:{name:'Leech tooth',desc:'Heal 2 per kill',c:'#b8323a'},
-  eagle:{name:'Eagle eye',desc:'+25% headshot damage',c:'#e8e2d0'},
-  ember:{name:'Ember sigil',desc:'+30% burn damage',c:'#ff8a2a'},
-  tinker:{name:'Tinker cog',desc:'Turrets get 50% more ammo and 20% more damage',c:'#9aa0aa'}
+  quick:{name:'Quickhand charm',desc:'Reload 25% faster',c:'#7fd3ff'},
+  might:{name:'Bone of might',desc:'+25% damage',c:'#ff6a5a'},
+  swift:{name:'Roadrunner feather',desc:'+20% walking speed',c:'#ffd27a'},
+  bulwark:{name:'Mortar stone',desc:'Crates and doors take 40% less damage',c:'#b9a27a'},
+  vital:{name:'Heart of the mesa',desc:'+50 max health',c:'#e05a8a'},
+  midas:{name:'Coin of Midas',desc:'+30% tips',c:'#f5c542'},
+  leech:{name:'Leech tooth',desc:'Heal 5 per kill',c:'#b8323a'},
+  eagle:{name:'Eagle eye',desc:'+60% headshot damage',c:'#e8e2d0'},
+  ember:{name:'Ember sigil',desc:'+75% burn damage',c:'#ff8a2a'},
+  tinker:{name:'Tinker cog',desc:'Turrets get double ammo and 50% more damage',c:'#9aa0aa'}
 };
 const ITEMS={
   barricade:{name:'Crate barricade',short:'Crates',key:'Z',price:90,desc:'Two stacked crates. They have to break through.'},
@@ -491,7 +526,7 @@ const AMB={
 
 /* ---------- state ---------- */
 let run,p,night=null,pet=null,sole=null;
-let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[],pigeons=[],trucks=[];
+let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[],pigeons=[],trucks=[],pulses=[];
 let truckT=6;
 let mode='title',paused=false,camX=0,shake=0,T=0,banner=null,overT=0,overReason='',lastSummary=null,muzT=0,doorHit=0;
 let flashW=0,boltT=4,lightning=null,thunderT=0,weedT=3,bossRef=null,stockTab='guns',flameS=0,sawS=0;
@@ -503,7 +538,7 @@ let aimMode='mouse',aimX=300,aimY=200;
 
 function newRun(){
   run={night:1,cash:120,hpMax:100,doorMax:250,door:250,owned:{pistol:true},weapon:'pistol',mags:{pistol:12},mods:{},mmods:{},buys:0,perkPhase:{},
-    melee:'bat',meleeOwned:{bat:true},armor:'vest',armorOwned:{vest:true},pet:null,petOwned:{},amu:{},
+    melee:'bat',meleeOwned:{bat:true},armor:'vest',armorOwned:{vest:true},pet:null,petOwned:{},amus:[],pirStacks:0,pulsarCd:0,
     inv:{barricade:1,spikes:0,propane:0,turret:0,medkit:1,libro:1,copasa:0,lunch:0,hermana:0},up:{str:0,dmg:0,hp:0,reload:0,door:0},kills:0,heads:0,amb:'night',nextAmb:'night',bosses:0,
     cheated:DEV.god||DEV.ammo||DEV.onehit};
   structs=[];goos=[];pickups=[];eggs=[];projs=[];pigs=[];pigeons=[];night=null;pet=null;bossRef=null;sole=null;resetPlayer(100);
@@ -512,24 +547,28 @@ function resetPlayer(hp){p={x:190,y:GY,face:1,hp,alive:true,walkT:0,fireCd:0,rel
 
 /* ---------- derived stats ---------- */
 const AR=()=>ARMORS[run.armor];
-const amu=k=>run.amu[k]||0;
-function modOf(id){if(!run.mods)run.mods={};return run.mods[id]||(run.mods[id]={mag:0,rate:0,dmg:0,sp:false});}
+const amu=k=>{let n=0;for(const a of run.amus||[])if(a.id===k)n++;return n;};
+const AMU_LIFE=10;
+const trOn=(g,t)=>{const m=run.mods&&run.mods[g];return !!m&&m.act===t;};
+function modOf(id){if(!run.mods)run.mods={};const m=run.mods[id]||(run.mods[id]={mag:0,rate:0,dmg:0,sp:false});if(!m.tr)m.tr={};return m;}
 function mmodOf(id){if(!run.mmods)run.mmods={};return run.mmods[id]||(run.mmods[id]={dmg:0,spd:0,sp:false});}
 function gunDmgMult(id){const m=modOf(id);return 1+.12*(m.dmg||0);}
 function spinOf(id){return id==='minigun'&&modOf(id).sp?.12:GUNS[id].spin;}
 const modCost=(base,lv)=>Math.round(base*(lv+1)*(1+.25*lv));
 function magOf(id){return GUNS[id].mag+MODS[id].mag[1]*modOf(id).mag;}
-function rateOf(id){let r=GUNS[id].rate/(1+.15*modOf(id).rate);if(id==='bow'&&AR().bowRate)r*=AR().bowRate;return r;}
-function reloadOf(id){return GUNS[id].reload*Math.pow(.85,run.up.reload)*(AR().reload||1)*Math.pow(.9,amu('quick'));}
-function dmgMult(){return (1+.12*run.up.dmg)*(1+.1*amu('might'));}
+function rateOf(id){let r=GUNS[id].rate/(1+.15*modOf(id).rate);if(id==='bow'&&AR().bowRate)r*=AR().bowRate;
+  if(id==='nailgun'&&trOn(id,'staple'))r*=1.43;if(id==='bow'&&trOn(id,'boom'))r*=1.4;if(id==='rifle'&&trOn(id,'bump'))r/=1.8;
+  if(id==='pir')r/=1+(run.pirStacks||0)*(trOn(id,'hyper')?.1:.05);return r;}
+function reloadOf(id){return GUNS[id].reload*Math.pow(.85,run.up.reload)*(AR().reload||1)*Math.pow(.75,amu('quick'))*(id==='pistol'&&trOn('pistol','akimbo')?1.4:1)*(id==='pir'&&modOf('pir').sp?.6:1);}
+function dmgMult(){return (1+.12*run.up.dmg)*(1+.25*amu('might'));}
 const isWolf=()=>!!run&&run.amb==='moon'&&(mode==='night'||mode==='over');
 function petMult(){return AR().pet||1;}
-function speedOf(){return 72*(AR().speed||1)*(1+.1*amu('swift'))*(isWolf()?1.35:1);}
+function speedOf(){return 72*(AR().speed||1)*(1+.2*amu('swift'))*(isWolf()?1.35:1);}
 function strMult(){return .3+.17*(run.up.str||0);}
-function cashMult(){return (AR().cash||1)*(1+.1*amu('midas'));}
+function cashMult(){return (AR().cash||1)*(1+.3*amu('midas'));}
 function nightScale(){return 1+.1*(run.night-1);}
-function burnDps(){return 22*nightScale()*(AR().burn||1)*(1+.3*amu('ember'));}
-function guardMult(){return 1/(1+.25*amu('bulwark'));}
+function burnDps(){return 22*nightScale()*(AR().burn||1)*(1+.75*amu('ember'));}
+function guardMult(){return 1/(1+.667*amu('bulwark'));}
 
 /* ---------- audio ---------- */
 let AC=null,noiseBuf=null,lastHitS=0;
@@ -591,6 +630,7 @@ const SFX={
   coo(){tone(430,380,.14,.04,'sine');},
   howl(){tone(320,620,.5,.1,'sawtooth');tone(620,360,.9,.09,'sawtooth',.5);},
   nuke(){noise(2.6,120,.4,.9,'lowpass');tone(70,20,2.2,.45,'sine');},
+  pulse(){tone(1800,300,.12,.06,'sine');noise(.08,5000,2,.05,'highpass');},
   oink(){tone(520,300,.12,.07,'square');tone(460,260,.1,.06,'square',.1);},
   squelch(){tone(200,80,.2,.12,'sine');noise(.2,500,2,.1);},
   thunder(){noise(1.6,140,.5,.6,'lowpass');tone(50,30,1.2,.3,'sine');}
@@ -785,7 +825,8 @@ function drawGun(sx,sy,ang,id,noHand){
   G.save();G.translate(Math.round(sx),Math.round(sy));G.rotate(ang);if(Math.cos(ang)<0)G.scale(1,-1);
   const r=(x,y,w,h,c)=>{G.fillStyle=c;G.fillRect(x,y,w,h);};
   switch(id){
-    case 'pistol':r(1,-2,7,2,'#3a3a44');r(1,0,2,2,'#2a2a31');break;
+    case 'pistol':if(run&&run.mods&&run.mods.pistol&&run.mods.pistol.sp2){const gl=(T*8%2)<1?'#ffffff':'#cfd8ff';r(1,-2,7,2,'#e3e7f2');r(1,-2,7,1,'#ffffff');r(1,0,2,2,'#8a92a8');r(4,-1,2,1,'#1d1724');r(8,-2,1,2,gl);}else{r(1,-2,7,2,'#3a3a44');r(1,0,2,2,'#2a2a31');}break;
+    case 'pir':{const gl=(T*6%2)<1?'#7fe8ff':'#c9f6ff';r(-5,-1,5,3,'#26303d');r(-5,-1,5,1,'#3c4a5c');r(0,-2,10,3,'#34404f');r(0,-2,10,1,'#55667c');r(1,-1,6,1,gl);r(4,1,2,2,'#4a5a70');r(5,3,2,1,'#4a5a70');r(6,4,2,1,'#4a5a70');r(5,1,1,1,'#7fe8ff');r(1,1,2,2,'#26303d');r(10,-2,4,1,'#34404f');r(10,-1,6,1,'#2a2a31');r(16,-2,1,3,gl);r(3,-3,3,1,'#2a2a31');r(4,-4,1,1,gl);break;}
     case 'nailgun':r(0,-2,8,3,'#e8b42a');r(8,-1,3,1,'#2a2a31');r(1,1,2,3,'#2a2a31');r(3,-3,3,1,'#2a2a31');break;
     case 'shotgun':r(-4,-1,6,2,'#7a4a2a');r(2,-2,11,2,'#3a3a44');r(6,0,4,1,'#7a4a2a');break;
     case 'bow':r(2,-6,1,1,'#8a5a32');r(3,-5,1,3,'#8a5a32');r(4,-2,1,4,'#8a5a32');r(3,2,1,3,'#8a5a32');r(2,5,1,1,'#8a5a32');r(1,-5,1,10,'#e9e2d0');
@@ -839,6 +880,9 @@ function drawStruct(s,x,gy,icon){
   }else if(s.kind==='copasa'){
     R0(x-5,gy-13,10,12,'#c9a46a');R0(x-6,gy-12,1,10,'#a8844f');R0(x+5,gy-12,1,10,'#a8844f');R0(x-4,gy-15,8,2,'#b8935a');R0(x-1,gy-16,2,1,'#7a5a3a');
     R0(x-5,gy-9,10,4,'#2f7a3f');R0(x-4,gy-8,2,2,'#f3efe4');R0(x-1,gy-8,2,2,'#f3efe4');R0(x+2,gy-8,2,2,'#f3efe4');R0(x-3,gy-4,6,2,'#e8a0a8');
+  }else if(s.kind==='lunch'){
+    R0(x-3,gy-14,6,1,'#9aa0aa');R0(x-3,gy-14,1,3,'#9aa0aa');R0(x+2,gy-14,1,3,'#9aa0aa');R0(x-6,gy-11,12,10,'#3f7fbf');R0(x-6,gy-11,12,1,'#6fa8e0');R0(x-6,gy-2,12,1,'#2a5a8a');R0(x-6,gy-7,12,1,'#2a5a8a');
+    R0(x-2,gy-10,4,3,'#f5d33a');R0(x-1,gy-9,2,1,'#1d1724');R0(x+4,gy-6,1,2,'#c9ccd4');if(!icon||(T*2%1)<.5)R0(x-5,gy-5,1,1,'#7fe07a');
   }else if(s.kind==='hermana'){
     R0(x-1,gy-15,3,14,'#c9a26a');R0(x-4,gy-12,9,2,'#c9a26a');R0(x-1,gy-15,1,14,'#e8c99a');R0(x-4,gy-12,9,1,'#e8c99a');R0(x-6,gy-16,1,1,'#ffe27a');R0(x+5,gy-15,1,1,'#ffe27a');R0(x+4,gy-5,1,1,'#ffe27a');R0(x-5,gy-6,1,1,'#ffe27a');
   }
@@ -853,7 +897,7 @@ function drawGoo(g){
 function drawAmulet(x,y,id){const c=AMULETS[id].c;R0(x-3,y-8,1,4,'#c9b08a');R0(x+2,y-8,1,4,'#c9b08a');R0(x-2,y-9,4,1,'#c9b08a');R0(x-2,y-4,4,4,c);R0(x-1,y-3,1,1,'#ffffff');}
 function drawPet(){
   if(!pet)return;
-  const x=Math.round(pet.x-camX),y=Math.round(pet.y),f=pet.face,R=(lx,ly,w,h,c)=>{G.fillStyle=c;G.fillRect(f>0?x+lx:x-lx-w,y+ly,w,h);};
+  const x=Math.round(pet.x-camX),y=Math.round(pet.y),f=pet.id==='horse'&&pet.atk>0?-pet.face:pet.face,R=(lx,ly,w,h,c)=>{G.fillStyle=c;G.fillRect(f>0?x+lx:x-lx-w,y+ly,w,h);};
   const st=Math.floor(pet.walkT)%2,a=pet.atk>0?1:0;
   switch(pet.id){
     case 'chicken':R(-4,-6,2,3,'#e0d9c8');R(-3,-6,6,5,'#f3efe4');R(2,-9,3,4,'#f3efe4');R(3,-10,2,1,'#cf4450');R(5,-8,2,1,'#e8b42a');R(4,-8,1,1,'#1d1724');R(3,-6,1,2,'#cf4450');R(-1,-1,1,1,'#e8b42a');R(1+st,-1,1,1,'#e8b42a');break;
@@ -873,6 +917,13 @@ function drawPet(){
     case 'goat':R(-9,-10,2,2,'#6e7a5e');R(-7,-11,13,6,'#8a9a7a');R(-7,-11,13,1,'#a3b08f');R(-4,-9,3,2,'#6e7a5e');R(1,-8,2,2,'#5e1b24');
       R(5+a,-14,5,6,'#8a9a7a');R(9+a,-12,2,3,'#7a8a6a');R(5+a,-17,1,3,'#d9d2c3');R(4+a,-18,1,2,'#d9d2c3');R(7+a,-17,1,3,'#d9d2c3');R(6+a,-18,2,1,'#d9d2c3');R(8+a,-8,2,3,'#5a6a4a');R(8+a,-13,1,1,'#e3f5a8');
       R(-6,-5,2,5-st,'#5a6a4a');R(-3,-5,2,4+st,'#5a6a4a');R(2,-5,2,5-st,'#5a6a4a');R(4,-5,2,4+st,'#5a6a4a');break;
+    case 'horse':{const B='#8a5a32',D='#6a4426',M='#2a2228';
+      R(-12,-15,2,7,M);R(-13,-11,1,5,M);
+      R(-10,-16,19,8,B);R(-10,-16,19,1,'#a3703f');R(-10,-9,19,1,D);R(-6,-13,3,2,'#a3703f');
+      R(6,-21,4,7,B);R(5,-21,2,7,M);R(8,-23,7,4,B);R(13,-21,3,3,B);R(15,-20,1,1,M);R(11,-22,1,1,'#1d1724');R(13,-23,1,2,'#f3efe4');R(8,-25,1,2,D);R(10,-25,1,2,D);
+      if(pet.atk>0){R(-17,-12,8,2,D);R(-19,-12,2,2,M);R(-17,-9,8,2,D);R(-19,-9,2,2,M);R(5,-8,2,8,D);R(8,-8,2,8,D);R(5,-1,2,1,M);R(8,-1,2,1,M);}
+      else{R(-9+st,-8,2,8,D);R(-6-st,-8,2,8,D);R(5+st,-8,2,8,D);R(8-st,-8,2,8,D);R(-9+st,-1,2,1,M);R(-6-st,-1,2,1,M);R(5+st,-1,2,1,M);R(8-st,-1,2,1,M);}
+      break;}
     case 'redeagle':{const up=Math.sin(T*14)>0||pet.dive;R(-5,-4,10,4,'#a8202a');R(4,-7,3,3,'#c8303a');R(7,-6,2,1,'#e04848');R(5,-6,1,1,'#1d1724');R(-8,-3,3,2,'#8a1820');
       if(up)R(-6,-10,12,5,'#c8303a');else R(-6,-1,12,5,'#c8303a');break;}
     case 'vulture':{const up=Math.sin(T*12)>0||pet.dive;R(-4,-4,8,4,'#2a2228');R(3,-6,2,2,'#e9e2d0');R(4,-8,3,3,'#d98a8a');R(7,-7,1,1,'#e8d27a');R(5,-7,1,1,'#1d1724');R(-6,-3,2,2,'#2a2228');
@@ -880,6 +931,16 @@ function drawPet(){
   }
 }
 
+function drawUpIcon(id,x,y){
+  const r=(lx,ly,w,h,c)=>R0(x+lx,y+ly,w,h,c);
+  switch(id){
+    case 'str':r(-7,-2,2,5,'#6a6b75');r(-9,-1,2,3,'#4c4d57');r(5,-2,2,5,'#6a6b75');r(7,-1,2,3,'#4c4d57');r(-5,0,10,1,'#c9ccd4');break;
+    case 'dmg':r(-1,-6,2,4,'#cf4450');r(-1,2,2,4,'#cf4450');r(-6,-1,4,2,'#cf4450');r(2,-1,4,2,'#cf4450');r(0,0,1,1,'#ffffff');break;
+    case 'hp':r(-6,-5,12,10,'#7a5232');r(-6,-5,12,1,'#a3703f');r(-1,-5,2,10,'#5a3a22');r(-4,-2,2,1,'#e9e2d0');r(2,-2,2,1,'#e9e2d0');r(-8,-4,2,6,'#7a5232');r(6,-4,2,6,'#7a5232');break;
+    case 'reload':r(-3,-6,5,9,'#3a3a44');r(-3,-6,5,1,'#6a6b75');r(-2,-5,3,1,'#d2a64a');r(-2,-3,3,1,'#d2a64a');r(-2,-1,3,1,'#d2a64a');r(-2,3,4,2,'#3a3a44');break;
+    case 'door':r(-5,-7,10,13,'#6f4a2c');r(-5,-7,10,1,'#8b603a');r(-4,-3,8,1,'#4a301c');r(-4,1,8,1,'#4a301c');r(2,-1,1,1,'#f5d33a');r(-6,-7,1,13,'#c9ccd4');r(5,-7,1,13,'#c9ccd4');break;
+  }
+}
 function drawNun(x,y){
   const R=(lx,ly,w,h,c)=>{G.fillStyle=c;G.fillRect(Math.round(x+lx),Math.round(y+ly),w,h);};
   G.strokeStyle='#ffe27a';G.lineWidth=1;G.beginPath();G.ellipse(Math.round(x)+.5,Math.round(y)-3.5,6,2,0,0,Math.PI*2);G.stroke();
@@ -929,7 +990,7 @@ function addStruct(kind,x){
   if(kind==='barricade')Object.assign(s,{w:16,h:20,hp:170,max:170});
   if(kind==='spikes')Object.assign(s,{w:22,h:3,dur:320,max:320});
   if(kind==='propane')Object.assign(s,{w:7,h:10});
-  if(kind==='turret'){const m=1+.5*amu('tinker');Object.assign(s,{w:12,h:12,ammo:Math.round(160*m),ammoMax:Math.round(160*m),cd:0,flash:0,ang:0});}
+  if(kind==='turret'){const m=1+amu('tinker');Object.assign(s,{w:12,h:12,ammo:Math.round(160*m),ammoMax:Math.round(160*m),cd:0,flash:0,ang:0});}
   structs.push(s);return s;
 }
 function placeItem(kind){
@@ -1029,7 +1090,7 @@ function hitscan(ox,oy,a,spec,mult,src,noTracer){
   for(const z of zombies){if(!live(z))continue;const t=rayRect(ox,oy,dx,dy,z.x-z.w/2,z.y-z.h,z.w,z.h);if(t!==null&&t<=maxT)hits.push([t,z]);}
   hits.sort((u,v)=>u[0]-v[0]);
   let end=maxT,n=0;
-  for(const [t,z] of hits){const hy=oy+dy*t,zone=hitZone(z,ox+dx*t,hy);damage(z,spec.dmg*mult,zone==='head',dx>=0?1:-1,spec.kb,src,{burn:spec.burn,stun:spec.stun,legs:zone==='legs'});if(spec.boom)explode(ox+dx*t,hy,20,{z:spec.dmg*mult*.5,p:0,s:0},'pop');n++;if(n>spec.pierce){end=t;break;}}
+  for(const [t,z] of hits){const hy=oy+dy*t,zone=hitZone(z,ox+dx*t,hy);damage(z,spec.dmg*mult,zone==='head',dx>=0?1:-1,spec.kb,src,{burn:spec.burn,stun:spec.stun,legs:zone==='legs',hm:spec.hm,bm:spec.bm,pulsar:spec.pulsar});if(spec.boom)explode(ox+dx*t,hy,20,{z:spec.dmg*mult*.5,p:0,s:0},'pop');n++;if(n>spec.pierce){end=t;break;}}
   if(!noTracer)tracers.push({x1:ox,y1:oy,x2:ox+dx*end,y2:oy+dy*end,t:.06,c:spec.burn?'#ff9a3c':(spec.tracer||null)});
   if(end===maxT&&dy>0&&maxT<spec.range)for(let i=0;i<3;i++)part(ox+dx*end,GY-1,rnd(-30,30),rnd(-60,-20),.35,'#8a7a5a',1,300);
   return {x:ox+dx*end,y:oy+dy*end};
@@ -1050,11 +1111,16 @@ function breakLegs(z,dir){
   z.speed*=.35;if(z.walkSpeed)z.walkSpeed*=.35;
   flt(z.x,GY-18,'LEGS BROKEN','#cf4450');blood(z.x,GY-3,dir,10);sfx('thud');
 }
-function applyBurn(z,dur){if(z.type==='fireman')return;z.burn=Math.max(z.burn||0,dur*(run.amb==='rain'?.5:1));}
+function applyBurn(z,dur,green){if(z.type==='fireman')return;z.burn=Math.max(z.burn||0,dur*(run.amb==='rain'?.5:1));if(green)z.gburn=true;}
+function voidKill(z,dir){z.voided=true;const cy=z.y-z.h*.55;pulses.push({x1:z.x,y1:cy,x2:z.x,y2:cy,t:.05,max:.05,end:.6,big:1});flt(z.x,z.y-z.h-6,'VOID','#ffffff');sfx('pulse');kill(z,false,dir);}
 function damage(z,d,head,dir,kb,src,o){
   if(z.dead||z.under||z.demo)return;
   o=o||{};
-  if(o.burn)applyBurn(z,o.burn);
+  if(o.pulsar){
+    if(!z.boss&&Math.random()<.2){voidKill(z,dir);return;}
+    if(z.boss&&(run.pulsarCd||0)<=0&&Math.random()<.05){run.pulsarCd=25;z.hp-=z.max*.1;const cy=z.y-z.h*.55;pulses.push({x1:z.x,y1:cy,x2:z.x,y2:cy,t:.05,max:.05,end:.9,big:2});flt(z.x,z.y-z.h-14,'LIGHT HOLE -10%','#ffffff');sfx('pulse');shake=Math.max(shake,5);}
+  }
+  if(o.burn)applyBurn(z,o.burn,o.green);
   let mult=1;
   if(z.helmet>0&&o.pierceArmor)armorOff(z,dir);
   if(head){
@@ -1063,9 +1129,10 @@ function damage(z,d,head,dir,kb,src,o){
       else{sfx('ting');for(let i=0;i<5;i++)part(z.x,z.y-z.h+1,rnd(-60,60),rnd(-90,-30),.3,'#ffe39a',1,200);}
       if(!z.blockT||T-z.blockT>.7){z.blockT=T;flt(z.x,z.y-z.h-5,'BLOCKED','#ffe39a');}
       z.flash=.03;return;}
-    mult=2*(1+.25*amu('eagle'));
+    mult=2*(1+.6*amu('eagle'))*(o.hm||1);
   }
   if(!head&&!o.legs&&(z.type==='soldier'||z.type==='gunner'))mult=.75;
+  if(!head&&o.bm)mult*=o.bm;
   if(z.type==='fireman'&&o.fire)mult*=.2;
   z.hp-=DEV.onehit?1e9:d*mult;z.flash=.06;z.kbv+=dir*(kb||30)/z.mass*(z.boss?.25:1);
   if(o.stun)z.stun=Math.max(z.stun||0,o.stun*(z.boss?.25:1));
@@ -1080,10 +1147,12 @@ function kill(z,head,dir){
   if(z.dead)return;z.dead=true;z.flash=0;
   const t=ZT[z.type],cash=Math.max(1,Math.round((t.cash+(head?2:0))*cashMult()*(1+.05*(run.night-1))));
   run.cash+=cash;run.kills++;if(head)run.heads++;
+  if(z.lastSrc==='pir'){run.pirStacks=(run.pirStacks||0)+1;if(run.pirStacks%10===0)flt(p.x,p.y-36,'PIR +'+run.pirStacks*(trOn('pir','hyper')?10:5)+'% FIRE RATE','#7fe8ff');}
   if(night){night.killed++;night.earned+=cash;if(head)night.heads++;}
   flt(z.x,z.y-z.h-4,'+'+money(cash),'#f5a443');if(head)flt(z.x,z.y-z.h-13,'HEADSHOT','#efe6d2');
-  if(amu('leech')&&p.alive)p.hp=Math.min(run.hpMax,p.hp+2*amu('leech'));
+  if(amu('leech')&&p.alive)p.hp=Math.min(run.hpMax,p.hp+5*amu('leech'));
   if(z.holy){for(let i=0;i<14;i++)part(z.x+rnd(-5,5),z.y-rnd(0,z.h),rnd(-15,15),rnd(-90,-30),rnd(.6,1.2),pick(['#fff8d8','#ffe27a','#ffffff']),pick([1,2]),-30);return;}
+  if(z.voided){const cy=z.y-z.h*.55;for(let i=0;i<18;i++){const a=rnd(0,Math.PI*2),r=rnd(6,16);part(z.x+Math.cos(a)*r,cy+Math.sin(a)*r,-Math.cos(a)*r*5,-Math.sin(a)*r*5,.22,pick(['#ffffff','#dfe6ff','#1d1724']),pick([1,2]),0);}return;}
   if(z.crawl)corpses.push({z,x:z.x,cy:GY,vx:0,vy:0,rot:0,vr:0,t:0,ground:true,flat:true});
   else if(z.type!=='larva'){corpses.push({z,x:z.x,cy:z.y-z.h/2,vx:dir*rnd(30,80)/Math.sqrt(z.mass)+z.kbv*.3,vy:-rnd(50,120)/Math.sqrt(z.mass),rot:0,vr:dir*rnd(5,10)/Math.sqrt(z.mass),t:0,ground:false});if(corpses.length>45)corpses.shift();}
   blood(z.x,z.y-z.h*.6,dir,z.boss?24:8);sfx('kill');
@@ -1130,43 +1199,69 @@ function hurtDoor(d){
 /* ---------- player weapons ---------- */
 function fire(){
   const id=run.weapon,g=GUNS[id];
-  if(p.reloadT>0||p.fireCd>0||!p.alive)return;
-  if(run.mags[id]<=0){startReload();return;}
-  if(g.spin&&p.spin<spinOf(id))return;
-  if(g.charge&&p.charge<g.charge)return;
+  if(p.reloadT>0||p.fireCd>0||!p.alive)return false;
+  if(run.mags[id]<=0){startReload();return false;}
+  if(g.spin&&p.spin<spinOf(id))return false;
+  if(g.charge&&p.charge<g.charge)return false;
   if(!DEV.ammo)run.mags[id]--;
-  p.fireCd=rateOf(id);
+  p.fireCd+=rateOf(id);
   const sx=p.x+p.face,sy=p.y-13,ang=p.ang;
   const ox=sx+Math.cos(ang)*g.len,oy=sy+Math.sin(ang)*g.len;
   let mult=dmgMult()*gunDmgMult(id);
-  const msp=modOf(id).sp,ex=msp?{shotgun:{burn:3},nailgun:{stun:.15},hunter:{boom:1},blunder:{pierce:1},rifle:{pierce:1},rail:{stun:1}}[id]:null,spec=ex?Object.assign({},g,ex):g;
-  if(id==='pistol'&&modOf(id).sp)mult*=1.3;
-  const src='gun';
+  const m=modOf(id),msp=m.sp,tr=m.act&&m.tr[m.act]?m.act:null;
+  const ex=msp?{shotgun:{burn:3},nailgun:{stun:.15},hunter:{boom:1},blunder:{pierce:1},rifle:{pierce:1},rail:{stun:1}}[id]:null,spec=Object.assign({},g,ex||{});
+  if(id==='pistol'&&msp)mult*=1.3;
+  if(tr==='akimbo')spec.spread=g.spread*3;
+  else if(tr==='staple')spec.pierce=(spec.pierce||0)+2;
+  else if(tr==='slug'){spec.pellets=1;spec.dmg=g.dmg*7;spec.pierce=(spec.pierce||0)+2;spec.range=380;spec.spread=0;spec.kb=150;spec.tracer='#ffe39a';}
+  else if(tr==='scope'){spec.hm=2;spec.bm=.5;}
+  else if(tr==='dragon'){spec.burn=3;spec.range=Math.round(g.range*.6);}
+  else if(tr==='bump'){spec.spread=g.spread*2.5;mult*=.8;}
+  else if(tr==='hyper')spec.spread=Math.min(.35,g.spread*(1+.04*(run.pirStacks||0)));
+  else if(tr==='tripod'){mult*=1.6;spec.spread=g.spread*.35;}
+  if(id==='pistol'&&m.sp2)spec.pulsar=true;
+  const src=id==='pir'?'pir':'gun';
   if(g.type!=='flame')muzT=.05;
   switch(g.type){
     case 'hit':{
-      for(let i=0;i<g.pellets;i++)hitscan(ox,oy,ang+(Math.random()-.5)*2*g.spread,spec,mult,src);
+      const n=spec.pellets||1,hands=tr==='akimbo'?2:1;
+      for(let k=0;k<hands;k++){const bx=ox-(k?p.face*3:0),by=oy+(k?2:0);
+        for(let i=0;i<n;i++){const a=ang+(Math.random()-.5)*2*spec.spread,e=hitscan(bx,by,a,spec,mult,src,spec.pulsar);
+          if(spec.pulsar){const M=Math.max(.03,Math.hypot(e.x-bx,e.y-by)/2600);pulses.push({x1:bx,y1:by,x2:e.x,y2:e.y,t:0,max:M,end:M+.35});}}}
       part(sx,sy-1,-p.face*rnd(20,50),rnd(-90,-50),1.2,id==='nailgun'?'#9aa0aa':'#d2a64a',1,420,{bounce:true});break;}
-    case 'arrow':projs.push({kind:'arrow',x:ox,y:oy,vx:Math.cos(ang)*460,vy:Math.sin(ang)*460,g:140,dmg:g.dmg*mult*(AR().bow||1)*strMult(),pierce:modOf('bow').sp?3:1,hit:[],t:0});break;
-    case 'goo':projs.push({kind:'goo',x:ox,y:oy,vx:Math.cos(ang)*300,vy:Math.sin(ang)*300-30,g:300,dmg:g.dmg*mult,t:0});break;
-    case 'flame':flameTick(ox,oy,ang,g,mult,msp?5:2.5);break;
-    case 'arc':arcShot(ox,oy,ang,g,mult);break;
-    case 'rail':{const e=hitscan(ox,oy,ang,spec,mult,'gun',true);beams.push({x1:ox,y1:oy,x2:e.x,y2:e.y,t:.3});p.charge=0;break;}
+    case 'arrow':{const boom=tr==='boom';projs.push({kind:'arrow',x:ox,y:oy,vx:Math.cos(ang)*460,vy:Math.sin(ang)*460,g:140,dmg:g.dmg*mult*(AR().bow||1)*strMult(),pierce:boom?0:(msp?3:1),boom,hit:[],t:0});break;}
+    case 'goo':projs.push({kind:'goo',x:ox,y:oy,vx:Math.cos(ang)*300,vy:Math.sin(ang)*300-30,g:300,dmg:g.dmg*mult,sticky:tr==='sticky',t:0});break;
+    case 'flame':flameTick(ox,oy,ang,g,mult,msp?5:2.5,tr);break;
+    case 'arc':arcShot(ox,oy,ang,g,mult,tr==='static');break;
+    case 'rail':{const angs=tr==='split'?[ang-.09,ang,ang+.09]:[ang],rm=tr==='split'?mult*.45:mult;
+      for(const a of angs){const e=hitscan(ox,oy,a,spec,rm,'gun',true);beams.push({x1:ox,y1:oy,x2:e.x,y2:e.y,t:.3});}p.charge=0;break;}
   }
-  shake=Math.max(shake,g.shake);
-  if(id==='flamer'){if(T-flameS>.15){flameS=T;sfx('flame');}}else sfx(g.snd);
+  shake=Math.max(shake,tr==='slug'?3:g.shake);
+  if(id==='flamer'){if(T-flameS>.15){flameS=T;sfx('flame');}}
+  else if(spec.pulsar){if(T-lastShotS>.03){lastShotS=T;sfx('pulse');}}
+  else if(T-lastShotS>.03||g.rate>.2){lastShotS=T;sfx(tr==='slug'?'hunter':g.snd);}
   if(run.mags[id]<=0)startReload();
+  return true;
 }
-function flameTick(ox,oy,ang,g,mult,bd){
-  const range=g.range*(AR().flameRange||1);
-  for(let i=0;i<3;i++){const a=ang+rnd(-.22,.22),sp=rnd(170,240)*(range/95);part(ox,oy,Math.cos(a)*sp,Math.sin(a)*sp,rnd(.3,.42),pick(['#ffd27a','#f5a443','#ff6a2a','#fff1c9']),pick([1,2,2,3]),-30,{flame:true});}
-  for(const z of zombies){if(!live(z))continue;const dx=z.x-ox,dy=(z.y-z.h/2)-oy,d=Math.hypot(dx,dy);if(d>range+z.w/2)continue;let da=Math.atan2(dy,dx)-ang;da=Math.atan2(Math.sin(da),Math.cos(da));if(Math.abs(da)>.4)continue;damage(z,g.dmg*mult,false,Math.sign(dx)||1,g.kb,'gun',{burn:bd||2.5,fire:true});}
+let lastShotS=0;
+function flameTick(ox,oy,ang,g,mult,bd,tr){
+  const green=tr==='green',lng=tr==='long',range=g.range*(AR().flameRange||1)*(lng?1.6:1),cone=lng?.24:.4;
+  if(lng)mult*=.75;
+  const cols=green?['#d8ff9a','#7fe05a','#3fbf4a','#efffd8']:['#ffd27a','#f5a443','#ff6a2a','#fff1c9'];
+  for(let i=0;i<3;i++){const a=ang+rnd(-cone*.55,cone*.55),sp=rnd(170,240)*(range/95);part(ox,oy,Math.cos(a)*sp,Math.sin(a)*sp,rnd(.3,.42),pick(cols),pick([1,2,2,3]),-30,{flame:true});}
+  for(const z of zombies){if(!live(z))continue;const dx=z.x-ox,dy=(z.y-z.h/2)-oy,d=Math.hypot(dx,dy);if(d>range+z.w/2)continue;let da=Math.atan2(dy,dx)-ang;da=Math.atan2(Math.sin(da),Math.cos(da));if(Math.abs(da)>cone)continue;
+    damage(z,g.dmg*mult*(green?(z.boss?.3:1.8):1),false,Math.sign(dx)||1,g.kb,'gun',{burn:bd||2.5,fire:true,green});}
 }
-function arcShot(ox,oy,ang,g,mult){
-  const dx=Math.cos(ang),dy=Math.sin(ang);let maxT=g.range;if(dy>0)maxT=Math.min(maxT,(GY-oy)/dy);
+function arcShot(ox,oy,ang,g,mult,stat){
+  const dx=Math.cos(ang),dy=Math.sin(ang);let maxT=g.range*(stat?.6:1);if(dy>0)maxT=Math.min(maxT,(GY-oy)/dy);
   let first=null,ft=1e9;for(const z of zombies){if(!live(z))continue;const t=rayRect(ox,oy,dx,dy,z.x-z.w/2,z.y-z.h,z.w,z.h);if(t!==null&&t<=maxT&&t<ft){ft=t;first=z;}}
   const pts=[[ox,oy]];
   if(!first){pts.push([ox+dx*maxT,oy+dy*maxT]);bolts.push({pts:jag(pts),t:.12,c:'#9fe8ff'});return;}
+  if(stat){const cx=first.x,cy=first.y-first.h*.55;pts.push([cx,cy]);bolts.push({pts:jag(pts),t:.14,c:'#9fe8ff'});
+    damage(first,g.dmg*mult,false,Math.sign(first.x-ox)||1,g.kb,'gun',{stun:.4});
+    for(const z of zombies){if(!live(z)||z===first)continue;const dd=Math.hypot(z.x-cx,(z.y-z.h/2)-cy);if(dd<50+z.w/2){bolts.push({pts:jag([[cx,cy],[z.x,z.y-z.h*.55]]),t:.12,c:'#c9f4ff'});damage(z,g.dmg*mult*.7,false,Math.sign(z.x-cx)||1,g.kb,'gun',{stun:.4});}}
+    for(let i=0;i<12;i++){const a=rnd(0,Math.PI*2),r=rnd(8,46);part(cx+Math.cos(a)*r,cy+Math.sin(a)*r*.6,rnd(-10,10),rnd(-10,10),.18,pick(['#9fe8ff','#ffffff']),1,0);}
+    return;}
   const chain=modOf('arc').sp?7:g.chains+1,hit=[];let cur=first,d=g.dmg*mult;
   for(let i=0;i<chain&&cur;i++){hit.push(cur);pts.push([cur.x,cur.y-cur.h*.55]);damage(cur,d,false,Math.sign(cur.x-ox)||1,g.kb,'gun',{stun:.4});d*=.85;
     let nx=null,nd=75;for(const z of zombies){if(!live(z)||hit.includes(z))continue;const dd=Math.hypot(z.x-cur.x,(z.y-z.h/2)-(cur.y-cur.h/2));if(dd<nd){nd=dd;nx=z;}}cur=nx;}
@@ -1175,6 +1270,7 @@ function arcShot(ox,oy,ang,g,mult){
 function startReload(){
   const id=run.weapon;
   if(p.reloadT>0||run.mags[id]>=magOf(id)||!p.alive)return;
+  if(id==='pir'&&trOn('pir','hyper')&&run.pirStacks){run.pirStacks=0;flt(p.x,p.y-30,'STACKS LOST','#7fe8ff');}
   p.reloadT=p.reloadMax=reloadOf(id);sfx('reload');
 }
 function melee(){
@@ -1210,12 +1306,17 @@ function updateProjs(dt){
     q.t+=dt;const px=q.x,py=q.y;q.vy+=q.g*dt;q.x+=q.vx*dt;q.y+=q.vy*dt;
     if(q.kind==='arrow'){
       for(const z of zombies){if(!live(z)||q.hit.includes(z))continue;const t=segHit(px,py,q.x,q.y,z.x-z.w/2,z.y-z.h,z.w,z.h);if(t===null)continue;
-        const k=t/(Math.hypot(q.x-px,q.y-py)||1),zone=hitZone(z,px+(q.x-px)*k,py+(q.y-py)*k);q.hit.push(z);damage(z,q.dmg,zone==='head',Math.sign(q.vx)||1,60,'gun',{legs:zone==='legs'});if(q.hit.length>q.pierce){q.dead=true;break;}}
-      if(!q.dead&&q.y>=GY){q.dead=true;decals.push({x:q.x,y:GY,arrow:Math.atan2(q.vy,q.vx),c:'#8a6a44',t:8});}
+        const k=t/(Math.hypot(q.x-px,q.y-py)||1),zone=hitZone(z,px+(q.x-px)*k,py+(q.y-py)*k);q.hit.push(z);damage(z,q.dmg,zone==='head',Math.sign(q.vx)||1,60,'gun',{legs:zone==='legs'});if(q.boom){q.dead=true;explode(q.x,q.y,26,{z:q.dmg*.9,p:0,s:0},'pop');break;}if(q.hit.length>q.pierce){q.dead=true;break;}}
+      if(!q.dead&&q.y>=GY){q.dead=true;if(q.boom)explode(q.x,GY-4,26,{z:q.dmg*.9,p:0,s:0},'pop');else decals.push({x:q.x,y:GY,arrow:Math.atan2(q.vy,q.vx),c:'#8a6a44',t:8});}
     }else if(q.kind==='goo'){
       let hz=null;for(const z of zombies){if(!live(z))continue;if(segHit(px,py,q.x,q.y,z.x-z.w/2,z.y-z.h,z.w,z.h)!==null){hz=z;break;}}
-      if(hz){damage(hz,q.dmg,false,Math.sign(q.vx)||1,20,'gun');makeGoo(hz.x);q.dead=true;}
-      else if(q.y>=GY){makeGoo(q.x);q.dead=true;}
+      if(hz){damage(hz,q.dmg,false,Math.sign(q.vx)||1,20,'gun');if(q.sticky)stick(hz,q.x,q.y,q.dmg);else makeGoo(hz.x);q.dead=true;}
+      else if(q.y>=GY){if(q.sticky)stick(null,q.x,GY-2,q.dmg);else makeGoo(q.x);q.dead=true;}
+    }else if(q.kind==='sticky'){
+      if(q.z&&!q.z.dead&&!q.z.under){q.x=q.z.x+q.dx;q.y=q.z.y-q.z.h*.55;}
+      q.fuse-=dt;if(Math.random()<dt*20)part(q.x,q.y,rnd(-15,15),rnd(-25,-5),.3,pick(['#7fe07a','#c9ffb8']),1,60);
+      if(q.fuse<=0){q.dead=true;explode(q.x,q.y,30,{z:q.dmg,p:0,s:0},'gas');}
+      continue;
     }else if(q.kind==='sack'){
       q.rot+=dt*8;
       let hit=q.y>=GY-1;for(const z of zombies){if(live(z)&&segHit(px,py,q.x,q.y,z.x-z.w/2,z.y-z.h,z.w,z.h)!==null){hit=true;break;}}
@@ -1255,14 +1356,15 @@ function updateProjs(dt){
   }
   projs=projs.filter(q=>!q.dead);
 }
+function stick(z,x,y,dmg){projs.push({kind:'sticky',z,dx:z?clamp(x-z.x,-z.w/2,z.w/2):0,x,y,vx:0,vy:0,g:0,t:0,fuse:1.2,dmg:dmg*7});sfx('goo');}
 function makeGoo(x){goos.push({x:clamp(x,PMIN+12,WORLD),w:26,t:12,acid:!!modOf('goo').sp});for(let i=0;i<14;i++)part(x+rnd(-8,8),GY-rnd(2,14),rnd(-60,60),rnd(-100,-20),rnd(.4,.8),pick(['#7fe07a','#c9ffb8','#5ab45a']),pick([1,2]),300);sfx('goo');}
 const inGoo=z=>z.y>GY-30?goos.find(g=>Math.abs(z.x-g.x)<g.w/2+z.w/2-2):null;
 
 /* ---------- pickups, eggs, pets ---------- */
 function collectAmulet(pk){
-  pk.dead=true;run.amu[pk.id]=(run.amu[pk.id]||0)+1;const A=AMULETS[pk.id];
-  if(pk.id==='vital'){run.hpMax+=20;p.hp+=20;}
-  flt(p.x,p.y-34,A.name.toUpperCase(),A.c);flt(p.x,p.y-25,A.desc,'#efe6d2');sfx('chime');renderTray();
+  pk.dead=true;if(!run.amus)run.amus=[];run.amus.push({id:pk.id,got:run.night});const A=AMULETS[pk.id];
+  if(pk.id==='vital'){run.hpMax+=50;p.hp+=50;}
+  flt(p.x,p.y-34,A.name.toUpperCase(),A.c);flt(p.x,p.y-25,A.desc+' for '+AMU_LIFE+' shifts','#efe6d2');sfx('chime');renderTray();
 }
 function updatePickups(dt){
   for(const pk of pickups){pk.t+=dt;if(p.alive&&Math.abs(pk.x-p.x)<10&&mode!=='dawn')collectAmulet(pk);if(Math.random()<dt*3)part(pk.x+rnd(-3,3),GY-8+rnd(-3,3),0,-10,.5,AMULETS[pk.id].c,1,0);}
@@ -1285,7 +1387,7 @@ function updatePet(dt){
       petFollow(dt,70,16);
       if(fight&&pet.cd<=0&&eggs.length<5){eggs.push({x:pet.x,t:14,arm:.6});pet.cd=6;sfx('cluck');}
       break;
-    case 'dog':case 'wolf':case 'bear':case 'goat':{
+    case 'dog':case 'wolf':case 'bear':case 'goat':case 'horse':{
       if(pet.jump){pet.x+=pet.jump.vx*dt;pet.y+=pet.jump.vy*dt;pet.jump.vy+=520*dt;
         if(pet.y>=GY){pet.y=GY;pet.jump=null;for(const z of zombies){if(live(z)&&z.y>GY-20&&Math.abs(z.x-pet.x)<14)damage(z,P.dmg*sc*petMult()*1.2,false,pet.face,160,'pet');}sfx('bite');}
         break;}
@@ -1293,10 +1395,10 @@ function updatePet(dt){
       if(tg){const dx=tg.x-pet.x,dist=Math.abs(dx);pet.face=Math.sign(dx)||1;
         if(P.pounce&&pet.cd<=0&&dist>30&&dist<95){pet.jump={vx:Math.sign(dx)*dist/.55,vy:-143};pet.cd=P.rate+.4;break;}
         if(dist>P.reach+tg.w/2){pet.x+=Math.sign(dx)*P.speed*dt;pet.walkT+=dt*P.speed*.2;}
-        else if(pet.cd<=0){pet.cd=P.rate;pet.atk=.15;
+        else if(pet.cd<=0){pet.cd=P.rate;pet.atk=pet.id==='horse'?.3:.15;
           if(P.swipe){for(const z of zombies){if(!live(z)||z.y<GY-20)continue;const d=(z.x-pet.x)*pet.face;if(d>-4&&d<z.w/2+P.reach+6)damage(z,P.dmg*sc*petMult(),false,pet.face,260,'pet');}sfx('thud');}
-          else{damage(tg,P.dmg*sc*petMult(),false,pet.face,pet.id==='wolf'?120:pet.id==='goat'?280:40,'pet');sfx(pet.id==='goat'?'thud':'bite');}}
-      }else petFollow(dt,P.speed,pet.id==='bear'?26:18);
+          else{damage(tg,P.dmg*sc*petMult(),false,pet.face,pet.id==='wolf'?120:pet.id==='goat'?280:pet.id==='horse'?320:40,'pet');sfx(pet.id==='goat'||pet.id==='horse'?'thud':'bite');}}
+      }else petFollow(dt,P.speed,pet.id==='bear'||pet.id==='horse'?26:18);
       break;}
     case 'armadillo':
       if(pet.roll>0){pet.roll-=dt;pet.x+=pet.face*230*dt;
@@ -1533,8 +1635,9 @@ function updateZombies(dt){
         for(const s of structs)if(s.kind==='barricade'&&!s.dead&&Math.abs(s.x-z.x)<20){s.hp-=60*guardMult();s.hit=.2;if(s.hp<=0)breakStruct(s);}
         z.hp-=20;if(z.hp<=0)kill(z,false,1);}
       continue;}
-    if(z.burn>0){z.burn-=dt;z.hp-=burnDps()*dt;z.lastSrc=z.lastSrc||'burn';
-      if(Math.random()<dt*30)part(z.x+rnd(-3,3),z.y-rnd(3,z.h),rnd(-6,6),rnd(-30,-10),.4,pick(['#f5a443','#ffd27a','#ff6a2a']),1,-40,{flame:true});
+    if(z.burn>0){z.burn-=dt;z.hp-=burnDps()*dt*(z.gburn?(z.boss?.3:1.5):1);z.lastSrc=z.lastSrc||'burn';
+      if(Math.random()<dt*30)part(z.x+rnd(-3,3),z.y-rnd(3,z.h),rnd(-6,6),rnd(-30,-10),.4,pick(z.gburn?['#b8ff7a','#5fe04a','#e8ffd0']:['#f5a443','#ffd27a','#ff6a2a']),1,-40,{flame:true});
+      if(z.burn<=0)z.gburn=false;
       if(z.hp<=0){kill(z,false,z.face);continue;}}
     if(z.kbv){z.x+=z.kbv*dt;z.kbv*=Math.exp(-8*dt);if(Math.abs(z.kbv)<1)z.kbv=0;}
     z.x=Math.max(z.x,PMIN-30);
@@ -1587,7 +1690,7 @@ function updateStructs(dt){
       if(s.flash>0)s.flash-=dt;s.cd-=dt;
       let bz=null,bd=1e9;for(const z of zombies){if(!live(z))continue;const d=z.x-s.x;if(d>4&&d<240&&d<bd){bd=d;bz=z;}}
       if(bz){const ta=Math.atan2((bz.y-bz.h*.6)-(GY-8),bz.x-(s.x+3));s.ang+=(ta-s.ang)*Math.min(1,dt*12);
-        if(s.ammo>0&&s.cd<=0){s.cd=.22;s.ammo--;s.flash=.05;hitscan(s.x+3+Math.cos(s.ang)*9,GY-8+Math.sin(s.ang)*9,s.ang+rnd(-.03,.03),{dmg:22*(1+.2*amu('tinker')),pierce:0,range:250,kb:14},1,'turret');sfx('turret');}}
+        if(s.ammo>0&&s.cd<=0){s.cd=.22;s.ammo--;s.flash=.05;hitscan(s.x+3+Math.cos(s.ang)*9,GY-8+Math.sin(s.ang)*9,s.ang+rnd(-.03,.03),{dmg:22*(1+.5*amu('tinker')),pierce:0,range:250,kb:14},1,'turret');sfx('turret');}}
       else s.ang*=Math.max(0,1-dt*4);
     }
   }
@@ -1618,7 +1721,7 @@ function updateAmbient(dt){
 function burstStorm(x){for(let i=0;i<12;i++)part(x,GY-rnd(0,20),rnd(-80,80),rnd(-140,-30),.5,pick(['#e8fbff','#9fe8ff','#ffffff']),1,300);}
 
 /* ---------- shifts ---------- */
-function pickAmb(n){if(n<=1)return 'night';if(n>=3&&Math.random()<.15)return 'moon';const pool=['night','night','day','day','rain','sand'];let a=pick(pool);if(a===run.amb&&Math.random()<.5)a=pick(pool);return a;}
+function pickAmb(n){if(n<=1)return 'night';if(n>=3&&Math.random()<.05)return 'moon';const pool=['night','night','day','day','rain','sand'];let a=pick(pool);if(a===run.amb&&Math.random()<.5)a=pick(pool);return a;}
 function buildQueue(n){
   const total=Math.round(14+n*7.5+n*n*.5);
   const w={walker:10,vaulter:n>=3?1+n*.35:0,fireman:n>=4?.8+n*.25:0,soldier:n>=5?1+n*.3:0,gunner:n>=7?.3+n*.04:0,runner:n>=2?2+n*.7:0,hardhat:n>=3?1.5+n*.5:0,bloater:n>=4?1+n*.35:0,digger:n>=4?1+n*.3:0,jetpack:n>=5?1+n*.25:0,brute:n>=6?.2+n*.06:0};
@@ -1632,7 +1735,7 @@ function startNight(){
   if(mode!=='prep')return;
   const q=buildQueue(run.night),am=AMB[run.amb];
   night={queue:q,killed:0,spawnT:1.2,heads:0,earned:0};
-  mode='night';paused=false;
+  mode='night';paused=false;run.pirStacks=0;run.expired=null;
   if(Math.random()<.75)dropAmulet(rnd(420,WORLD-60));
   banner={text:'SHIFT '+run.night,sub:am.name+' · '+fmtT(am.start)+' · Hold the store until '+am.end,t:2.6,max:2.6};
   boltT=rnd(3,6);sfx('start');renderTray();hideOverlay();
@@ -1650,10 +1753,10 @@ function spawnTick(dt){
 }
 function dawn(){
   mode='dawn';
-  const bonus=25+10*run.night;run.cash+=bonus;
+  const bonus=25+10*run.night;run.cash+=bonus;run.pirStacks=0;
   lastSummary={night:run.night,amb:run.amb,kills:night.killed,heads:night.heads,earned:night.earned,bonus,cash:run.cash};
   if(!run.cheated){best=Math.max(best,run.night);store.set(BEST_KEY,best);}
-  for(const s of structs)if(s.kind==='turret')s.ammo=s.ammoMax=Math.round(160*(1+.5*amu('tinker')));
+  for(const s of structs)if(s.kind==='turret')s.ammo=s.ammoMax=Math.round(160*(1+amu('tinker')));
   run.nextAmb=pickAmb(run.night+1);
   projs=[];pigeons=[];pigs=[];bossRef=null;p.pull=null;p.root=0;p.reloadT=0;trig.mouse=trig.auto=false;
   banner={text:AMB[run.amb].end,sub:'Shift '+run.night+' survived. Heading back inside.',t:2.4,max:2.4,dawnT:2.4};
@@ -1666,7 +1769,9 @@ function updateDawn(dt){
   else{p.inside+=dt;p.alpha=Math.max(0,1-p.inside/.5);}
   if(p.inside>.5&&(!banner||banner.dawnT==null||banner.dawnT<=0))goShop();
 }
-function goShop(){pigs=[];run.night++;run.buys=0;run.perkPhase={};night=null;corpses=[];for(const id of ownedGuns())run.mags[id]=magOf(id);p.reloadT=0;keys.left=keys.right=false;trig.mouse=trig.auto=false;openStock();}
+function goShop(){pigs=[];run.night++;run.buys=0;run.perkPhase={};night=null;corpses=[];for(const id of ownedGuns())run.mags[id]=magOf(id);p.reloadT=0;keys.left=keys.right=false;trig.mouse=trig.auto=false;expireAmulets();openStock();}
+function expireAmulets(){const gone=[];run.amus=(run.amus||[]).filter(a=>{if(run.night-a.got>=AMU_LIFE){gone.push(a.id);return false;}return true;});
+  for(const id of gone)if(id==='vital')run.hpMax-=50;p.hp=Math.min(p.hp,run.hpMax);run.expired=gone.length?gone:null;}
 function gameOver(reason){
   if(mode==='over')return;
   clearSave();
@@ -1682,6 +1787,7 @@ function updatePlayer(dt){
   if(p.pull){p.pull.t-=dt;mv=0;const tx=p.pull.by.x;p.x+=Math.sign(tx-p.x)*260*dt;if(Math.abs(tx-p.x)<22||p.pull.t<=0||p.pull.by.dead)p.pull=null;}
   if(p.root>0){p.root-=dt;mv=0;}
   if(mode==='over')mv=0;
+  if(run.weapon==='minigun'&&trOn('minigun','tripod')&&(trig.mouse||trig.auto)&&mode==='night'&&p.spin>0)mv=0;
   p.x=clamp(p.x+mv*speedOf()*dt,PMIN,WORLD-8);if(mv)p.walkT+=dt*speedOf()*.22;else p.walkT=0;
   const sy=p.y-13,g=GUNS[run.weapon];
   if(aimMode==='auto'){let bz=null,bd=1e9;for(const z of zombies){if(!live(z))continue;const d=Math.abs(z.x-p.x);if(d<bd&&d<Math.max(g.range,160)){bd=d;bz=z;}}
@@ -1689,12 +1795,12 @@ function updatePlayer(dt){
   else{aimX=mouse.x+camX;aimY=mouse.y;}
   p.face=aimX>=p.x?1:-1;
   p.ang=Math.atan2(aimY-sy,aimX-(p.x+p.face));
-  if(p.fireCd>0)p.fireCd-=dt;if(p.meleeCd>0)p.meleeCd-=dt;if(p.meleeT>0)p.meleeT-=dt;if(p.hurt>0)p.hurt-=dt;
+  p.fireCd=Math.max(-.04,p.fireCd-dt);if(p.meleeCd>0)p.meleeCd-=dt;if(p.meleeT>0)p.meleeT-=dt;if(p.hurt>0)p.hurt-=dt;
   if(p.reloadT>0){p.reloadT-=dt;if(p.reloadT<=0){p.reloadT=0;run.mags[run.weapon]=magOf(run.weapon);sfx('click');}}
   const firing=(trig.mouse||trig.auto)&&mode==='night';
   if(g.spin)p.spin=firing?Math.min(spinOf(run.weapon),p.spin+dt):Math.max(0,p.spin-dt*2);
   if(g.charge){p.charge=firing&&p.reloadT<=0&&run.mags[run.weapon]>0?Math.min(g.charge,p.charge+dt):Math.max(0,p.charge-dt*2);if(p.charge>0&&Math.random()<dt*30)part(p.x+p.face*12+Math.cos(p.ang)*8,sy+Math.sin(p.ang)*8,rnd(-20,20),rnd(-20,20),.2,'#9fe8ff',1,0);}
-  if(firing)fire();
+  if(firing){for(let k=0;k<8;k++){if(!fire()||p.fireCd>0)break;}}
   if(MELEE[run.melee].hold&&(keys.melee||trig.melee||trig.rmouse))melee();
 }
 function updateFx(dt){
@@ -1720,6 +1826,7 @@ function updateFx(dt){
   for(const d of decals)d.t-=dt;decals=decals.filter(d=>d.t>0);
   for(const f of floaters){f.life-=dt;f.y-=16*dt;}floaters=floaters.filter(f=>f.life>0);
   for(const t of tracers)t.t-=dt;tracers=tracers.filter(t=>t.t>0);
+  for(const q of pulses)q.t+=dt;pulses=pulses.filter(q=>q.t<q.end);
   for(const b of booms)b.t+=dt;booms=booms.filter(b=>b.t<b.max);
   for(const b of bolts)b.t-=dt;bolts=bolts.filter(b=>b.t>0);
   for(const b of beams)b.t-=dt;beams=beams.filter(b=>b.t>0);
@@ -1733,7 +1840,7 @@ function update(dt){
   if(mode==='title')for(const z of zombies)z.walkT+=dt*.8;
   if(mode==='prep'||mode==='night'||mode==='over')updatePlayer(dt);
   if(mode==='dawn')updateDawn(dt);
-  if(mode==='night'||mode==='over'){updateZombies(dt);updateStructs(dt);updateProjs(dt);updateSole(dt);updatePigs(dt);updatePigeons(dt);}
+  if(mode==='night'||mode==='over'){updateZombies(dt);updateStructs(dt);updateProjs(dt);updateSole(dt);updatePigs(dt);updatePigeons(dt);if(run.pulsarCd>0)run.pulsarCd-=dt;}
   updateTrucks(dt);
   if(mode==='prep'||mode==='night'||mode==='dawn'){updatePet(dt);updateEggs(dt);updatePickups(dt);}
   if(mode==='night')spawnTick(dt);
@@ -1767,6 +1874,7 @@ function drawLighting(sx,sy,am){
   for(const b of bolts){const m=b.pts[b.pts.length>>1];hole(m[0]-camX,m[1],40,.8);}
   for(const b of beams)hole((b.x1+b.x2)/2-camX,(b.y1+b.y2)/2,120,.8*b.t/.3);
   for(const g of goos)hole(g.x-camX,GY-10,22,.3);
+  for(const q of pulses){const k=Math.min(1,q.t/q.max),hx=q.x1+(q.x2-q.x1)*k-camX,hy=q.y1+(q.y2-q.y1)*k;hole(hx,hy,q.big?30+q.big*14:18,.85);}
   if(sole&&sole.t>.6&&sole.t<2.3){L.fillStyle='rgba(0,0,0,'+Math.min(.85,(sole.t-.6)*2,(2.3-sole.t)*2)+')';L.fillRect(0,0,W,H);}
   else if(sole)hole(sole.x-camX,40,60,.6);
   for(const pk of pickups)hole(pk.x-camX,GY-8,10,.6);
@@ -1807,8 +1915,9 @@ function drawWorld(){
   drawPet();
   drawPlayerSprite();
   for(const q of projs){const x=q.x-camX;
-    if(q.kind==='arrow'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(Math.atan2(q.vy,q.vx));G.fillStyle='#c9b08a';G.fillRect(-7,0,7,1);G.fillStyle='#9aa0aa';G.fillRect(0,-1,2,3);G.fillStyle='#cf4450';G.fillRect(-8,-1,2,1);G.fillRect(-8,1,2,1);G.restore();}
-    else if(q.kind==='goo'){R0(x-2,q.y-2,4,4,'#7fe07a');R0(x-1,q.y-1,1,1,'#d4ffc9');}
+    if(q.kind==='arrow'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(Math.atan2(q.vy,q.vx));G.fillStyle='#c9b08a';G.fillRect(-7,0,7,1);G.fillStyle='#9aa0aa';G.fillRect(0,-1,2,3);G.fillStyle='#cf4450';G.fillRect(-8,-1,2,1);G.fillRect(-8,1,2,1);if(q.boom){G.fillStyle='#f5a443';G.fillRect(1,-1,2,3);G.fillStyle='#ffd27a';G.fillRect(2,0,1,1);}G.restore();}
+    else if(q.kind==='goo'){R0(x-2,q.y-2,4,4,q.sticky?'#b8ff7a':'#7fe07a');R0(x-1,q.y-1,1,1,'#d4ffc9');}
+    else if(q.kind==='sticky'){const bl=(T*(q.fuse<.4?22:8)%2)<1;R0(x-2,q.y-2,5,4,bl?'#b8ff7a':'#4a9a4a');R0(x-1,q.y-1,2,1,'#efffd8');if(bl)R0(x,q.y-3,1,1,'#ff5a4a');}
     else if(q.kind==='sack'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(q.rot);G.fillStyle='#c9a46a';G.fillRect(-4,-5,8,10);G.fillStyle='#2f7a3f';G.fillRect(-4,-2,8,3);G.fillStyle='#7a5a3a';G.fillRect(-1,-6,2,1);G.restore();}
     else if(q.kind==='book'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(q.rot);G.fillStyle='#b8323a';G.fillRect(-4,-3,8,6);G.fillStyle='#f3efe4';G.fillRect(3,-2,1,4);G.restore();}
     else if(q.kind==='hook'){const o=q.owner;G.strokeStyle='#8a8f99';G.beginPath();G.moveTo(o.x-camX+o.face*10,o.y-20);G.lineTo(x,q.y);G.stroke();R0(x-2,q.y-2,4,4,'#c9ccd4');R0(x+(q.vx>0?2:-3),q.y-4,1,3,'#c9ccd4');}
@@ -1817,6 +1926,10 @@ function drawWorld(){
     else if(q.kind==='wrench'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(q.rot);G.fillStyle='#8a8f99';G.fillRect(-5,-1,10,2);G.fillRect(4,-3,3,2);G.fillRect(4,1,3,2);G.restore();}
     else if(q.kind==='plob'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(q.rot);G.fillStyle='#2c2c33';G.fillRect(-4,-4,8,8);G.fillStyle='#e8c25a';G.fillRect(-3,-3,6,6);G.fillStyle='#c8402e';G.fillRect(-1,-1,2,1);G.restore();}}
   G.lineWidth=1;
+  for(const q of pulses){const k=Math.min(1,q.t/q.max),hx=q.x1+(q.x2-q.x1)*k-camX,hy=q.y1+(q.y2-q.y1)*k;
+    if(q.t<q.max){G.globalAlpha=.35;G.strokeStyle='#dfe6ff';G.beginPath();G.moveTo(q.x1+(q.x2-q.x1)*Math.max(0,k-.35)-camX,q.y1+(q.y2-q.y1)*Math.max(0,k-.35));G.lineTo(hx,hy);G.stroke();G.globalAlpha=1;}
+    const life=q.t<q.max?1:1-(q.t-q.max)/(q.end-q.max),rr=(q.big?4+q.big*3:2.6)*(q.t<q.max?1:.6+.6*life);
+    G.globalAlpha=Math.max(0,life);G.fillStyle='#ffffff';G.beginPath();G.arc(hx,hy,rr+1.4,0,Math.PI*2);G.fill();G.fillStyle='#cfd8ff';G.beginPath();G.arc(hx,hy,rr+.6,0,Math.PI*2);G.fill();G.fillStyle='#07060f';G.beginPath();G.arc(hx,hy,Math.max(.8,rr-.6),0,Math.PI*2);G.fill();G.globalAlpha=1;}
   for(const t of tracers){G.globalAlpha=t.t/.06;G.strokeStyle=t.c||'#ffe7a8';G.beginPath();G.moveTo(t.x1-camX,t.y1);G.lineTo(t.x2-camX,t.y2);G.stroke();}
   G.globalAlpha=1;
   for(const b of bolts){G.globalAlpha=Math.min(1,b.t/.08);G.strokeStyle=b.c;G.lineWidth=2;G.beginPath();b.pts.forEach((pt,i)=>i?G.lineTo(pt[0]-camX,pt[1]):G.moveTo(pt[0]-camX,pt[1]));G.stroke();G.strokeStyle='#ffffff';G.lineWidth=1;G.stroke();}
@@ -1830,19 +1943,23 @@ function drawWorld(){
   if(lightning){G.globalAlpha=Math.min(1,lightning.t/.1);G.strokeStyle='#e8f0ff';G.lineWidth=2;G.beginPath();lightning.pts.forEach((pt,i)=>i?G.lineTo(pt[0]-camX,pt[1]):G.moveTo(pt[0]-camX,pt[1]));G.stroke();G.lineWidth=1;G.globalAlpha=1;}
   return glints;
 }
+function playerLook(aid,frame,flash){
+  const look={skin:'#e2b48c',shirt:ARMORS[aid].shirt,pants:'#34304a',frame:frame||0,arms:'none',cap:aid==='riot'?'#3a4250':aid==='dictator'?'#3f4a2f':'#c8402e',patch:aid==='cashier'||aid==='dictator'?'#f5d33a':'#e9e2d0',flash:!!flash,eye:'#2a2030'};
+  if(aid==='riot')look.straps='#5a6270';
+  if(aid==='dictator')look.post=g=>{const R=g.R;R(g.hx,g.hTop-2,g.headW,1,'#e8c25a');R(-g.half+2,g.tTop+2,1,2,'#cf4450');R(-g.half+4,g.tTop+2,1,2,'#3f7fbf');R(-g.half,g.tTop,1,g.torsoH,'#e8c25a');};
+  return look;
+}
 function drawPlayerSprite(){
   const px=Math.round(p.x-camX);
   if(p.alpha<=0)return;
   G.globalAlpha=p.alpha;
-  const look={skin:'#e2b48c',shirt:ARMORS[run.armor].shirt,pants:'#34304a',frame:Math.floor(p.walkT),arms:'none',cap:run.armor==='riot'?'#3a4250':run.armor==='dictator'?'#3f4a2f':'#c8402e',patch:run.armor==='cashier'||run.armor==='dictator'?'#f5d33a':'#e9e2d0',flash:p.hurt>0&&(T*20%2)<1,eye:'#2a2030'};
-  if(run.armor==='riot')look.straps='#5a6270';
-  if(run.armor==='dictator')look.post=g=>{const R=g.R;R(g.hx,g.hTop-2,g.headW,1,'#e8c25a');R(-g.half+2,g.tTop+2,1,2,'#cf4450');R(-g.half+4,g.tTop+2,1,2,'#3f7fbf');R(-g.half,g.tTop,1,g.torsoH,'#e8c25a');};
+  const look=playerLook(run.armor,Math.floor(p.walkT),p.hurt>0&&(T*20%2)<1);
   if(isWolf()){look.skin='#7a6a5a';look.cap=null;look.eye='#ffd23a';look.hair='#5a4a3a';look.post=g=>{const R=g.R;R(g.hx,g.hTop-2,2,2,'#5a4a3a');R(g.hx+g.headW-2,g.hTop-2,2,2,'#5a4a3a');R(g.hx+g.headW,g.hTop+3,2,2,'#6a5a4a');R(g.hx+g.headW+1,g.hTop+3,1,1,'#1d1724');R(-g.half,g.tTop+g.torsoH-2,2,3,'#5a4a3a');R(g.torsoW-g.half-1,g.tTop+g.torsoH-3,2,3,'#5a4a3a');};}
   if(!p.alive){G.save();G.translate(px,GY-11);G.rotate(p.rot);drawHuman(0,11,p.face,BODY.walker,look);G.restore();G.globalAlpha=1;return;}
   drawHuman(px,GY,p.face,BODY.walker,look);
   if(run.melee==='paella'&&!panOut())drawPaellaShield(px,GY,p.face);
   const sx=px+p.face,sy=GY-13;
-  if(mode!=='dawn')drawGun(sx,sy,p.ang,run.weapon);
+  if(mode!=='dawn'){if(run.weapon==='pistol'&&trOn('pistol','akimbo'))drawGun(sx-p.face*3,sy+2,p.ang,'pistol');drawGun(sx,sy,p.ang,run.weapon);}
   if(muzT>0){const g=GUNS[run.weapon],mx=sx+Math.cos(p.ang)*g.len,my=sy+Math.sin(p.ang)*g.len;R0(mx-1,my-1,3,3,'#fff3c4');R0(mx-2,my,1,1,'#f5a443');R0(mx+2,my,1,1,'#f5a443');R0(mx,my-2,1,1,'#f5a443');R0(mx,my+2,1,1,'#f5a443');}
   if(p.meleeT>0&&!MELEE[run.melee].thrown){const M=MELEE[run.melee];let a;if(M.hold)a=p.face>0?Math.sin(T*40)*.08:Math.PI+Math.sin(T*40)*.08;else{const k=1-p.meleeT/.2,a0=-1.5+2.3*k;a=p.face>0?a0:Math.PI-a0;}drawGun(px+p.face*2,GY-15,a,run.melee);}
   if(p.reloadT>0){const k=1-p.reloadT/p.reloadMax;R0(px-7,GY-28,14,2,'#14121f');R0(px-7,GY-28,Math.round(14*k),2,'#efe6d2');}
@@ -1918,7 +2035,10 @@ function updateHUD(){
   setT('left',night?String(night.queue.length+zombies.filter(z=>!z.dead&&!z.demo).length):'0');setT('cash',money(run.cash));
   setW('mHp',Math.max(0,p.hp)/run.hpMax);setT('tHp',Math.ceil(Math.max(0,p.hp))+'/'+run.hpMax);
   setW('mDoor',run.door/run.doorMax);setT('tDoor',Math.ceil(run.door)+'/'+run.doorMax);
-  const g=GUNS[run.weapon];setT('kGun',g.short);
+  const g=GUNS[run.weapon];let gl=g.short;
+  if(run.weapon==='pir'&&run.pirStacks)gl='PIR +'+run.pirStacks*(trOn('pir','hyper')?10:5)+'%';
+  else if(run.weapon==='pistol'&&run.mods.pistol&&run.mods.pistol.sp2)gl='Pulsar'+(run.pulsarCd>0?' '+Math.ceil(run.pulsarCd)+'s':'');
+  setT('kGun',gl);
   if(p.reloadT>0){setW('mAmmo',1-p.reloadT/p.reloadMax);setT('tAmmo','reload');el.ammoRow.classList.add('reloading');}
   else{const mm=magOf(run.weapon);setW('mAmmo',run.mags[run.weapon]/mm);setT('tAmmo',run.mags[run.weapon]+'/'+mm);el.ammoRow.classList.remove('reloading');}
 }
@@ -1927,20 +2047,25 @@ function updateHUD(){
 const tray=$('#tray'),stockEl=$('#stock'),ov=$('#ov');
 function iconCanvas(fn){const c=mk(24,16),prev=G;G=c.getContext('2d');try{fn();}finally{G=prev;}return c;}
 function slot(cls,data,icon,name,sub,disabled){const b=document.createElement('button');b.className='slot'+(cls?' '+cls:'');for(const k in data)b.dataset[k]=data[k];if(disabled)b.disabled=true;if(icon)b.appendChild(icon);b.insertAdjacentHTML('beforeend','<span class="nm">'+name+'</span><span class="sub">'+sub+'</span>');return b;}
+function amuGroups(){const m={};for(const a of run.amus||[]){if(!AMULETS[a.id])continue;const left=AMU_LIFE-(run.night-a.got);const g=m[a.id]||(m[a.id]={id:a.id,n:0,left:99,all:[]});g.n++;g.left=Math.min(g.left,left);g.all.push(left);}return Object.values(m);}
+const leftS=n=>n<=1?'last shift':n+' shifts left';
+function gunShort(id){return id==='pistol'&&run.mods&&run.mods.pistol&&run.mods.pistol.sp2?'Pulsar':GUNS[id].short;}
 function renderTray(){
   tray.innerHTML='';
   const gw=document.createElement('div');gw.className='group';
-  ownedGuns().forEach((id,i)=>{gw.appendChild(slot(run.weapon===id?'on':'',{w:id},iconCanvas(()=>drawGun(GUNS[id].len>13?4:6,8,0,id)),GUNS[id].short,i<10?String((i+1)%10):''));});
+  ownedGuns().forEach((id,i)=>{gw.appendChild(slot(run.weapon===id?'on':'',{w:id},iconCanvas(()=>drawGun(GUNS[id].len>13?4:6,8,0,id)),gunShort(id),i<10?String((i+1)%10):''));});
   const mw=document.createElement('div');mw.className='group';
   mw.appendChild(slot('',{act:'melee'},iconCanvas(()=>drawGun(4,8,0,run.melee)),MELEE[run.melee].short,'F'));
-  const iw=document.createElement('div');iw.className='group';
-  for(const id in ITEMS)iw.appendChild(slot('',{i:id},iconCanvas(()=>drawStruct({kind:id},12,16,true)),ITEMS[id].short+' &times;'+run.inv[id],ITEMS[id].key,run.inv[id]<=0||!(mode==='prep'||mode==='night')));
-  tray.append(gw,mw,iw);
-  const owned=Object.keys(AMULETS).filter(k=>amu(k)>0);
-  if(owned.length||run.pet||run.cheated){const cw=document.createElement('div');cw.className='chips';
+  tray.append(gw,mw);
+  const have=Object.keys(ITEMS).filter(id=>run.inv[id]>0);
+  if(have.length){const iw=document.createElement('div');iw.className='group';
+    for(const id of have)iw.appendChild(slot('',{i:id},iconCanvas(()=>drawStruct({kind:id},12,16,true)),ITEMS[id].short+' &times;'+run.inv[id],ITEMS[id].key,!(mode==='prep'||mode==='night')));
+    tray.appendChild(iw);}
+  const ag=amuGroups();
+  if(ag.length||run.pet||run.cheated){const cw=document.createElement('div');cw.className='chips';
     if(run.cheated)cw.insertAdjacentHTML('beforeend','<span class="chip" style="--c:#93b27a" title="This run does not count toward your best">Dev panel used</span>');
-    if(run.pet)cw.insertAdjacentHTML('beforeend','<span class="chip" style="--c:#93b27a">Pet: '+PETS[run.pet].name+'</span>');
-    for(const k of owned)cw.insertAdjacentHTML('beforeend','<span class="chip" style="--c:'+AMULETS[k].c+'" title="'+AMULETS[k].desc+'">'+AMULETS[k].name+(amu(k)>1?' &times;'+amu(k):'')+'</span>');
+    if(run.pet)cw.insertAdjacentHTML('beforeend','<button class="chip" style="--c:#93b27a" data-info="pet:'+run.pet+'">Pet: '+PETS[run.pet].name+'</button>');
+    for(const g of ag)cw.insertAdjacentHTML('beforeend','<button class="chip" style="--c:'+AMULETS[g.id].c+'" data-info="amu:'+g.id+'" title="'+AMULETS[g.id].desc+'">'+AMULETS[g.id].name+(g.n>1?' &times;'+g.n:'')+' · '+leftS(g.left)+'</button>');
     tray.appendChild(cw);}
   const aw=document.createElement('div');aw.className='actions';
   if(mode==='prep')aw.innerHTML='<button class="btn small" data-act="stats">Stats (I)</button><button class="btn small" data-act="stock">Stockroom (B)</button><button class="btn go" data-act="start">Start shift '+run.night+' (Tab)</button>';
@@ -1950,6 +2075,7 @@ function renderTray(){
 }
 tray.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;ac();
+  if(b.dataset.info){const [k,i]=b.dataset.info.split(':');showInfo(k,i,b);return;}
   if(b.dataset.w)switchWeapon(b.dataset.w);
   else if(b.dataset.i)placeItem(b.dataset.i);
   else{const a=b.dataset.act;
@@ -1960,56 +2086,49 @@ tray.addEventListener('click',e=>{
 });
 
 /* ---------- stockroom ---------- */
-const TABS=[['guns','Guns'],['mods','Gun mods'],['melee','Melee'],['mmods','Melee mods'],['armor','Armor'],['pets','Pets'],['supplies','Supplies'],['ups','Upgrades']];
+const TABS=[['guns','Guns'],['melee','Melee'],['armor','Armor'],['pets','Pets'],['supplies','Supplies'],['ups','Upgrades']];
 function tline(l,r,cls){return '<div class="tline'+(cls?' '+cls:'')+'"><span class="nm">'+l+'</span><span class="dots"></span><span>'+r+'</span></div>';}
 function row(name,price,desc,btn){return '<li class="row">'+tline(name,price)+'<p class="ds">'+desc+'</p>'+btn+'</li>';}
 const wn=(k,id,name)=>'<button class="wname" data-info="'+k+':'+id+'" title="See details">'+name+'</button>';
 const bbtn=(data,label,dis,ghost)=>'<button class="buy'+(ghost?' ghost':'')+'" data-buy="'+data+'"'+(dis?' disabled':'')+'>'+label+'</button>';
+const pair=(a,b)=>'<div class="bpair">'+a+b+'</div>';
+const modsBtn=(k,id)=>'<button class="buy ghost modsb" data-mods="'+k+':'+id+'">Mods</button>';
 function renderStock(){
+  if(!TABS.some(t=>t[0]===stockTab))stockTab='guns';
   const c=run.cash;let h='';
   const full=run.buys>=BUY_LIMIT,buyB=(data,price,extra)=>bbtn(data,full?'Limit':'Buy',full||c<price||!!extra);
   h+='<div class="rhead"><h2>Stockroom</h2><span class="meta">ALCAMPO ROUTE 9 · REGISTER 2 · BEFORE SHIFT '+run.night+'</span><button class="btn small" data-sheet>Your stats (I)</button></div>';
   if(lastSummary){const s=lastSummary;h+='<div class="tally">'+tline('Shift '+s.night+' survived ('+AMB[s.amb].name.toLowerCase()+')',AMB[s.amb].end)+tline('Kills',s.kills)+tline('Headshots',s.heads)+tline('Tips from kills',money(s.earned))+tline('End of shift bonus',money(s.bonus))+tline('In the drawer',money(c),'total')+'</div>';}
   else h+='<div class="tally">'+tline('Starting float',money(c),'total')+'</div>';
   if(run.cheated)h+='<p class="note">You used the dev panel this run, so it will not count toward your best.</p>';
+  if(run.expired&&run.expired.length)h+='<p class="note">Crumbled to dust after '+AMU_LIFE+' shifts: '+run.expired.map(k=>AMULETS[k]?AMULETS[k].name:k).join(', ')+'.</p>';
   const na=AMB[run.nextAmb];h+='<p class="forecast">Forecast for shift '+run.night+': '+na.name+' · '+fmtT(na.start)+' to '+na.end+(run.night%4===0?' · BOSS TONIGHT: '+ZT[BOSS_ORDER[(run.night/4-1)%BOSS_ORDER.length]].name:'')+'</p>';
   h+='<p class="forecast'+(full?' full':'')+'">Purchases this buy phase: '+run.buys+' of '+BUY_LIMIT+(full?'. Come back after the next shift.':'.')+' Upgrades don\'t count, but each one only goes up one level per buy phase.</p>';
   h+='<div class="tabs" role="tablist">'+TABS.map(([k,l])=>'<button class="tab" role="tab" data-tab="'+k+'" aria-selected="'+(stockTab===k)+'">'+l+'</button>').join('')+'</div>';
   let body='';
   if(stockTab==='guns'){
     body+='<ul class="rows">';
-    for(const id of ORDER){if(id==='pistol')continue;const g=GUNS[id],own=run.owned[id];
-      body+=row(wn('gun',id,g.name),own?'owned':money(g.price),g.desc,own?(run.weapon===id?bbtn('','Equipped',true,true):bbtn('equip:'+id,'Equip',false,true)):buyB('gun:'+id,g.price));}
-    body+='</ul>';
-  }else if(stockTab==='mods'){
-    body+='<div class="modgrid">'+ownedGuns().map(id=>{const M=MODS[id],m=modOf(id);let r='';
-      for(const k of ['dmg','mag','rate']){const lv=m[k]||0,cost=modCost(M[k][k==='mag'?2:1],lv),maxed=lv>=MODMAX;
-        const d=k==='mag'?'+'+M.mag[1]+' per load. Now '+magOf(id)+'.':k==='rate'?'+15% fire rate. Now '+(1/rateOf(id)).toFixed(1)+' a second.':'+12% damage with this gun. Now +'+Math.round((gunDmgMult(id)-1)*100)+'%.';
-        r+=row(M[k][0]+' <small>'+lv+'/'+MODMAX+'</small>',maxed?'max':money(cost),d,maxed?bbtn('','Max',true):buyB('mod:'+id+':'+k,cost));}
-      if(M.sp)r+=row(M.sp.name,m.sp?'owned':money(M.sp.price),M.sp.desc,m.sp?bbtn('','Fitted',true,true):buyB('mod:'+id+':sp',M.sp.price));
-      return '<div class="modgun"><h4>'+wn('gun',id,GUNS[id].name)+'</h4><ul class="rows">'+r+'</ul></div>';}).join('')+'</div><p class="note">Buy a gun to unlock its mods.</p>';
+    for(const id of ORDER){const g=GUNS[id],own=run.owned[id];
+      const main=own?(run.weapon===id?bbtn('','Equipped',true,true):bbtn('equip:'+id,'Equip',false,true)):buyB('gun:'+id,g.price);
+      body+=row(wn('gun',id,id==='pistol'&&modOf(id).sp2?'Pulsargun':g.name),own?(g.price?'owned':'yours'):money(g.price),g.desc,pair(main,modsBtn('gun',id)));}
+    body+='</ul><p class="note">Every gun has mods behind its Mods button, including a playstyle perk that changes how it plays. You can look before you buy.</p>';
   }else if(stockTab==='melee'){
-    body+='<ul class="rows">'+MORDER.map(id=>{const M=MELEE[id],own=run.meleeOwned[id];return row(wn('melee',id,M.name)+' <small>'+Math.round(M.dmg*strMult())+' dmg</small>',own?'owned':money(M.price),M.desc,own?(run.melee===id?bbtn('','In hand',true,true):bbtn('melee:'+id,'Equip',false,true)):buyB('melee:'+id,M.price));}).join('')+'</ul><p class="note">Melee damage scales with your Strength upgrade. Right now you hit at '+Math.round(strMult()*100)+'% of full damage.</p>';
-  }else if(stockTab==='mmods'){
-    body+='<div class="modgrid">'+MORDER.filter(id=>run.meleeOwned[id]).map(id=>{const M=MMODS[id],m=mmodOf(id);let r='';
-      for(const k of ['dmg','spd']){const lv=m[k],cost=modCost(M[k][1],lv),maxed=lv>=MMODMAX;
-        const d=k==='dmg'?'+15% damage per hit. Now +'+Math.round(15*lv)+'%.':'+15% swing speed. Now +'+Math.round(15*lv)+'%.';
-        r+=row(M[k][0]+' <small>'+lv+'/'+MMODMAX+'</small>',maxed?'max':money(cost),d,maxed?bbtn('','Max',true):buyB('mmod:'+id+':'+k,cost));}
-      r+=row(M.sp.name,m.sp?'owned':money(M.sp.price),M.sp.desc,m.sp?bbtn('','Fitted',true,true):buyB('mmod:'+id+':sp',M.sp.price));
-      return '<div class="modgun"><h4>'+wn('melee',id,MELEE[id].name)+'</h4><ul class="rows">'+r+'</ul></div>';}).join('')+'</div><p class="note">Buy a melee weapon to unlock its mods.</p>';
+    body+='<ul class="rows">'+MORDER.map(id=>{const M=MELEE[id],own=run.meleeOwned[id];const main=own?(run.melee===id?bbtn('','In hand',true,true):bbtn('melee:'+id,'Equip',false,true)):buyB('melee:'+id,M.price);
+      return row(wn('melee',id,M.name)+' <small>'+Math.round(M.dmg*strMult())+' dmg</small>',own?'owned':money(M.price),M.desc,pair(main,modsBtn('melee',id)));}).join('')+'</ul><p class="note">Melee damage scales with your Strength upgrade. Right now you hit at '+Math.round(strMult()*100)+'% of full damage.</p>';
   }else if(stockTab==='armor'){
-    body+='<ul class="rows">'+AORDER.map(id=>{const A=ARMORS[id],own=run.armorOwned[id];return row(A.name,own?'owned':money(A.price),A.desc,own?(run.armor===id?bbtn('','Wearing',true,true):bbtn('armor:'+id,'Wear',false,true)):buyB('armor:'+id,A.price));}).join('')+'</ul>';
+    body+='<ul class="rows">'+AORDER.map(id=>{const A=ARMORS[id],own=run.armorOwned[id];return row(wn('armor',id,A.name),own?'owned':money(A.price),A.desc,own?(run.armor===id?bbtn('','Wearing',true,true):bbtn('armor:'+id,'Wear',false,true)):buyB('armor:'+id,A.price));}).join('')+'</ul>';
   }else if(stockTab==='pets'){
-    body+='<ul class="rows">'+PORDER.map(id=>{const P=PETS[id],own=run.petOwned[id];return row(P.name,own?'owned':money(P.price),P.desc,own?(run.pet===id?bbtn('petoff','Leave home',false,true):bbtn('pet:'+id,'Bring along',false,true)):(full?bbtn('','Limit',true):bbtn('pet:'+id,'Adopt',c<P.price)));}).join('')+'</ul><p class="note">One pet comes to work with you. Pets cannot be hurt. They get a little stronger every shift.</p>';
+    body+='<ul class="rows">'+PORDER.map(id=>{const P=PETS[id],own=run.petOwned[id];return row(wn('pet',id,P.name),own?'owned':money(P.price),P.desc,own?(run.pet===id?bbtn('petoff','Leave home',false,true):bbtn('pet:'+id,'Bring along',false,true)):(full?bbtn('','Limit',true):bbtn('pet:'+id,'Adopt',c<P.price)));}).join('')+'</ul><p class="note">One pet comes to work with you. Pets cannot be hurt. They get a little stronger every shift.</p>';
   }else if(stockTab==='supplies'){
     const heal=80,rep=90;
-    body+='<ul class="rows">'+Object.keys(ITEMS).map(id=>{const it=ITEMS[id];return row(it.name+' <small>(have '+run.inv[id]+')</small>',money(it.price),it.desc,buyB('item:'+id,it.price));}).join('')+
+    body+='<ul class="rows">'+Object.keys(ITEMS).map(id=>{const it=ITEMS[id];return row(wn('item',id,it.name)+' <small>(have '+run.inv[id]+')</small>',money(it.price),it.desc,buyB('item:'+id,it.price));}).join('')+
       row('Patch up',money(heal),'Restore your health to full. Now '+Math.ceil(p.hp)+'/'+run.hpMax+'.',buyB('svc:heal',heal,p.hp>=run.hpMax))+
       row('Fix the doors',money(rep),'+100 door strength, up to its max. Now '+Math.ceil(run.door)+'/'+run.doorMax+'.',buyB('svc:door',rep,run.door>=run.doorMax))+'</ul>';
   }else if(stockTab==='ups'){
-    body+='<ul class="rows">'+Object.keys(UPS).map(id=>{const u=UPS[id],lv=run.up[id]||0,cost=u.base*(lv+1),maxed=lv>=u.max,done=!!run.perkPhase[id];return row(u.name+' <small>'+lv+'/'+u.max+'</small>',maxed?'max':money(cost),u.desc+(id==='str'?' Now '+Math.round(strMult()*100)+'%.':''),bbtn('up:'+id,maxed?'Max':done?'Bought':'Buy',maxed||done||c<cost));}).join('')+'</ul><p class="note">Each upgrade can go up one level per buy phase.</p>';
-    const own=Object.keys(AMULETS).filter(k=>amu(k)>0);
-    body+='<div class="modgun"><h4>Amulets you carry</h4>'+(own.length?'<ul class="rows">'+own.map(k=>'<li class="row">'+tline(AMULETS[k].name,'&times;'+amu(k))+'<p class="ds">'+AMULETS[k].desc+' each</p></li>').join('')+'</ul>':'<p class="note">None yet. Amulets glint on the road and sometimes drop from kills. Bosses always drop two. Walk over one to pick it up.</p>')+'</div>';
+    body+='<ul class="rows">'+Object.keys(UPS).map(id=>{const u=UPS[id],lv=run.up[id]||0,cost=u.base*(lv+1),maxed=lv>=u.max,done=!!run.perkPhase[id];return row(wn('up',id,u.name)+' <small>'+lv+'/'+u.max+'</small>',maxed?'max':money(cost),u.desc+(id==='str'?' Now '+Math.round(strMult()*100)+'%.':''),bbtn('up:'+id,maxed?'Max':done?'Bought':'Buy',maxed||done||c<cost));}).join('')+'</ul><p class="note">Each upgrade can go up one level per buy phase.</p>';
+    const ag=amuGroups();
+    body+='<div class="modgun"><h4>Amulets you carry</h4>'+(ag.length?'<ul class="rows">'+ag.map(g=>'<li class="row">'+tline(wn('amu',g.id,AMULETS[g.id].name),'&times;'+g.n)+'<p class="ds">'+AMULETS[g.id].desc+(g.n>1?' each':'')+' · '+g.all.slice().sort((a,b)=>a-b).map(leftS).join(', ')+'</p></li>').join('')+'</ul>':'<p class="note">None yet. Amulets glint on the road and sometimes drop from kills. Bosses always drop two. Walk over one to pick it up.</p>')+
+      '<p class="note">Each amulet lasts '+AMU_LIFE+' shifts, counting the one you find it in, then crumbles. Two of the same kind stack.</p></div>';
   }
   h+=body;
   h+='<div class="rfoot"><span class="thanks">THANK YOU, COME AGAIN.</span><span style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn small" data-buy="out">Back outside to place</button><button class="btn go" data-buy="start">Start shift '+run.night+'</button></span></div>';
@@ -2019,18 +2138,28 @@ stockEl.addEventListener('click',e=>{
   const tb=e.target.closest('[data-tab]');if(tb){stockTab=tb.dataset.tab;renderStock();return;}
   const sb=e.target.closest('[data-sheet]');if(sb){showSheet(sb);return;}
   const wi=e.target.closest('[data-info]');if(wi){const [k,i]=wi.dataset.info.split(':');showInfo(k,i,wi);return;}
+  const mb=e.target.closest('[data-mods]');if(mb){ac();const [k,i]=mb.dataset.mods.split(':');showMods(k,i,mb);return;}
   const b=e.target.closest('[data-buy]');if(!b||b.disabled||!b.dataset.buy)return;ac();
-  const [kind,id,sub]=b.dataset.buy.split(':');
+  const kind=b.dataset.buy.split(':')[0];
   if(kind==='out'){closeStock();return;}
   if(kind==='start'){closeStock();startNight();return;}
-  const limited=['gun','mod','mmod','item','svc'].includes(kind)||(kind==='melee'&&!run.meleeOwned[id])||(kind==='armor'&&!run.armorOwned[id])||(kind==='pet'&&!run.petOwned[id]);
-  if(limited&&run.buys>=BUY_LIMIT){sfx('deny');return;}
-  if(kind==='up'&&run.perkPhase[id]){sfx('deny');return;}
+  doBuy(b.dataset.buy);
+  const y=window.scrollY;renderStock();window.scrollTo(0,y);saveGame();
+});
+function doBuy(data){
+  const [kind,id,sub]=data.split(':');
+  const limited=['gun','mod','mmod','item','svc','tr'].includes(kind)||(kind==='melee'&&!run.meleeOwned[id])||(kind==='armor'&&!run.armorOwned[id])||(kind==='pet'&&!run.petOwned[id]);
+  if(limited&&run.buys>=BUY_LIMIT){sfx('deny');return false;}
+  if(kind==='up'&&run.perkPhase[id]){sfx('deny');return false;}
+  if((kind==='mod'||kind==='tr'||kind==='tron')&&!run.owned[id]){sfx('deny');return false;}
+  if(kind==='mmod'&&!run.meleeOwned[id]){sfx('deny');return false;}
   const pay=n=>{if(run.cash<n)return false;run.cash-=n;sfx('cash');if(limited)run.buys++;if(kind==='up')run.perkPhase[id]=true;return true;};
   switch(kind){
     case 'equip':run.weapon=id;break;
     case 'gun':if(pay(GUNS[id].price)){run.owned[id]=true;run.mags[id]=magOf(id);run.weapon=id;}break;
-    case 'mod':{const M=MODS[id],m=modOf(id);if(sub==='sp'){if(!m.sp&&pay(M.sp.price))m.sp=true;}else{const lv=m[sub]||0,cost=modCost(M[sub][sub==='mag'?2:1],lv);if(lv<MODMAX&&pay(cost)){m[sub]=lv+1;if(sub==='mag')run.mags[id]=magOf(id);}}break;}
+    case 'mod':{const M=MODS[id],m=modOf(id);if(sub==='sp'){if(!m.sp&&pay(M.sp.price))m.sp=true;}else if(sub==='sp2'){if(M.sp2&&!m.sp2&&pay(M.sp2.price))m.sp2=true;}else{const lv=m[sub]||0,cost=modCost(M[sub][sub==='mag'?2:1],lv);if(lv<MODMAX&&pay(cost)){m[sub]=lv+1;if(sub==='mag')run.mags[id]=magOf(id);}}break;}
+    case 'tr':{const m=modOf(id),tt=(MODS[id].tr||[]).find(t=>t.id===sub);if(tt&&!m.tr[sub]&&pay(tt.price)){m.tr[sub]=true;m.act=sub;}break;}
+    case 'tron':{const m=modOf(id);if(m.tr[sub]){m.act=m.act===sub?null:sub;sfx('click');}break;}
     case 'mmod':{const M=MMODS[id],m=mmodOf(id);if(sub==='sp'){if(!m.sp&&pay(M.sp.price))m.sp=true;}else{const lv=m[sub],cost=modCost(M[sub][1],lv);if(lv<MMODMAX&&pay(cost))m[sub]++;}break;}
     case 'melee':if(run.meleeOwned[id])run.melee=id;else if(pay(MELEE[id].price)){run.meleeOwned[id]=true;run.melee=id;}break;
     case 'armor':if(run.armorOwned[id])run.armor=id;else if(pay(ARMORS[id].price)){run.armorOwned[id]=true;run.armor=id;}break;
@@ -2040,33 +2169,75 @@ stockEl.addEventListener('click',e=>{
     case 'svc':if(id==='heal'&&p.hp<run.hpMax&&pay(80))p.hp=run.hpMax;if(id==='door'&&run.door<run.doorMax&&pay(90))run.door=Math.min(run.doorMax,run.door+100);break;
     case 'up':{const u=UPS[id],lv=run.up[id]||0,cost=u.base*(lv+1);if(lv<u.max&&pay(cost)){run.up[id]=lv+1;if(id==='hp'){run.hpMax+=25;p.hp+=25;}if(id==='door'){run.doorMax+=100;run.door+=100;}}break;}
   }
-  const y=window.scrollY;renderStock();window.scrollTo(0,y);saveGame();
-});
-const winfo=$('#winfo');let infoFrom=null;
+  return true;
+}
+const winfo=$('#winfo');let infoFrom=null,modsOpen=null;
 const fx1=n=>(Math.round(n*10)/10).toLocaleString('en-US');
+function openCard(html,focusSel){
+  if(mode==='night'&&!paused){togglePause();sheetResume=true;}
+  winfo.innerHTML=html;winfo.hidden=false;const f=focusSel&&winfo.querySelector(focusSel);(f||winfo.querySelector('[data-close]')).focus();
+}
+function showMods(kind,id,from,keep){
+  infoFrom=from||infoFrom;modsOpen={kind,id};
+  const prevScroll=keep&&winfo.querySelector('.wcard')?winfo.querySelector('.wcard').scrollTop:0;
+  const c=run.cash,full=run.buys>=BUY_LIMIT,gun=kind==='gun',own=gun?!!run.owned[id]:!!run.meleeOwned[id],name=gun?GUNS[id].name:MELEE[id].name;
+  const buyB=(data,price,extra)=>bbtn(data,!own?'Buy':full?'Limit':'Buy',!own||full||c<price||!!extra);
+  let r='',t='';
+  if(gun){const M=MODS[id],m=modOf(id);
+    for(const k of ['dmg','mag','rate']){const lv=m[k]||0,cost=modCost(M[k][k==='mag'?2:1],lv),maxed=lv>=MODMAX;
+      const d=k==='mag'?'+'+M.mag[1]+' per load. Now '+magOf(id)+'.':k==='rate'?'+15% fire rate. Now '+(1/rateOf(id)).toFixed(1)+' a second.':'+12% damage with this gun. Now +'+Math.round((gunDmgMult(id)-1)*100)+'%.';
+      r+=row(M[k][0]+' <small>'+lv+'/'+MODMAX+'</small>',maxed?'max':money(cost),d,maxed?bbtn('','Max',true):buyB('mod:'+id+':'+k,cost));}
+    if(M.sp)r+=row(M.sp.name,m.sp?'owned':money(M.sp.price),M.sp.desc,m.sp?bbtn('','Fitted',true,true):buyB('mod:'+id+':sp',M.sp.price));
+    if(M.sp2)r+='<li class="row sp2">'+tline('<b>'+M.sp2.name+'</b>',m.sp2?'owned':money(M.sp2.price))+'<p class="ds">'+M.sp2.desc+'</p>'+(m.sp2?bbtn('','Fitted',true,true):buyB('mod:'+id+':sp2',M.sp2.price))+'</li>';
+    for(const tt of M.tr||[]){const has=!!m.tr[tt.id],on=m.act===tt.id;
+      t+='<li class="row tr'+(on?' on':'')+'">'+tline(tt.name,has?(on?'in use':'owned'):money(tt.price))+'<p class="ds">'+tt.desc+'</p><p class="ds down">Downside: '+tt.down+'</p>'+(has?bbtn('tron:'+id+':'+tt.id,on?'Turn off':'Use',false,!on):buyB('tr:'+id+':'+tt.id,tt.price))+'</li>';}
+  }else{const M=MMODS[id],m=mmodOf(id);
+    for(const k of ['dmg','spd']){const lv=m[k],cost=modCost(M[k][1],lv),maxed=lv>=MMODMAX;
+      const d=k==='dmg'?'+15% damage per hit. Now +'+Math.round(15*lv)+'%.':'+15% swing speed. Now +'+Math.round(15*lv)+'%.';
+      r+=row(M[k][0]+' <small>'+lv+'/'+MMODMAX+'</small>',maxed?'max':money(cost),d,maxed?bbtn('','Max',true):buyB('mmod:'+id+':'+k,cost));}
+    r+=row(M.sp.name,m.sp?'owned':money(M.sp.price),M.sp.desc,m.sp?bbtn('','Fitted',true,true):buyB('mmod:'+id+':sp',M.sp.price));}
+  let html='<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+name+' mods</h3><button class="btn small" data-close>Close</button></div>'+
+    '<p class="forecast'+(full?' full':'')+'">'+money(c)+' in the drawer · purchases this buy phase: '+run.buys+' of '+BUY_LIMIT+'</p>'+
+    (own?'':'<p class="note">You don\'t own the '+name.toLowerCase()+' yet. Buy it first to fit these.</p>')+
+    '<ul class="rows">'+r+'</ul>';
+  if(t)html+='<span class="wtag">Playstyle perks</span><p class="note">These change how the gun plays, with a catch. Buying one counts as a purchase. After that, switching it on or off is free. One can be in use at a time.</p><ul class="rows">'+t+'</ul>';
+  html+='</div>';
+  if(!keep)openCard(html);else{winfo.innerHTML=html;winfo.hidden=false;const cd=winfo.querySelector('.wcard');if(cd)cd.scrollTop=prevScroll;const f=keep&&winfo.querySelector('[data-buy="'+keep+'"]');(f&&!f.disabled?f:winfo.querySelector('[data-close]')).focus({preventScroll:true});}
+}
+const pctS=v=>(v>=1?'+':'−')+Math.round(Math.abs(v-1)*100)+'%';
+function drawPetPreview(id,cx,gy){const keep=pet;pet={id,x:camX+cx,y:(id==='vulture'||id==='redeagle')?gy-6:gy,face:1,cd:1,t:0,walkT:0,roll:0,hitList:[],jump:null,dive:null,atk:0,ball:null};try{drawPet();}finally{pet=keep;}}
 function showInfo(kind,id,from){
-  infoFrom=from||null;
-  const gun=kind==='gun',D=gun?GUNS[id]:MELEE[id];
-  const stats=[];let tag;
-  if(gun){
-    const g=D,m=modOf(id),own=run.owned[id];
-    let dm=g.dmg*dmgMult()*gunDmgMult(id)*(id==='pistol'&&m.sp?1.3:1)*(id==='bow'?(AR().bow||1)*strMult():1);
-    tag=GTYPE[g.type]+(g.type==='hit'&&g.pellets>1?' · '+g.pellets+' pellets':'');
-    stats.push(['Damage per hit',fx1(dm)+(g.pellets>1?' × '+g.pellets:'')]);
+  infoFrom=from||null;modsOpen=null;sheetResume=false;
+  const stats=[];let name,tag,lore='',desc='',draw=null,cw=40,ch=20;
+  if(kind==='gun'){
+    const g=GUNS[id],m=modOf(id),own=run.owned[id],tr=m.act&&m.tr[m.act]?m.act:null,M=MODS[id];
+    name=id==='pistol'&&m.sp2?'Pulsargun':g.name;lore=LORE[id];desc=g.desc;
+    const trM={bump:.8,tripod:1.6,slug:7,long:.75,green:1.8,split:.45}[tr]||1,pel=tr==='slug'?1:(g.pellets||1)*(tr==='akimbo'?2:1)*(tr==='split'?3:1);
+    const dm=g.dmg*dmgMult()*gunDmgMult(id)*(id==='pistol'&&m.sp?1.3:1)*(id==='bow'?(AR().bow||1)*strMult():1)*trM;
+    tag=GTYPE[g.type]+(pel>1?' · '+pel+(tr==='akimbo'?' bullets a shot':tr==='split'?' beams':' pellets'):'');
+    stats.push(['Damage per hit',fx1(dm)+(pel>1?' × '+pel:'')+(tr==='green'?' (bosses '+fx1(dm/1.8*.3)+')':'')]);
     stats.push(['Shots per second',fx1(1/rateOf(id))]);
-    stats.push(['Damage per second',fx1(dm*(g.pellets||1)/rateOf(id))]);
+    stats.push(['Damage per second',fx1(dm*pel/rateOf(id))]);
     stats.push([g.type==='flame'?'Fuel':g.type==='arrow'?'Arrows in the quiver':'Magazine',String(magOf(id))]);
     stats.push(['Reload',fx1(reloadOf(id))+' s']);
-    stats.push(['Range',(g.range<=170?'short':g.range<=300?'medium':'long')+' ('+g.range+')']);
-    const pc=g.type==='arrow'&&m.sp?3:g.pierce;if(g.type==='hit'||g.type==='arrow'||g.type==='rail')stats.push(['Passes through',pc>=99?'everything':pc>0?pc+(pc===1?' more enemy':' more enemies'):'no']);
-    if(g.type==='arc')stats.push(['Lightning jumps',String(m.sp?6:g.chains)]);
+    const rg=Math.round((tr==='slug'?380:g.range)*(tr==='dragon'||tr==='static'?.6:tr==='long'?1.6:1)*(id==='flamer'?(AR().flameRange||1):1));
+    stats.push(['Range',(rg<=170?'short':rg<=300?'medium':'long')+' ('+rg+')']);
+    const pc=g.type==='arrow'?(tr==='boom'?0:m.sp?3:1):g.pierce+(m.sp&&(id==='blunder'||id==='rifle')?1:0)+(tr==='staple'||tr==='slug'?2:0);
+    if(g.type==='hit'||g.type==='arrow'||g.type==='rail')stats.push(['Passes through',pc>=99?'everything':pc>0?pc+(pc===1?' more enemy':' more enemies'):'no']);
+    if(g.type==='arc')stats.push(['Lightning',tr==='static'?'no chain · fries everything within 50':'jumps to '+(m.sp?6:g.chains)]);
     if(g.spin)stats.push(['Spin-up time',fx1(spinOf(id))+' s']);
     if(g.charge)stats.push(['Charge time',fx1(g.charge)+' s']);
-    const M=MODS[id];stats.push(['Mods',M.dmg[0]+' '+(m.dmg||0)+'/'+MODMAX+' · '+M.mag[0]+' '+m.mag+'/'+MODMAX+' · '+M.rate[0]+' '+m.rate+'/'+MODMAX]);stats.push(['Special',M.sp.name+(m.sp?' (fitted): ':' (not bought): ')+M.sp.desc]);
+    if(id==='pir')stats.push(['Kill stacks','+'+(trOn('pir','hyper')?10:5)+'% fire rate per kill · now +'+(run.pirStacks||0)*(trOn('pir','hyper')?10:5)+'%']);
+    stats.push(['Mods',M.dmg[0]+' '+(m.dmg||0)+'/'+MODMAX+' · '+M.mag[0]+' '+m.mag+'/'+MODMAX+' · '+M.rate[0]+' '+m.rate+'/'+MODMAX]);
+    stats.push(['Special',M.sp.name+(m.sp?' (fitted): ':' (not bought): ')+M.sp.desc]);
+    if(M.sp2)stats.push([M.sp2.name,m.sp2?'fitted · 20% instant kills, bosses lose 10% (every 25 s)':'not bought · '+money(M.sp2.price)]);
+    const tt=tr?M.tr.find(x=>x.id===tr):null;stats.push(['Playstyle perk',tt?tt.name+' (in use) · '+tt.down:'none in use · '+M.tr.map(x=>x.name).join(', ')]);
     stats.push(['Price',g.price?money(g.price)+(own?' · you own it':''):'free · you own it']);
     if(id==='bow')stats.push(['Strength','level '+(run.up.str||0)+' · arrows hit at '+Math.round(strMult()*100)+'%']);
-  }else{
-    const M=D,mm=mmodOf(id),MM=MMODS[id],mul=dmgMult()*(AR().melee||1)*(1+.15*mm.dmg)*strMult(),cd=M.cd/(1+.15*mm.spd);tag='Melee'+(M.hold?' · hold to use':'');
+    draw=()=>drawGun(g.len>13?13:15,10,0,id,true);
+  }else if(kind==='melee'){
+    const M=MELEE[id],mm=mmodOf(id),MM=MMODS[id],mul=dmgMult()*(AR().melee||1)*(1+.15*mm.dmg)*strMult(),cd=M.cd/(1+.15*mm.spd);
+    name=M.name;lore=LORE[id];desc=M.desc;tag='Melee'+(M.hold?' · hold to use':'');
     stats.push(['Damage per hit',fx1(M.dmg*mul)]);
     stats.push(['Hits per second',fx1(1/cd)]);
     stats.push(['Damage per second',fx1(M.dmg*mul/cd)]);
@@ -2077,18 +2248,64 @@ function showInfo(kind,id,from){
     if(sp.length)stats.push(['Effect',sp.join(' · ')]);
     stats.push(['Mods',MM.dmg[0]+' '+mm.dmg+'/'+MMODMAX+' · '+MM.spd[0]+' '+mm.spd+'/'+MMODMAX]);stats.push(['Special',MM.sp.name+(mm.sp?' (fitted): ':' (not bought): ')+MM.sp.desc]);
     stats.push(['Price',M.price?money(M.price)+(run.meleeOwned[id]?' · you own it':''):'free · you own it']);
-  }
-  winfo.innerHTML='<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+D.name+'</h3><button class="btn small" data-close>Close</button></div>'+
-    '<div class="wpic"><canvas width="40" height="20" aria-label="Picture of the '+D.name+'"></canvas></div><span class="wtag">'+tag+'</span><p class="wlore">'+(LORE[id]||'')+'</p><p style="margin:0">'+D.desc+'</p>'+
-    '<div class="wstats">'+stats.map(([a,b])=>tline(a,b)).join('')+'</div></div>';
+    draw=()=>drawGun(12,10,0,id,true);
+  }else if(kind==='item'){
+    const it=ITEMS[id];name=it.name;lore=LORE2.item[id];desc=it.desc;
+    const once=['libro','copasa','lunch','hermana','medkit'].includes(id);tag=(once?'One-time use':'Place on the road')+' · key '+it.key;
+    const S={barricade:[['Health','170 per stack'],['Use','press Z to drop it where you stand']],
+      spikes:[['Damage','70 a second to anything on it'],['Lasts','about 9 seconds of traffic'],['Effect','slows them down']],
+      propane:[['Blast','360 damage, radius 52'],['Careful','also hurts you and your crates']],
+      turret:[['Damage per shot',fx1(22*(1+.5*amu('tinker')))],['Shots per second','4.5'],['Ammo',Math.round(160*(1+amu('tinker')))+', refilled every shift'],['Range','250, down the road']],
+      medkit:[['Heals','50 health'],['Use','press H any time']],
+      libro:[['Blast','600 damage, radius 74'],['Use','press G to throw it where you aim']],
+      copasa:[['Pigs','4, for 7 seconds'],['Damage per ram',fx1(12*nightScale()*petMult())],['Use','press K to throw the sack']],
+      lunch:[['Effect','every zombie and boss on the road, plus the rest of the wave'],['Use','press L during a shift']],
+      hermana:[['Effect','vaporizes every zombie on screen · bosses lose half their health'],['Use','press J during a shift']]}[id]||[];
+    stats.push(...S);stats.push(['You have',String(run.inv[id])]);stats.push(['Price',money(it.price)]);
+    draw=()=>drawStruct({kind:id},20,18,true);
+  }else if(kind==='armor'){
+    const A=ARMORS[id];name=A.name;lore=LORE2.armor[id];desc=A.desc;tag='Armor';cw=60;ch=30;
+    if(A.speed)stats.push(['Walking speed',pctS(A.speed)]);if(A.bow)stats.push(['Bow damage',pctS(A.bow)]);if(A.bowRate)stats.push(['Bow draw time',pctS(A.bowRate)]);
+    if(A.reload)stats.push(['Reload time',pctS(A.reload)]);if(A.melee)stats.push(['Melee damage',pctS(A.melee)]);if(A.taken)stats.push(['Damage you take',pctS(A.taken)]);
+    if(A.cash)stats.push(['Tips',pctS(A.cash)]);if(A.fireproof)stats.push(['Explosions','cannot hurt you']);if(A.burn)stats.push(['Burn damage',pctS(A.burn)]);if(A.flameRange)stats.push(['Flamethrower range',pctS(A.flameRange)]);if(A.pet)stats.push(['Pet damage',pctS(A.pet)]);
+    if(!stats.length)stats.push(['Perks','none']);
+    stats.push(['Price',A.price?money(A.price):'free']);stats.push(['Status',run.armor===id?'wearing it':run.armorOwned[id]?'in your locker':'not bought']);
+    draw=()=>drawHuman(30,29,1,BODY.walker,playerLook(id,0,false));
+  }else if(kind==='pet'){
+    const P=PETS[id],sc=nightScale()*petMult();name=P.name;lore=LORE2.pet[id];desc=P.desc;tag='Pet';cw=60;ch=30;
+    const every={chicken:6,armadillo:5,rabbit:4.5,vulture:3,redeagle:2}[id]||P.rate;
+    stats.push(['Damage',id==='chicken'?fx1(160*nightScale())+' per egg blast':fx1(P.dmg*sc)+' a hit']);
+    stats.push(['Attacks','every '+fx1(every)+' s']);
+    if(P.speed)stats.push(['Speed',String(P.speed)]);
+    const fx={chicken:'up to 5 eggs on the road at once',dog:'fast bites',armadillo:'bowls through a whole line',rabbit:'bounces up to 4 times',goat:'huge headbutt knockback',wolf:'pounces from range',vulture:'hunts flyers and bosses first · fetches amulets',redeagle:'hunts flyers and bosses first · fetches amulets',horse:'double back-leg kick, huge knockback · cannot be ridden',bear:'every swipe hits everything in front'}[id];
+    if(fx)stats.push(['Effect',fx]);
+    stats.push(['Grows','+10% every shift · now ×'+fx1(nightScale())]);
+    if(petMult()>1)stats.push([ARMORS[run.armor].name,'×'+fx1(petMult())+' pet damage']);
+    stats.push(['Price',money(P.price)]);stats.push(['Status',run.pet===id?'coming to work':run.petOwned[id]?'at home':'not adopted']);
+    draw=()=>drawPetPreview(id,30,28);
+  }else if(kind==='up'){
+    const u=UPS[id],lv=run.up[id]||0,maxed=lv>=u.max;name=u.name;lore=LORE2.up[id];desc=u.desc;tag='Upgrade · one level per buy phase';cw=30;ch=15;
+    const now={str:Math.round(strMult()*100)+'% melee and bow damage',dmg:'+'+12*lv+'% damage',hp:run.hpMax+' max health',reload:Math.round(Math.pow(.85,lv)*100)+'% reload time',door:run.doorMax+' door strength'}[id];
+    const next={str:Math.round((.3+.17*(lv+1))*100)+'%',dmg:'+'+12*(lv+1)+'%',hp:(run.hpMax+25)+' max health',reload:Math.round(Math.pow(.85,lv+1)*100)+'%',door:(run.doorMax+100)+''}[id];
+    stats.push(['Level',lv+' of '+u.max]);stats.push(['Now',now]);stats.push(['Next level',maxed?'maxed':next+' · '+money(u.base*(lv+1))]);stats.push(['This buy phase',run.perkPhase[id]?'already bought':'available']);
+    draw=()=>drawUpIcon(id,15,8);
+  }else if(kind==='amu'){
+    const A=AMULETS[id],g=amuGroups().find(x=>x.id===id);name=A.name;lore=LORE2.amu[id];desc=A.desc+(g&&g.n>1?' each.':'.');tag='Amulet · lasts '+AMU_LIFE+' shifts';cw=30;ch=15;
+    stats.push(['Effect',A.desc+' per amulet']);stats.push(['You carry',g?String(g.n):'none']);if(g)stats.push(['Crumbles',g.all.slice().sort((a,b)=>a-b).map(leftS).join(', ')]);
+    stats.push(['Where to find','glints on the road · 2.5% of kills · bosses drop two']);
+    draw=()=>drawAmulet(15,13,id);
+  }else return;
+  const html='<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+name+'</h3><button class="btn small" data-close>Close</button></div>'+
+    '<div class="wpic"><canvas width="'+cw+'" height="'+ch+'" aria-label="Picture of the '+name+'"></canvas></div><span class="wtag">'+tag+'</span>'+(lore?'<p class="wlore">'+lore+'</p>':'')+'<p style="margin:0">'+desc+'</p>'+
+    '<div class="wstats">'+stats.map(([a,b])=>tline(a,b)).join('')+'</div>'+
+    ((kind==='gun'||kind==='melee')&&mode==='shop'?'<div><button class="btn small" data-mods="'+kind+':'+id+'">Open mods</button></div>':'')+'</div>';
+  openCard(html);
   const c=winfo.querySelector('canvas'),g=c.getContext('2d'),prev=G;G=g;
-  try{g.fillStyle='rgba(255,255,255,.04)';for(let x=0;x<40;x+=4)g.fillRect(x,0,1,20);drawGun(gun&&GUNS[id].len>13?13:gun?15:12,10,0,id,true);}finally{G=prev;}
-  winfo.hidden=false;winfo.querySelector('[data-close]').focus();
+  try{g.fillStyle='rgba(255,255,255,.04)';for(let x=0;x<cw;x+=4)g.fillRect(x,0,1,ch);if(draw)draw();}finally{G=prev;}
 }
 let sheetResume=false;
 function showSheet(from){
-  infoFrom=from||null;sheetResume=false;
-  if(mode==='night'&&!paused){togglePause();sheetResume=true;}
+  infoFrom=from||null;modsOpen=null;sheetResume=false;
   const pct=n=>Math.round(n*100)+'%',lv=run.up.str||0;
   const M=MELEE[run.melee],mm=mmodOf(run.melee),hit=M.dmg*dmgMult()*(AR().melee||1)*(1+.15*mm.dmg)*strMult(),cd=M.cd/(1+.15*mm.spd);
   const rows=[
@@ -2096,8 +2313,8 @@ function showSheet(from){
     ['Health',Math.ceil(Math.max(0,p.hp))+' of '+run.hpMax],
     ['Damage you take',pct(AR().taken||1)],
     ['Damage bonus','+'+Math.round((dmgMult()-1)*100)+'% (guns and melee)'],
-    ['Reload time',pct(Math.pow(.85,run.up.reload)*(AR().reload||1)*Math.pow(.9,amu('quick')))+' of normal'],
-    ['Headshots','×'+fx1(2*(1+.25*amu('eagle')))+' damage'],
+    ['Reload time',pct(Math.pow(.85,run.up.reload)*(AR().reload||1)*Math.pow(.75,amu('quick')))+' of normal'],
+    ['Headshots','×'+fx1(2*(1+.6*amu('eagle')))+' damage'],
     ['Melee in hand',M.name+' · '+fx1(hit)+' a hit · '+fx1(hit/cd)+' a second']
   ];
   if(run.owned.bow)rows.push(['Bow',fx1(GUNS.bow.dmg*dmgMult()*gunDmgMult('bow')*(AR().bow||1)*strMult())+' per arrow']);
@@ -2105,20 +2322,24 @@ function showSheet(from){
   rows.push(['Tips',pct(cashMult())+' per kill']);
   rows.push(['Armor',ARMORS[run.armor].name]);
   rows.push(['Pet',run.pet?PETS[run.pet].name:'none']);
-  const am=Object.keys(AMULETS).filter(k=>amu(k)>0).map(k=>AMULETS[k].name+(amu(k)>1?' ×'+amu(k):''));
+  const am=amuGroups().map(g=>AMULETS[g.id].name+(g.n>1?' ×'+g.n:'')+' ('+leftS(g.left)+')');
   rows.push(['Amulets',am.length?am.join(', '):'none']);
-  winfo.innerHTML='<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">Your stats</h3><button class="btn small" data-close>Close</button></div>'+
+  openCard('<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">Your stats</h3><button class="btn small" data-close>Close</button></div>'+
     '<div class="strbox"><div class="tline total"><span class="nm">Strength</span><span class="dots"></span><span>'+lv+' / '+UPS.str.max+'</span></div>'+
     '<div class="strtrack" aria-hidden="true"><div style="width:'+Math.round(100*lv/UPS.str.max)+'%"></div></div>'+
     '<p class="note">Melee weapons and the bow hit at <b>'+pct(strMult())+'</b> of full damage. Next level: '+(lv>=UPS.str.max?'maxed':pct(.3+.17*(lv+1)))+'. Raise it in Upgrades, one level per buy phase.</p></div>'+
-    '<div class="wstats">'+rows.map(([a,b])=>tline(a,b)).join('')+'</div>'+saveBox()+'<p class="note">Shift '+run.night+(run.cheated?' · dev panel used this run':'')+'</p></div>';
-  winfo.hidden=false;winfo.querySelector('[data-close]').focus();
+    '<div class="wstats">'+rows.map(([a,b])=>tline(a,b)).join('')+'</div>'+saveBox()+'<p class="note">Shift '+run.night+(run.cheated?' · dev panel used this run':'')+'</p></div>');
 }
-function hideInfo(){if(sheetResume&&paused&&mode==='night')togglePause();sheetResume=false;winfo.hidden=true;winfo.innerHTML='';if(infoFrom&&document.body.contains(infoFrom))infoFrom.focus();infoFrom=null;}
+function hideInfo(){if(sheetResume&&paused&&mode==='night')togglePause();sheetResume=false;modsOpen=null;winfo.hidden=true;winfo.innerHTML='';if(infoFrom&&document.body.contains(infoFrom))infoFrom.focus();infoFrom=null;}
 winfo.addEventListener('click',e=>{
   if(e.target.closest('[data-copy]')){const ta=$('#saveCode'),msg=$('#copyMsg');if(!ta)return;
     const fallback=()=>{ta.focus();ta.select();msg.textContent='Selected. Press Ctrl+C (Cmd+C on Mac) to copy.';};
     try{navigator.clipboard.writeText(ta.value).then(()=>{msg.textContent='Copied.';},fallback);}catch(err){fallback();}return;}
+  const om=e.target.closest('[data-mods]');if(om){const [k,i]=om.dataset.mods.split(':');const fr=infoFrom;showMods(k,i,fr);return;}
+  const bb=e.target.closest('[data-buy]');
+  if(bb&&modsOpen){if(bb.disabled||!bb.dataset.buy)return;ac();const d=bb.dataset.buy;doBuy(d);
+    if(mode==='shop'){const y=window.scrollY;renderStock();window.scrollTo(0,y);const nb=stockEl.querySelector('[data-mods="'+modsOpen.kind+':'+modsOpen.id+'"]');if(nb)infoFrom=nb;}
+    showMods(modsOpen.kind,modsOpen.id,infoFrom,d);saveGame();return;}
   if(e.target===winfo||e.target.closest('[data-close]'))hideInfo();});
 function saveBox(){
   const sv=loadSave();
@@ -2131,7 +2352,9 @@ const SAVE_KEY='run1';
 function normalizeRun(r){
   r.up=Object.assign({str:0,dmg:0,hp:0,reload:0,door:0},r.up||{});
   r.inv=Object.assign({barricade:0,spikes:0,propane:0,turret:0,medkit:0,libro:0,copasa:0,lunch:0,hermana:0},r.inv||{});
-  r.mods=r.mods||{};r.mmods=r.mmods||{};r.amu=r.amu||{};r.owned=r.owned||{};r.owned.pistol=true;r.mags=r.mags||{};
+  r.mods=r.mods||{};r.mmods=r.mmods||{};
+  if(!Array.isArray(r.amus)){r.amus=[];const old=r.amu||{};for(const k in old)if(AMULETS[k])for(let i=0;i<old[k];i++){r.amus.push({id:k,got:r.night});if(k==='vital')r.hpMax=(r.hpMax||100)+30;}}
+  delete r.amu;r.amus=r.amus.filter(a=>a&&AMULETS[a.id]&&typeof a.got==='number');r.pirStacks=0;r.pulsarCd=0;r.owned=r.owned||{};r.owned.pistol=true;r.mags=r.mags||{};
   r.meleeOwned=r.meleeOwned||{};r.meleeOwned.bat=true;r.armorOwned=r.armorOwned||{};r.armorOwned.vest=true;r.petOwned=r.petOwned||{};
   if(!MELEE[r.melee]||!r.meleeOwned[r.melee])r.melee='bat';if(!ARMORS[r.armor]||!r.armorOwned[r.armor])r.armor='vest';if(r.pet&&!PETS[r.pet])r.pet=null;
   if(!GUNS[r.weapon]||!r.owned[r.weapon])r.weapon='pistol';if(!AMB[r.amb])r.amb='night';if(!AMB[r.nextAmb])r.nextAmb=r.amb;
@@ -2163,6 +2386,7 @@ function openStock(){
 function closeStock(){
   mode='prep';run.amb=run.nextAmb;stockEl.hidden=true;tray.hidden=false;
   p.x=170;p.inside=0;p.alpha=1;p.face=1;spawnPet();weeds=[];renderTray();
+  {const cab=$('#cab')||cv,r=cab.getBoundingClientRect();if(r.top<0||r.top>window.innerHeight*.5)cab.scrollIntoView({behavior:'smooth',block:'start'});}
   banner={text:fmtT(AMB[run.amb].start-30),sub:AMB[run.amb].name+'. Set your defenses before the doors open.',t:2.4,max:2.4};
   saveGame();
 }
@@ -2194,10 +2418,9 @@ function showGameOver(){
 }
 function clockIn(){
   ac();newRun();zombies=[];corpses=[];parts=[];decals=[];floaters=[];tracers=[];booms=[];bolts=[];beams=[];weeds=[];lastSummary=null;banner=null;paused=false;
-  mode='prep';hideOverlay();stockEl.hidden=true;tray.hidden=false;spawnPet();renderTray();
+  hideOverlay();spawnPet();p.x=140;p.inside=1;p.alpha=0;p.face=-1;
   if(!devEl.hidden)renderDev();
-  banner={text:'22:30',sub:'Doors open at 23:00. Set your crates on the road.',t:2.6,max:2.6};
-  saveGame();
+  openStock();
 }
 function togglePause(){if(mode!=='night'&&mode!=='prep')return;paused=!paused;trig.mouse=trig.auto=false;renderTray();}
 
@@ -2281,7 +2504,7 @@ function devAct(a,v){
     case 'door':run.door=run.doorMax;devMsg='Doors fixed.';break;
     case 'god':case 'ammo':case 'onehit':DEV[a]=!DEV[a];devMsg=(a==='god'?'God mode':a==='ammo'?'Infinite ammo':'One-hit kills')+(DEV[a]?' on.':' off.');break;
     case 'guns':ORDER.forEach(id=>{if(!run.owned[id]){run.owned[id]=true;run.mags[id]=magOf(id);}});devMsg='All guns unlocked.';break;
-    case 'mods':ORDER.forEach(id=>{const m=modOf(id);m.mag=MODMAX;m.rate=MODMAX;m.dmg=MODMAX;m.sp=true;run.mags[id]=magOf(id);});MORDER.forEach(id=>{const m=mmodOf(id);m.dmg=MMODMAX;m.spd=MMODMAX;m.sp=true;});devMsg='Every gun and melee mod maxed.';break;
+    case 'mods':ORDER.forEach(id=>{const m=modOf(id);m.mag=MODMAX;m.rate=MODMAX;m.dmg=MODMAX;m.sp=true;if(MODS[id].sp2)m.sp2=true;for(const t of MODS[id].tr||[])m.tr[t.id]=true;run.mags[id]=magOf(id);});MORDER.forEach(id=>{const m=mmodOf(id);m.dmg=MMODMAX;m.spd=MMODMAX;m.sp=true;});devMsg='Every gun and melee mod maxed. Playstyle perks are unlocked: switch them on in each gun\'s Mods.';break;
     case 'melees':MORDER.forEach(id=>run.meleeOwned[id]=true);devMsg='All melee weapons in the stockroom. Equip one there.';break;
     case 'armors':AORDER.forEach(id=>run.armorOwned[id]=true);devMsg='All armor in the stockroom. Wear one there.';break;
     case 'pets':PORDER.forEach(id=>run.petOwned[id]=true);devMsg='All pets adopted. Pick one in the stockroom.';break;
@@ -2334,7 +2557,7 @@ devEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INP
 /* ---------- boot ---------- */
 function boot(data){
   newRun();
-  if(data&&data.run&&data.mode==='prep'){try{run=data.run;if(run.inv.hermana==null)run.inv.hermana=0;if(run.up.str==null)run.up.str=0;if(run.buys==null)run.buys=0;if(!run.perkPhase)run.perkPhase={};delete run.golden;structs=data.structs||[];resetPlayer(data.hp||run.hpMax);mode='prep';hideOverlay();spawnPet();}catch(e){newRun();}}
+  if(data&&data.run&&data.mode==='prep'){try{run=normalizeRun(data.run);structs=data.structs||[];resetPlayer(data.hp||run.hpMax);mode='prep';hideOverlay();spawnPet();}catch(e){newRun();}}
   if(mode==='title'){
     spawnZombie('walker',395,true);spawnZombie('runner',428,true);const ch=spawnZombie('hardhat',458,true);if(!ch.cone){ch.cone=true;ch.helmet=200;ch.h+=4;ch.headH+=4;}spawnZombie('jetpack',418,true);spawnZombie('vaulter',470,true);spawnZombie('fireman',440,true);
     titleCard();
