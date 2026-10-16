@@ -177,6 +177,43 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
 .dev input{width:96px;font-family:var(--display);font-size:12px;padding:4px 6px;background:#18172e;color:var(--ink);border:1px solid #33402f;border-radius:2px}
 .dev-msg{margin:0;font-size:13px;color:var(--rot);min-height:1.3em}
 .dev-note{margin:0;font-size:12px;color:var(--dim)}
+.lang{display:inline-flex;gap:0;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-left:auto}
+.lang button{font-family:var(--display);font-size:11px;letter-spacing:.06em;padding:3px 8px;background:transparent;border:0;color:var(--dim);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--sodium);color:#2a1606}
+.card .langrow .lang{margin-left:0}
+.card .langrow .lang button{font-size:12px;padding:5px 10px}
+.stage{position:relative}
+.pad{display:none}
+body.touch .stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"s s" "l r";background:#0c0b1b}
+body.touch .screen{grid-area:s}
+body.touch .padL{grid-area:l}
+body.touch .padR{grid-area:r}
+body.touch .pad{display:flex;flex-direction:column;gap:8px;padding:10px 8px;align-items:center;justify-content:center;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none}
+body.touch button{touch-action:manipulation}
+.prow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pb{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:uppercase;width:62px;height:62px;border-radius:50%;background:#2a2745;border:2px solid var(--line);color:var(--ink);cursor:pointer;padding:0;line-height:1.1;touch-action:none;display:grid;place-items:center;overflow:hidden}
+.pb[data-hold=left],.pb[data-hold=right]{width:70px;height:70px;font-size:22px}
+.pb.sm{width:auto;min-width:52px;height:40px;border-radius:20px;padding:0 10px;font-size:10px}
+.pb.fire{width:80px;height:80px;background:#5a1f28;border-color:var(--blood);font-size:13px}
+.pb.on{border-color:var(--sodium);background:#3d3456;transform:scale(.95)}
+.pb.fire.on{background:#7a2a36}
+.pb.wide{width:auto;height:46px;border-radius:4px;padding:0 14px}
+.pb.go{background:var(--sodium);color:#2a1606;border-color:var(--sodium)}
+.pfight,.pprep{display:none;flex-direction:column;gap:8px;align-items:center}
+.stage[data-mode=night] .pfight{display:flex}
+.stage[data-mode=prep] .pprep{display:flex}
+.stage:not([data-mode=night]):not([data-mode=prep]) .padL .prow{visibility:hidden}
+.pitems{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:100%}
+.pi{display:grid;grid-template-columns:auto auto;align-items:center;gap:3px;padding:3px 6px 3px 3px;background:#2a2745;border:1px solid var(--line);border-radius:4px;color:var(--ink);font-family:var(--display);font-size:11px;cursor:pointer;touch-action:manipulation}
+.pi canvas{width:36px;height:24px;image-rendering:pixelated}
+.pi:disabled{opacity:.4}
+@media (orientation:landscape){
+  body.touch .stage{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-areas:"l s r"}
+  body.touch .screen{width:min(calc((100svh - 84px)*16/9),calc(100vw - 330px));min-width:240px}
+  body.touch .pb[data-hold=left],body.touch .pb[data-hold=right]{width:64px;height:64px}
+  body.touch .padL .prow{gap:8px;flex-wrap:nowrap}
+  body.touch .hud{padding:6px 12px}
+}
 @media (max-width:640px){
   .hud{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px 10px}
   .meters{grid-column:1/-1}
@@ -190,33 +227,37 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
 <body>
 <main class="wrap">
   <header class="mast">
-    <div class="eyebrow"><span>Alcampo &middot; Route 9 desert branch</span><span class="neon" id="neon">Open 24 hrs</span><span>Shift manager wanted</span></div>
+    <div class="eyebrow"><span data-i18n="eb1">Alcampo &middot; Route 9 desert branch</span><span class="neon" id="neon" data-i18n="eb2">Open 24 hrs</span><span data-i18n="eb3">Shift manager wanted</span><span class="lang" role="group" aria-label="Language / Idioma"><button data-lang="en" aria-pressed="true">EN</button><button data-lang="es" aria-pressed="false">ES</button></span></div>
     <h1>Graveyard Shift</h1>
-    <p class="lede">You work at the Alcampo out on desert Route 9, and every shift more of the dead come shuffling in off the dunes. Keep them away from you and the sliding doors until the shift ends, then spend your tips in the stockroom on guns, armor, pets and a few things nobody should sell.</p>
+    <p class="lede" data-i18n="lede">You work at the Alcampo out on desert Route 9, and every shift more of the dead come shuffling in off the dunes. Keep them away from you and the sliding doors until the shift ends, then spend your tips in the stockroom on guns, armor, pets and a few things nobody should sell.</p>
   </header>
 
   <div class="cab" id="cab">
     <div class="hud">
-      <div class="stat"><span class="k">Shift</span><b id="hNight">1</b></div>
+      <div class="stat"><span class="k" data-i18n="hShift">Shift</span><b id="hNight">1</b></div>
       <div class="stat clock"><span class="k" id="kClock">Clock</span><b id="hClock">--:--</b></div>
-      <div class="stat"><span class="k">On the road</span><b id="hLeft">0</b></div>
-      <div class="stat"><span class="k">Tips</span><b id="hCash">$120</b></div>
+      <div class="stat"><span class="k" data-i18n="hRoad">On the road</span><b id="hLeft">0</b></div>
+      <div class="stat"><span class="k" data-i18n="hTips">Tips</span><b id="hCash">$120</b></div>
       <div class="meters">
-        <div class="meter"><span class="k">You</span><div class="track"><div class="fill" id="mHp"></div></div><em id="tHp">100</em></div>
-        <div class="meter door"><span class="k">Doors</span><div class="track"><div class="fill" id="mDoor"></div></div><em id="tDoor">250</em></div>
+        <div class="meter"><span class="k" data-i18n="hYou">You</span><div class="track"><div class="fill" id="mHp"></div></div><em id="tHp">100</em></div>
+        <div class="meter door"><span class="k" data-i18n="hDoors">Doors</span><div class="track"><div class="fill" id="mDoor"></div></div><em id="tDoor">250</em></div>
         <div class="meter ammo" id="ammoRow"><span class="k" id="kGun">Pistol</span><div class="track"><div class="fill" id="mAmmo"></div></div><em id="tAmmo">12/12</em></div>
       </div>
     </div>
-    <div class="screen">
-      <canvas id="game" width="480" height="270" aria-label="Game screen: an Alcampo supermarket on a desert road with zombies approaching from the right"></canvas>
-      <div class="ov" id="ov"></div>
+    <div class="stage" id="stage">
+      <div class="pad padL" id="padL"></div>
+      <div class="screen">
+        <canvas id="game" width="480" height="270" aria-label="Game screen: an Alcampo supermarket on a desert road with zombies approaching from the right"></canvas>
+        <div class="ov" id="ov"></div>
+      </div>
+      <div class="pad padR" id="padR"></div>
     </div>
     <div class="tray" id="tray"></div>
     <div class="stock" id="stock" hidden></div>
   </div>
 
   <div class="manual">
-    <section>
+    <section data-i18n="mHow">
       <h2>How a shift works</h2>
       <ol class="steps">
         <li>Before the doors open, place crates, spike strips, propane tanks and turrets on the road.</li>
@@ -228,7 +269,7 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
         <li>Every fourth shift ends with a boss.</li>
       </ol>
     </section>
-    <section>
+    <section data-i18n="mCtl">
       <h2>Controls</h2>
       <dl class="keys">
         <dt>A D / &larr; &rarr;</dt><dd>Walk</dd>
@@ -244,9 +285,10 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
         <dt>J</dt><dd>Call Hermana Sole</dd>
         <dt>H</dt><dd>Use a first-aid kit</dd>
         <dt>Tab / B / P</dt><dd>Start shift / stockroom / pause</dd>
+        <dt>Phone or tablet</dt><dd>On-screen buttons appear: arrows to walk, Fire shoots the nearest zombie by itself, or touch the screen to aim and shoot. Your items sit under the arrows.</dd>
       </dl>
     </section>
-    <section>
+    <section data-i18n="mWhere">
       <h2>Where to shoot</h2>
       <ul class="plain">
         <li><b>Head.</b> Double damage. Helmets and traffic cones block headshots completely.</li>
@@ -254,7 +296,7 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
         <li><b>Legs.</b> Normal damage, and it adds up. Put about a third of a zombie's health into its legs and they break. It drops to the ground, crawls at a third of its speed, and any helmet or cone falls off. Bosses cannot be crippled.</li>
       </ul>
     </section>
-    <section>
+    <section data-i18n="mWeather">
       <h2>Weather</h2>
       <ul class="plain">
         <li><b>Clear night.</b> Dark past the lamps. Your flashlight follows your aim.</li>
@@ -266,14 +308,14 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
       <p>The stockroom shows the forecast for the next shift.</p>
     </section>
     <section class="wide">
-      <h2>Field guide</h2>
+      <h2 data-i18n="mField">Field guide</h2>
       <div class="zgrid" id="zgrid"></div>
     </section>
     <section class="wide">
-      <h2>Bosses</h2>
+      <h2 data-i18n="mBoss">Bosses</h2>
       <div class="zgrid" id="bgrid"></div>
     </section>
-    <p class="credit">An original fan homage to <a href="https://apps.apple.com/us/app/they-are-coming-zombie-defense/id1576645378" target="_blank" rel="noopener">They Are Coming: Zombie Defense</a> by OnHit Developments, a side-scrolling survival game where you guard an orphanage from daily zombie waves and buy weapons, barricades and traps between days. Setting, art and code here are new.</p>
+    <p class="credit" data-i18n="credit">An original fan homage to <a href="https://apps.apple.com/us/app/they-are-coming-zombie-defense/id1576645378" target="_blank" rel="noopener">They Are Coming: Zombie Defense</a> by OnHit Developments, a side-scrolling survival game where you guard an orphanage from daily zombie waves and buy weapons, barricades and traps between days. Setting, art and code here are new.</p>
   </div>
 </main>
 
@@ -283,7 +325,7 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
 <script>
 (function(){
 'use strict';
-const W=480,H=270,GY=230,WORLD=1600,DOOR_X=152,PMIN=160;
+const W=480,H=270,GY=230,WORLD=1200,DOOR_X=152,PMIN=160;
 const cv=document.getElementById('game');
 const ctx=cv.getContext('2d');
 let G=ctx;
@@ -548,7 +590,7 @@ function resetPlayer(hp){p={x:190,y:GY,face:1,hp,alive:true,walkT:0,fireCd:0,rel
 /* ---------- derived stats ---------- */
 const AR=()=>ARMORS[run.armor];
 const amu=k=>{let n=0;for(const a of run.amus||[])if(a.id===k)n++;return n;};
-const AMU_LIFE=10;
+const AMU_LIFE=3;
 const trOn=(g,t)=>{const m=run.mods&&run.mods[g];return !!m&&m.act===t;};
 function modOf(id){if(!run.mods)run.mods={};const m=run.mods[id]||(run.mods[id]={mag:0,rate:0,dmg:0,sp:false});if(!m.tr)m.tr={};return m;}
 function mmodOf(id){if(!run.mmods)run.mmods={};return run.mmods[id]||(run.mmods[id]={dmg:0,spd:0,sp:false});}
@@ -636,6 +678,306 @@ const SFX={
   thunder(){noise(1.6,140,.5,.6,'lowpass');tone(50,30,1.2,.3,'sine');}
 };
 function sfx(n){try{SFX[n]&&SFX[n]();}catch(e){}}
+
+/* ---------- language (English default, Spanish optional) ---------- */
+let LANG=store.get('lang','en')==='es'?'es':'en';
+function _t(s,...a){let r=(LANG==='es'&&ES[s]!=null)?ES[s]:s;if(a.length)r=String(r).replace(/\{(\d+)\}/g,(m,i)=>a[i]!=null?a[i]:m);return r;}
+const ES_DATA={
+GUNS:{
+  pistol:{name:'Pistola',short:'Pistola',desc:'La de siempre. Fiable y nunca se queda sin balas.'},
+  nailgun:{name:'Pistola de clavos',short:'Clavos',desc:'De la sección de ferretería. Escupe clavos rápido a corta distancia.'},
+  shotgun:{name:'Escopeta de corredera',short:'Escopeta',desc:'Siete perdigones y poco alcance. Empuja hacia atrás a la primera fila.'},
+  bow:{name:'Arco recurvo',short:'Arco',desc:'Flechas silenciosas que caen con la distancia. Cada una atraviesa a dos. El daño depende de tu Fuerza.'},
+  hunter:{name:'Rifle de caza',short:'Caza',desc:'Atraviesa a cuatro de ellos en fila.'},
+  blunder:{name:'Trabuco',short:'Trabuco',desc:'Una campana de latón llena de chatarra. Un disparo enorme y luego una recarga larga.'},
+  rifle:{name:'Fusil de asalto',short:'Fusil',desc:'Treinta balas, totalmente automático.'},
+  pir:{desc:'Un AK-47 futurista. Cada zombi que mata le hace disparar un 5% más rápido durante el resto del turno, sin límite.'},
+  goo:{name:'Lanzababas xeno',short:'Babas',desc:'Tecnología alienígena. Lanza muros de moco que duran 12 segundos. Los zombis los cruzan al 30% de velocidad, los jefes al 80%.'},
+  flamer:{name:'Lanzallamas',short:'Llamas',desc:'Poco alcance. Prende fuego a todo lo que hay en el cono.'},
+  arc:{name:'Lanzarrayos',short:'Rayos',desc:'Un rayo que salta a cuatro más y aturde a cada uno.'},
+  minigun:{desc:'Tarda medio segundo en girar y luego ya no para.'},
+  rail:{name:'Cañón de riel',short:'Riel',desc:'Mantén pulsado medio segundo para cargar. El rayo atraviesa todo lo que haya en la carretera.'}
+},
+MODS:{
+  pistol:{mag:{0:'Cargador ampliado'},rate:{0:'Gatillo sensible'},dmg:{0:'Balas +P'},sp:{name:'Puntas huecas',desc:'+30% de daño con la pistola.'},
+    sp2:{desc:'Las balas se convierten en agujeros de luz. Cada impacto tiene un 20% de probabilidad de borrar a un zombi normal de golpe y un 5% de arrancarle un 10% de vida a un jefe (una vez cada 25 segundos).'},
+    tr:{0:{desc:'Una segunda pistola en la otra mano: cada disparo lanza dos balas.',down:'La dispersión se triplica y las recargas tardan un 40% más.'}}},
+  nailgun:{mag:{0:'Tira de clavos'},rate:{0:'Muelle reforzado'},dmg:{0:'Clavos templados'},sp:{name:'Clavos de anclaje',desc:'Cada clavo los deja clavados en el sitio un momento.'},
+    tr:{0:{name:'Grapas de riel',desc:'Los clavos atraviesan a dos zombis más.',down:'Dispara un 30% más lento.'}}},
+  shotgun:{mag:{0:'Tubo extendido'},rate:{0:'Corredera suave'},dmg:{0:'Cartuchos magnum'},sp:{name:'Cartuchos incendiarios',desc:'Cada perdigón les prende fuego durante 3 segundos.'},
+    tr:{0:{name:'Balas slug',desc:'Dispara una bala pesada en vez de perdigones: siete veces el daño de un perdigón, atraviesa a dos más y llega lejos.',down:'Sin dispersión: solo das a lo que apuntas.'}}},
+  bow:{mag:{0:'Carcaj más grande'},rate:{0:'Mira de pin'},dmg:{0:'Cuerda pesada'},sp:{name:'Puntas de caza',desc:'Las flechas atraviesan a cuatro en vez de a dos.'},
+    tr:{0:{name:'Flechas explosivas',desc:'Las flechas explotan al impactar y dañan todo lo que hay cerca.',down:'Se paran en el primer zombi y tensas un 40% más lento.'}}},
+  hunter:{mag:{0:'Cargador de caja'},rate:{0:'Cerrojo suave'},dmg:{0:'Calibre mayor'},sp:{name:'Balas explosivas',desc:'Cada impacto revienta y daña lo que tenga al lado.'},
+    tr:{0:{name:'Mira de tirador',desc:'Los disparos a la cabeza hacen cuatro veces el daño en vez del doble.',down:'Los disparos al cuerpo y a las piernas hacen la mitad.'}}},
+  blunder:{mag:{0:'Doble campana'},rate:{0:'Cuerno de pólvora'},dmg:{0:'Más pólvora'},sp:{name:'Metralla oxidada',desc:'Cada trozo de chatarra atraviesa a uno más.'},
+    tr:{0:{name:'Aliento de dragón',desc:'Cada perdigón les prende fuego durante 3 segundos.',down:'El alcance baja un 40%.'}}},
+  rifle:{mag:{0:'Cargador ampliado'},rate:{0:'Gatillo ajustado'},dmg:{0:'Balas reforzadas'},sp:{name:'Balas perforantes',desc:'Cada bala atraviesa a uno más.'},
+    tr:{0:{name:'Fuego a ráfagas',desc:'Dispara un 80% más rápido.',down:'La dispersión es 2,5 veces mayor y cada bala hace un 20% menos.'}}},
+  pir:{mag:{0:'Cargador de tambor'},rate:{0:'Cerrojo de luz'},dmg:{0:'Puntas de plasma'},sp:{name:'Aletas de refrigeración',desc:'Recarga un 40% más rápido.'},
+    tr:{0:{name:'Núcleo hiper',desc:'Cada muerte suma un 10% de cadencia en vez de un 5%.',down:'La dispersión crece con cada acumulación y recargar las borra.'}}},
+  goo:{mag:{0:'Glándula más grande'},rate:{0:'Saco a presión'},dmg:{0:'Moco espeso'},sp:{name:'Babas ácidas',desc:'Los muros de moco también queman 12 de daño por segundo.'},
+    tr:{0:{name:'Bombas pegajosas',desc:'Las babas se pegan al zombi que tocan y explotan 1,2 segundos después con mucho daño.',down:'Se acabaron los muros de moco que frenan.'}}},
+  flamer:{mag:{0:'Depósito más grande'},rate:{0:'Boquilla ancha'},dmg:{0:'Mezcla más caliente'},sp:{desc:'Las quemaduras duran el doble.'},
+    tr:{0:{name:'Boquilla larga',desc:'Las llamas llegan un 60% más lejos.',down:'El cono es más estrecho y las llamas hacen un 25% menos.'},
+        1:{name:'Llamas verdes',desc:'Fuego verde: un 80% más de daño y quema un 50% más contra zombis normales.',down:'Solo un 30% de daño contra jefes.'}}},
+  arc:{mag:{0:'Banco de condensadores'},rate:{0:'Bobina rápida'},dmg:{0:'Alto voltaje'},sp:{name:'Arcos bifurcados',desc:'Salta a siete objetivos en vez de a cinco.'},
+    tr:{0:{name:'Campo estático',desc:'El rayo ya no salta. Fríe todo lo que esté a 50 del primer objetivo con un 70% del daño.',down:'El alcance baja un 40%.'}}},
+  minigun:{mag:{0:'Cinta más larga'},rate:{0:'Motor forzado'},dmg:{0:'Balas pesadas'},sp:{name:'Arranque en caliente',desc:'Empieza a disparar casi al instante, sin esperar a que giren los cañones.'},
+    tr:{0:{name:'Trípode',desc:'+60% de daño y mucha menos dispersión.',down:'No puedes andar mientras disparas.'}}},
+  rail:{mag:{0:'Celda extra'},rate:{0:'Rieles superenfriados'},dmg:{0:'Bobinas gemelas'},sp:{name:'Sobrecarga',desc:'El rayo aturde durante un segundo todo lo que atraviesa.'},
+    tr:{0:{name:'Divisor',desc:'Cada disparo lanza tres rayos en abanico.',down:'Cada rayo hace un 45% del daño.'}}}
+},
+MELEE:{
+  bat:{name:'Bate de béisbol',short:'Bate',desc:'Los manda para atrás. Viene gratis con el trabajo.'},
+  machete:{name:'El Patrón',short:'El Patrón',desc:'Un machete con reputación. Cortes rápidos, poco empuje.'},
+  jamon:{name:'Pata de jamón',desc:'Una pata de jamón curado entera. Golpes pesados, y picoteas 3 de vida por golpe.'},
+  axe:{name:'Hacha de bombero',short:'Hacha',desc:'Parte cascos y conos de un hachazo.'},
+  paella:{name:'Paellera',short:'Paellera',desc:'Lánzala como un escudo: sale volando, golpea todo lo que encuentra y vuelve a ti. Mientras la tienes en la mano bloquea la mitad del daño de frente.'},
+  capote:{desc:'Un capote de torero. Apenas hace daño, pero lo que barres con él se confunde y camina hacia atrás 3 segundos.'},
+  prod:{name:'Picana de ganado',short:'Picana',desc:'Aturde lo que toca durante 1,5 segundos.'},
+  sledge:{name:'Mazo',short:'Mazo',desc:'Lento. Cada golpe también sacude el suelo y daña todo lo que hay cerca.'},
+  chainsaw:{name:'Motosierra',short:'Motosierra',desc:'Mantén pulsado el botón de cuerpo a cuerpo. Destroza todo lo que tenga delante.'}
+},
+MMODS:{
+  bat:{dmg:{0:'Clavos en la punta'},spd:{0:'Mango con cinta'},sp:{name:'Bate de home run',desc:'Los manda el doble de lejos.'}},
+  machete:{dmg:{0:'Filo afilado'},spd:{0:'Muñeca suelta'},sp:{name:'Doble tajo',desc:'Cada golpe va seguido de un segundo tajo con la mitad de daño.'}},
+  jamon:{dmg:{0:'Jamón de bellota'},spd:{0:'Agarre de jamonero'},sp:{name:'Ración doble',desc:'Curas 6 por golpe en vez de 3.'}},
+  axe:{dmg:{0:'Hoja templada'},spd:{0:'Mango corto'},sp:{name:'Hacha en llamas',desc:'Cada hachazo les prende fuego durante 3 segundos.'}},
+  paella:{dmg:{0:'Paellera de hierro'},spd:{0:'Asas reforzadas'},sp:{desc:'El escudo bloquea el 75% del daño de frente en vez del 50%.'}},
+  prod:{dmg:{0:'Batería extra'},spd:{0:'Gatillo rápido'},sp:{name:'Descarga en cadena',desc:'La descarga salta a dos zombis cercanos y también los aturde.'}},
+  sledge:{dmg:{0:'Cabeza de plomo'},spd:{0:'Mango de fibra'},sp:{name:'Terremoto',desc:'El golpe al suelo llega un 60% más lejos.'}},
+  capote:{dmg:{0:'Forro de seda'},spd:{0:'Pase rápido'},sp:{desc:'La confusión dura el doble.'}},
+  chainsaw:{dmg:{0:'Cadena destripadora'},spd:{0:'Motor de dos tiempos'},sp:{name:'Escape en llamas',desc:'Todo lo que cortas arde durante 2 segundos.'}}
+},
+ARMORS:{
+  vest:{name:'Chaleco de Alcampo',desc:'El de serie. Sin ventajas.'},
+  track:{name:'Chándal del desierto',desc:'+30% de velocidad al andar.'},
+  leather:{name:'Cueros de arquero',desc:'+50% de daño con el arco y tensas un 25% más rápido.'},
+  bando:{name:'Cartuchera',desc:'Recargas un 30% más rápido.'},
+  padded:{name:'Protecciones de matón',desc:'+50% de daño cuerpo a cuerpo. Recibes un 15% menos de daño.'},
+  cashier:{name:'Casaca de cajero',desc:'+30% de propinas por cada muerte.'},
+  fire:{name:'Traje ignífugo',desc:'Inmune a las explosiones. Las quemaduras hacen un 40% más y el lanzallamas llega un 25% más lejos.'},
+  dictator:{name:'Uniforme de dictador',desc:'Medallas, gorra de plato y autoridad absoluta. Tus mascotas pegan un 75% más fuerte, +15% de propinas y recibes un 10% menos de daño.'},
+  riot:{name:'Armadura antidisturbios',desc:'Recibes un 40% menos de daño. Andas un 12% más lento.'}
+},
+PETS:{
+  chicken:{name:'Gallina bomba',desc:'Pone un huevo cada 6 segundos. Los huevos explotan cuando un zombi los pisa.'},
+  dog:{name:'Chucho del desierto',desc:'Un mordedor pequeño y rápido.'},
+  armadillo:{name:'Armadillo bolo',desc:'Se hace una bola y arrolla a una fila entera.'},
+  rabbit:{name:'Conejo gordo',desc:'Se hace una bola de pelo y se estampa contra ellos, rebotando de uno a otro hasta cuatro veces por ataque.'},
+  goat:{desc:'Una cabra zombi llamada America. Embiste y los manda volando de un cabezazo.'},
+  wolf:{name:'Lobo coyote',desc:'Salta desde lejos y los tumba.'},
+  vulture:{name:'Buitre',desc:'Se lanza en picado desde el cielo, caza primero a los voladores y te trae amuletos.'},
+  redeagle:{name:'Águila roja',desc:'Un águila rojo sangre. Baja más rápido y pega más fuerte que el buitre, y también trae amuletos.'},
+  horse:{desc:'Un caballo llamado Wally. No se puede montar. Galopa hacia ellos y les da coces con las dos patas traseras.'},
+  bear:{desc:'Lento, pero cada zarpazo golpea todo lo que tiene delante.'}
+},
+LORE:{
+  pistol:'Estaba en el cajón de la caja registradora con una nota que decía "por si acaso". Nueve milímetros, nada especial, nunca se encasquilla.',
+  nailgun:'Sección de ferretería, pasillo 14. Hecha para tarimas, no para zombis, pero nadie se ha quejado.',
+  shotgun:'Calibre doce de corredera. Suena tan fuerte que todo el desierto sabe que sigues abierto.',
+  bow:'Del pasillo de deportes, todavía con la etiqueta del precio. Las flechas se quedan clavadas en la arena.',
+  hunter:'De cerrojo, con mira, de los que se usan para los coyotes. Ahora caza otra cosa.',
+  blunder:'Una antigüedad de latón que alguien cambió por vales de descuento. Se carga por la boca con tuercas, clavos y lo que haya por ahí.',
+  rifle:'Apareció en el maletero de un coche abandonado en el aparcamiento. Mejor no preguntar.',
+  pir:'Nadie sabe quién lo hizo. El número de serie es una fecha que todavía no ha llegado, y la tira cian brilla más cuanto más mata.',
+  goo:'Cayó del cielo una noche en un charco de baba verde. Late cuando lo sujetas y huele fatal.',
+  flamer:'Hecho con una bombona de propano y una manguera de jardín. No está precisamente homologado.',
+  arc:'Un prototipo de bobinas de cobre que no deja de zumbar. El manual está en un idioma que nadie reconoce.',
+  minigun:'Seis cañones girando. Pesa lo mismo que un carro lleno de garrafas de agua.',
+  rail:'Imanes, condensadores y mucha fe. Cuando dispara, parpadean todas las farolas de la carretera.',
+  bat:'Aluminio abollado con cinta en el mango. Un cliente se lo dejó y nunca volvió a por él.',
+  machete:'Lo llaman El Patrón. Nadie recuerda por qué, y nadie le lleva la contraria.',
+  jamon:'Curado treinta y seis meses. Pega como una porra y sabe a gloria.',
+  axe:'Del armario de incendios del almacén. "Romper el cristal en caso de emergencia". Esto es una emergencia.',
+  paella:'Una paellera de sesenta centímetros con el arroz del domingo todavía pegado. Hace de escudo decente.',
+  prod:'Una picana de ranchero con la batería trucada. Los deja tiesos un buen rato.',
+  sledge:'Cinco kilos de acero en un palo. Se oye cada golpe desde la autovía.',
+  chainsaw:'Gasolina, cadena y ruido. No necesita presentación.',
+  capote:'Un capote de torero de verdad, magenta por un lado y amarillo por el otro. Agítalo y se les olvida hacia dónde iban.'
+},
+LORE2:{
+  item:{barricade:'Dos cajas de melocotón en almíbar del almacén. Bien apiladas aguantan una cantidad sorprendente de peso muerto.',spikes:'Se vende como tira de seguridad para la entrada del garaje. Funciona igual de bien con pies que dejaron de sentir dolor hace años.',propane:'Gas de barbacoa del pasillo de jardín. La etiqueta dice que no se acerque al calor. Los zombis no la leyeron.',turret:'Un trípode, un sensor de movimiento y muchísima munición. El encargado la llama la supervisora de noche.',medkit:'Tiritas, gasas, yodo y una piruleta. La piruleta es lo importante.',libro:'El libro de texto de Teresa: tres kilos de deberes y algo que hace tictac. Nadie quiere saber qué hay dentro.',copasa:'Un saco de 25 kilos de pienso COPASA. Los cerdos lo huelen desde la comarca de al lado y llegan con hambre.',lunch:'Alguien la dejó en la nevera del personal con una nota: NO ABRIR. Zumba, está caliente al tacto y la luz de la nevera dejó de funcionar.',hermana:'Una cruz de madera de la capilla de la Hermana Sole, carretera abajo. Levántala y vendrá.'},
+  armor:{vest:'Azul, de poliéster, con el logo de Alcampo en la espalda. Huele a almacén.',track:'Comprado en una gasolinera para huir. Ahora es para volver corriendo.',leather:'Cosido a mano por un cazador que vivía en la meseta. Las mangas todavía huelen a hoguera.',bando:'Presillas para cada cartucho y cargador que tengas. Tintinea al andar.',padded:'Protecciones de hockey, un casco de bici y tres rollos de cinta americana.',cashier:'La casaca roja del cajero del mes. Los clientes dan mejores propinas. Los zombis también, no se sabe cómo.',fire:'Del parque de bomberos voluntarios. Un poco chamuscado, pero sigue homologado.',dictator:'Encontrado en una tienda de disfraces que cerró. Las medallas son de plástico, pero la autoridad parece de verdad.',riot:'Excedentes de la policía. Pesada, calurosa y casi nada la atraviesa.'},
+  pet:{chicken:'Pone huevos explosivos desde que se comió una bolsa de fertilizante. Nadie pregunta cómo.',dog:'Apareció detrás de los contenedores y nunca se fue. Primero muerde y luego pregunta.',armadillo:'Se hace una bola cuando se asusta. Ya nada le asusta, simplemente le gusta rodar.',rabbit:'Demasiado gordo para saltar, así que rueda. Aun así pega como un saco de patatas.',goat:'America murió una vez y volvió más enfadada. Sus cuernos son lo más duro del desierto.',wolf:'Mitad coyote, mitad lobo, todo dientes.',vulture:'Da vueltas sobre la tienda toda la noche esperando las sobras. Le pagas en sobras.',redeagle:'Nadie ha visto otra águila de este color. Bajó de un atardecer y se quedó.',horse:'Wally llegó de un rancho que ya no es de nadie. No deja que nadie lo monte, pero le da coces a cualquier cosa que se te acerque.',bear:'Un grizzly que aprendió que los empleados del súper comparten el bocadillo.'},
+  up:{str:'Cargar cajas de agua todo el día por fin sirve de algo.',dmg:'Menos temblor de manos, más agujeros en el sitio correcto.',hp:'Una chaqueta más gruesa de la taquilla del personal. Los dientes resbalan.',reload:'Práctica en la sala de descanso con un cargador vacío.',door:'Más tablones, más clavos y un candado más grande.'},
+  amu:{quick:'Un cordón con siete nudos. Tus manos recuerdan cosas que nunca aprendieron.',might:'Un hueso tallado con marcas que nadie sabe leer. Pesa más de lo que parece.',swift:'Una pluma de correcaminos. Bip bip.',bulwark:'Una piedra que nunca se mueve, por mucho que empujes.',vital:'Una piedra roja que late como un corazón cuando te la acercas al oído.',midas:'Todo lo que toca vale un poco más.',leech:'Un diente que todavía quiere morder.',eagle:'Un ojo de cristal que ve a través del polvo y la oscuridad.',ember:'Siempre está caliente al tacto.',tinker:'Un engranaje de una máquina que se arreglaba sola.'}
+},
+GTYPE:{hit:'Balas',arrow:'Flechas',goo:'Disparo de moco',flame:'Llamas',arc:'Rayo en cadena',rail:'Rayo cargado'},
+AMULETS:{
+  quick:{name:'Amuleto de manos rápidas',desc:'Recargas un 25% más rápido'},
+  might:{name:'Hueso de fuerza',desc:'+25% de daño'},
+  swift:{name:'Pluma de correcaminos',desc:'+20% de velocidad al andar'},
+  bulwark:{name:'Piedra de mortero',desc:'Las cajas y las puertas reciben un 40% menos de daño'},
+  vital:{name:'Corazón de la meseta',desc:'+50 de vida máxima'},
+  midas:{name:'Moneda de Midas',desc:'+30% de propinas'},
+  leech:{name:'Diente de sanguijuela',desc:'Curas 5 por cada muerte'},
+  eagle:{name:'Ojo de águila',desc:'+60% de daño en la cabeza'},
+  ember:{name:'Sello de brasa',desc:'+75% de daño por quemadura'},
+  tinker:{name:'Engranaje de manitas',desc:'Las torretas tienen el doble de munición y un 50% más de daño'}
+},
+ITEMS:{
+  barricade:{name:'Barricada de cajas',short:'Cajas',desc:'Dos cajas apiladas. Tienen que romperlas para pasar.'},
+  spikes:{name:'Tira de pinchos',short:'Pinchos',desc:'Destroza y frena todo lo que pasa por encima.'},
+  propane:{name:'Bombona de propano',short:'Propano',desc:'Explota cuando se acerca uno. Apártate.'},
+  turret:{name:'Torreta centinela',short:'Torreta',desc:'Dispara carretera abajo ella sola. Se recarga cada turno.'},
+  medkit:{name:'Botiquín',short:'Botiquín',desc:'Cura 50 al usarlo.'},
+  libro:{desc:'Se lanza una vez. El libro de texto explota al impactar y aplasta todo lo que hay cerca.'},
+  copasa:{name:'Pienso COPASA',desc:'Se lanza una vez. El saco revienta donde cae y cuatro cerdos salen a embestir a los zombis durante 7 segundos.'},
+  lunch:{name:'Fiambrera',short:'Fiambrera',desc:'Un solo uso. Lo que hay en esta fiambrera no es comida. Ábrela y la carretera queda limpia: todos los zombis, todos los jefes y el resto de la oleada.'},
+  hermana:{desc:'Un solo uso. Una monja baja del cielo y vaporiza con un rayo de luz a todos los zombis de la pantalla. Los jefes pierden la mitad de la vida.'}
+},
+UPS:{
+  str:{name:'Fuerza',desc:'Las armas cuerpo a cuerpo y el arco empiezan al 30% del daño. Cada nivel suma un 17% de su daño completo, hasta el 200%.'},
+  dmg:{name:'Pulso firme',desc:'+12% de daño con todas las armas'},
+  hp:{name:'Chaqueta de trabajo gruesa',desc:'+25 de vida máxima'},
+  reload:{name:'Manos rápidas',desc:'Recargas un 15% más rápido (se acumula)'},
+  door:{name:'Reforzar las puertas',desc:'+100 de resistencia de las puertas'}
+},
+ZT:{
+  walker:{name:'Caminante',pace:'Lento',note:'La mayoría. Cuatro disparos de pistola al cuerpo, o dos a la cabeza.'},
+  runner:{name:'Corredor',pace:'Rápido',note:'Corre por el arcén. Es delgado, pero te alcanza enseguida.'},
+  hardhat:{name:'Casco de obra',pace:'Lento',note:'El casco bloquea todos los disparos a la cabeza. Dispara al pecho, o rómpele las piernas para que se le caiga el casco. Uno de cada tres lleva un cono de tráfico.'},
+  vaulter:{name:'Saltador de pértiga',pace:'Rápido, salta',note:'Corre con una pértiga, salta por encima de ti y de tus cajas y va directo a las puertas. Después del salto te ignora.'},
+  bloater:{name:'Hinchado',pace:'Muy lento',note:'Revienta al morir. Túmbalo antes de que llegue a tus cajas.'},
+  digger:{name:'Excavador',pace:'Lento, rápido bajo tierra',note:'Lleva una pala. Pasa por debajo de las cajas y las trampas durante tres segundos y vuelve a salir. No puedes darle mientras está bajo tierra.'},
+  fireman:{name:'Bombero',pace:'Lento',note:'Ignífugo: nunca se prende y las llamas apenas le hacen daño. Su hacha roja rompe las cajas el doble de rápido.'},
+  jetpack:{name:'Mochila cohete',pace:'Rápido, vuela',note:'Te ignora por completo. Vuela por encima de cajas, pinchos y propano y aterriza justo en las puertas. El depósito revienta al morir.'},
+  soldier:{name:'Soldado',pace:'Lento',note:'El casco militar bloquea los disparos a la cabeza y el chaleco reduce el daño en el pecho un 25%. Apunta a las piernas: no llevan protección.'},
+  brute:{name:'Bruto',pace:'Lento',note:'Destroza las cajas tres veces más rápido.'},
+  gunner:{name:'Soldado con fusil',pace:'Lento, dispara',note:'Raro. Se para a distancia y dispara despacio, una vez cada tres segundos. Las cajas paran sus balas y el casco bloquea los disparos a la cabeza. Rómpele las piernas y deja de disparar.'},
+  larva:{name:'Larva',pace:'Rápida',note:'Sale de la Madre de la Colmena.'},
+  butcher:{title:'Lanza un gancho de carnicero que te arrastra. Se enfurece a mitad de vida.'},
+  brood:{name:'Madre de la Colmena',title:'Da a luz larvas cada pocos segundos y revienta en más cuando muere.'},
+  voltz:{title:'Sobrecarga a su horda con electricidad y levanta sus cadáveres. Guarda las distancias.'},
+  king:{name:'El Rey Podrido',title:'Te lanza a sus súbditos y usa a uno como espada.'},
+  sheriff:{name:'El Sheriff Hueco',title:'Ráfagas de seis tiros que puedes esquivar y un lazo que te roba las defensas.'},
+  teresa:{title:'La profe zombi. Te acribilla con tizas y toca la campana para llamar a sus alumnos.'},
+  chuchi:{title:'El cocinero zombi. Te lanza paella hirviendo y aplasta las cajas con su paellera.'},
+  patrick:{title:'El fontanero zombi. Lanza una llave inglesa que vuelve y revienta tuberías para sacar zombis del suelo.'}
+},
+AMB:{night:{name:'Noche despejada'},day:{name:'Día abrasador'},rain:{name:'Tormenta'},moon:{name:'Luna llena'},sand:{name:'Tormenta de arena'}}
+};
+const ES_HTML={
+  eb1:'Alcampo &middot; Sucursal del desierto, Ruta 9',eb2:'Abierto 24 h',eb3:'Se busca encargado de turno',
+  lede:'Trabajas en el Alcampo del desierto, en la Ruta 9, y cada turno llegan más muertos arrastrándose desde las dunas. Mantenlos lejos de ti y de las puertas correderas hasta que acabe el turno, y luego gástate las propinas en el almacén en armas, armaduras, mascotas y algunas cosas que nadie debería vender.',
+  hShift:'Turno',hRoad:'En la carretera',hTips:'Propinas',hYou:'Tú',hDoors:'Puertas',
+  mHow:'<h2>Cómo funciona un turno</h2><ol class="steps"><li>Antes de que abran las puertas, coloca cajas, tiras de pinchos, bombonas de propano y torretas en la carretera.</li><li>Llegan desde las dunas por la derecha. Mantenlos lejos de ti y de las puertas correderas.</li><li>Si caes o las puertas ceden, la partida se acaba y vuelves a empezar desde el turno 1.</li><li>Cuando acaba el turno vuelves corriendo dentro, cobras las propinas más un extra y repones. Las defensas se quedan donde las dejaste.</li><li>Entre turnos puedes hacer 4 compras. Las mejoras no cuentan, pero cada mejora solo sube un nivel por fase de compra.</li><li>Las armas cuerpo a cuerpo y el arco empiezan muy flojos. La mejora de Fuerza hace que peguen más.</li><li>Cada cuarto turno termina con un jefe.</li></ol>',
+  mCtl:'<h2>Controles</h2><dl class="keys"><dt>A D / &larr; &rarr;</dt><dd>Andar</dd><dt>Ratón</dt><dd>Apuntar. Mantén el clic izquierdo para disparar. Apunta alto para la cabeza, bajo para las piernas.</dd><dt>R</dt><dd>Recargar</dd><dt>F / clic derecho</dt><dd>Cuerpo a cuerpo. Mantenlo con la motosierra.</dd><dt>1&ndash;0 / Q E / rueda</dt><dd>Cambiar de arma</dd><dt>I</dt><dd>Tus estadísticas: fuerza, velocidad y lo demás</dd><dt>Z X C V</dt><dd>Colocar caja, pinchos, propano, torreta</dd><dt>G</dt><dd>Lanzar el Libro Tere Profe</dd><dt>K</dt><dd>Lanzar un saco de pienso COPASA</dd><dt>L</dt><dd>Abrir la fiambrera</dd><dt>J</dt><dd>Llamar a la Hermana Sole</dd><dt>H</dt><dd>Usar un botiquín</dd><dt>Tab / B / P</dt><dd>Empezar turno / almacén / pausa</dd><dt>Móvil o tableta</dt><dd>Aparecen botones en pantalla: flechas para andar, Disparar apunta solo al zombi más cercano, o toca la pantalla para apuntar y disparar. Tus objetos están debajo de las flechas.</dd></dl>',
+  mWhere:'<h2>Dónde disparar</h2><ul class="plain"><li><b>Cabeza.</b> Doble de daño. Los cascos y los conos de tráfico bloquean por completo los disparos a la cabeza.</li><li><b>Pecho.</b> Daño normal. El chaleco de los soldados lo reduce un 25%.</li><li><b>Piernas.</b> Daño normal, y se va sumando. Mete en las piernas un tercio de la vida de un zombi y se le rompen. Cae al suelo, se arrastra a un tercio de su velocidad y pierde el casco o el cono. A los jefes no se les puede lisiar.</li></ul>',
+  mWeather:'<h2>Tiempo</h2><ul class="plain"><li><b>Noche despejada.</b> Oscuro más allá de las farolas. Tu linterna sigue a donde apuntas.</li><li><b>Día abrasador.</b> Se ve todo. Hay plantas rodadoras.</li><li><b>Tormenta.</b> Oscuro y mojado. El fuego dura la mitad, y a veces un rayo cae sobre uno de ellos.</li><li><b>Luna llena.</b> Rara (1 turno de cada 20), desde el turno 3. Te conviertes en hombre lobo: 35% más rápido, doble de daño cuerpo a cuerpo y 20% menos de daño recibido. Una bandada de palomas picotea a los zombis toda la noche.</li><li><b>Tormenta de arena.</b> Solo ves lo que tienes cerca. Todo camina un 15% más lento.</li></ul><p>El almacén muestra la previsión del siguiente turno.</p>',
+  mField:'Guía de campo',mBoss:'Jefes',
+  credit:'Un homenaje original de fan a <a href="https://apps.apple.com/us/app/they-are-coming-zombie-defense/id1576645378" target="_blank" rel="noopener">They Are Coming: Zombie Defense</a> de OnHit Developments, un juego de supervivencia de desplazamiento lateral en el que defiendes un orfanato de oleadas diarias de zombis y compras armas, barricadas y trampas entre días. La ambientación, el arte y el código de aquí son nuevos.'
+};
+const ES={
+  /* canvas and floaters */
+  'NONE LEFT':'NO QUEDA','NO ROOM':'NO HAY SITIO','FULL HEALTH':'VIDA AL MÁXIMO','WAIT FOR THE SHIFT':'ESPERA AL TURNO','NO SACKS LEFT':'NO QUEDAN SACOS','COPASA!':'¡COPASA!',
+  'LUNCH BREAK!':'¡HORA DE COMER!','NO BOOKS LEFT':'NO QUEDAN LIBROS','LIBRO TERE PROFE!':'¡LIBRO TERE PROFE!','CONE OFF':'FUERA CONO','HELMET OFF':'FUERA CASCO','LEGS BROKEN':'PIERNAS ROTAS',
+  'VOID':'VACÍO','LIGHT HOLE -10%':'AGUJERO DE LUZ -10%','BLOCKED':'BLOQUEADO','PIR +{0}% FIRE RATE':'PIR +{0}% CADENCIA','HEADSHOT':'A LA CABEZA','BOSS DOWN':'JEFE ABATIDO',
+  '{0} is finished. +{1}':'{0}, fuera de combate. +{1}','SILENCE IN CLASS!':'¡SILENCIO EN CLASE!','STACKS LOST':'ACUMULACIÓN PERDIDA','ENRAGED':'FURIOSA','OVERCHARGE':'SOBRECARGA',
+  'IT LIVES!':'¡ESTÁ VIVO!','CATCH!':'¡AHÍ VA!','RISE, SUBJECTS!':'¡ALZAOS, SÚBDITOS!','YOINK':'¡MÍO!','LASSOED':'ATRAPADO','HOP!':'¡HOP!','May the light take you.':'Que la luz os lleve.',
+  'CLASS IS IN SESSION':'EMPIEZA LA CLASE','DINNER IS SERVED':'LA CENA ESTÁ SERVIDA','PIPE BURST!':'¡REVIENTA LA TUBERÍA!','SHIFT {0}':'TURNO {0}',
+  '{0} · {1} · Hold the store until {2}':'{0} · {1} · Aguanta en la tienda hasta las {2}','FULL MOON':'LUNA LLENA',
+  'You turn into a werewolf. The pigeons are on your side tonight.':'Te conviertes en hombre lobo. Esta noche las palomas están de tu lado.',
+  'Shift {0} survived. Heading back inside.':'Turno {0} superado. Vuelves dentro.','DOORS DOWN':'PUERTAS CAÍDAS','They are inside the Alcampo':'Están dentro del Alcampo',
+  '{0} for {1} shifts':'{0} durante {1} turnos','HERMANA SOLE':'HERMANA SOLE',
+  'Z X C V PLACE DEFENSES · TAB STARTS SHIFT {0} · {1}':'Z X C V COLOCA DEFENSAS · TAB EMPIEZA EL TURNO {0} · {1}','TAP AN ITEM TO PLACE IT · {0}':'TOCA UN OBJETO PARA COLOCARLO · {0}',
+  'PAUSED':'PAUSA','PRESS P TO RESUME':'PULSA P PARA SEGUIR','TAP ▶ TO RESUME':'TOCA ▶ PARA SEGUIR','WELCOME BACK':'BIENVENIDO DE NUEVO',
+  'Shift {0}. Your defenses are where you left them.':'Turno {0}. Tus defensas están donde las dejaste.','{0}. Set your defenses before the doors open.':'{0}. Coloca tus defensas antes de que abran las puertas.',
+  /* HUD and tray */
+  'Clock':'Hora','reload':'recarga','Walk left':'Andar a la izquierda','Walk right':'Andar a la derecha','Reload':'Recargar','Hit':'Golpe','Melee':'Cuerpo a cuerpo','How to use':'Cómo se usa','Fire':'Disparar','Stockroom':'Almacén','Start shift':'Empezar turno',
+  'Resume':'Seguir','Pause':'Pausa','last shift':'último turno','{0} shifts left':'quedan {0} turnos','shift':'turno','shifts':'turnos','kill':'muerte','kills':'muertes','headshot':'disparo a la cabeza','headshots':'disparos a la cabeza','boss':'jefe','bosses':'jefes',
+  'This run does not count toward your best':'Esta partida no cuenta para tu récord','Dev panel used':'Panel de desarrollo usado','Pet: {0}':'Mascota: {0}','Stats':'Estadísticas','Start shift {0}':'Empezar turno {0}',
+  'Sound off':'Sonido no','Sound on':'Sonido sí','Touch controls on':'Controles táctiles sí','Touch controls off':'Controles táctiles no',
+  /* stockroom */
+  'Guns':'Armas','Armor':'Armadura','Pets':'Mascotas','Supplies':'Suministros','Upgrades':'Mejoras','See details':'Ver detalles','Mods':'Mods','Limit':'Límite','Buy':'Comprar',
+  'ALCAMPO ROUTE 9 · REGISTER 2 · BEFORE SHIFT {0}':'ALCAMPO RUTA 9 · CAJA 2 · ANTES DEL TURNO {0}','Your stats':'Tus estadísticas','Shift {0} survived ({1})':'Turno {0} superado ({1})',
+  'Kills':'Muertes','Headshots':'Disparos a la cabeza','Tips from kills':'Propinas por muertes','End of shift bonus':'Extra de fin de turno','In the drawer':'En la caja','Starting float':'Cambio inicial',
+  'You used the dev panel this run, so it will not count toward your best.':'Has usado el panel de desarrollo en esta partida, así que no contará para tu récord.',
+  'Crumbled to dust after {0} shifts: {1}.':'Convertidos en polvo tras {0} turnos: {1}.','Forecast for shift {0}: {1} · {2} to {3}':'Previsión del turno {0}: {1} · de {2} a {3}','BOSS TONIGHT: {0}':'JEFE ESTA NOCHE: {0}',
+  'Purchases this buy phase: {0} of {1}':'Compras en esta fase: {0} de {1}','. Come back after the next shift.':'. Vuelve después del siguiente turno.',
+  'Upgrades don\'t count, but each one only goes up one level per buy phase.':'Las mejoras no cuentan, pero cada una solo sube un nivel por fase de compra.',
+  'Equipped':'Equipada','Equip':'Equipar','owned':'tuya','yours':'tuya',
+  'Every gun has mods behind its Mods button, including a playstyle perk that changes how it plays. You can look before you buy.':'Cada arma tiene mods en su botón Mods, incluida una ventaja de estilo que cambia cómo se juega. Puedes mirarlos antes de comprar.',
+  'In hand':'En la mano','{0} dmg':'{0} de daño','Melee damage scales with your Strength upgrade. Right now you hit at {0}% of full damage.':'El daño cuerpo a cuerpo depende de tu mejora de Fuerza. Ahora mismo pegas al {0}% del daño completo.',
+  'Wearing':'Puesta','Wear':'Ponértela','Leave home':'Dejar en casa','Bring along':'Traer','Adopt':'Adoptar',
+  'One pet comes to work with you. Pets cannot be hurt. They get a little stronger every shift.':'Una mascota viene a trabajar contigo. A las mascotas no se les puede hacer daño. Se hacen un poco más fuertes cada turno.',
+  'have {0}':'tienes {0}','Patch up':'Curarte','Restore your health to full. Now {0}.':'Recupera toda tu vida. Ahora {0}.','Fix the doors':'Arreglar las puertas','+100 door strength, up to its max. Now {0}.':'+100 de resistencia de las puertas, hasta el máximo. Ahora {0}.',
+  'max':'máx','Max':'Máx','Bought':'Comprada','Now {0}%.':'Ahora {0}%.','Each upgrade can go up one level per buy phase.':'Cada mejora puede subir un nivel por fase de compra.','Amulets you carry':'Amuletos que llevas','each':'cada uno',
+  'Amulets are rare. Sometimes one glints on the road, kills almost never drop one, and every boss drops one. Walk over it to pick it up.':'Los amuletos son raros. A veces brilla uno en la carretera, las muertes casi nunca sueltan uno y cada jefe suelta uno. Pasa por encima para cogerlo.',
+  'Each amulet lasts {0} shifts, counting the one you find it in, then crumbles. Two of the same kind stack.':'Cada amuleto dura {0} turnos, contando el turno en que lo encuentras, y luego se deshace. Dos del mismo tipo se suman.',
+  'THANK YOU, COME AGAIN.':'GRACIAS, VUELVA PRONTO.','Back outside to place':'Salir a colocar',
+  /* mods and cards */
+  'Close':'Cerrar','+{0} per load. Now {1}.':'+{0} por carga. Ahora {1}.','+15% fire rate. Now {0} a second.':'+15% de cadencia. Ahora {0} por segundo.','+12% damage with this gun. Now +{0}%.':'+12% de daño con esta arma. Ahora +{0}%.',
+  'Fitted':'Montado','in use':'en uso','Downside: {0}':'Pega: {0}','Turn off':'Quitar','Use':'Usar','+15% damage per hit. Now +{0}%.':'+15% de daño por golpe. Ahora +{0}%.','+15% swing speed. Now +{0}%.':'+15% de velocidad de golpe. Ahora +{0}%.',
+  '{0} mods':'Mods de {0}','{0} in the drawer · purchases this buy phase: {1} of {2}':'{0} en la caja · compras en esta fase: {1} de {2}','You don\'t own this yet. Buy it first to fit these.':'Todavía no la tienes. Cómprala primero para montar esto.',
+  'Playstyle perks':'Ventajas de estilo','These change how the gun plays, with a catch. Buying one counts as a purchase. After that, switching it on or off is free. One can be in use at a time.':'Cambian cómo se juega el arma, pero tienen su pega. Comprar una cuenta como compra. Después, ponerla o quitarla es gratis. Solo puede haber una en uso a la vez.',
+  '{0} bullets a shot':'{0} balas por disparo','{0} beams':'{0} rayos','{0} pellets':'{0} perdigones','Damage per hit':'Daño por impacto','bosses {0}':'jefes {0}','Shots per second':'Disparos por segundo','Damage per second':'Daño por segundo',
+  'Fuel':'Combustible','Arrows in the quiver':'Flechas en el carcaj','Magazine':'Cargador','Range':'Alcance','short':'corto','medium':'medio','long':'largo','Passes through':'Atraviesa','everything':'todo','{0} more enemy':'{0} enemigo más','{0} more enemies':'{0} enemigos más','no':'no',
+  'Lightning':'Rayo','no chain · fries everything within 50':'no salta · fríe todo en 50','jumps to {0}':'salta a {0}','Spin-up time':'Tiempo de giro','Charge time':'Tiempo de carga','Kill stacks':'Acumulación por muertes','+{0}% fire rate per kill · now +{1}%':'+{0}% de cadencia por muerte · ahora +{1}%',
+  'Special':'Especial','fitted':'montado','not bought':'sin comprar','fitted · 20% instant kills, bosses lose 10% (every 25 s)':'montado · 20% de muertes instantáneas, los jefes pierden un 10% (cada 25 s)','Playstyle perk':'Ventaja de estilo','none in use':'ninguna en uso',
+  'Price':'Precio','you own it':'es tuya','free':'gratis','Strength':'Fuerza','level {0} · arrows hit at {1}%':'nivel {0} · las flechas pegan al {1}%','hold to use':'mantén para usar','Hits per second':'Golpes por segundo','level {0} · hits at {1}%':'nivel {0} · pegas al {1}%',
+  'Reach':'Alcance','Knockback':'Empuje','huge':'enorme','strong':'fuerte','light':'ligero','heals {0} per hit':'cura {0} por golpe','breaks helmets and cones':'rompe cascos y conos','blocks {0}% from the front':'bloquea el {0}% de frente','scatters rice':'esparce arroz','stuns {0} s':'aturde {0} s','ground slam':'golpe al suelo','thrown, comes back':'se lanza y vuelve','confuses for {0} s':'confunde {0} s','Effect':'Efecto',
+  'One-time use':'Un solo uso','Place on the road':'Se coloca en la carretera','key {0}':'tecla {0}','Health':'Vida','170 per stack':'170 por montón','tap it to drop it where you stand':'tócala para soltarla donde estás','press Z to drop it where you stand':'pulsa Z para soltarla donde estás',
+  'Damage':'Daño','70 a second to anything on it':'70 por segundo a lo que esté encima','Lasts':'Dura','about 9 seconds of traffic':'unos 9 segundos de tráfico','slows them down':'los frena','Blast':'Explosión','360 damage, radius 52':'360 de daño, radio 52','Careful':'Cuidado','also hurts you and your crates':'también te daña a ti y a tus cajas',
+  'Damage per shot':'Daño por disparo','Ammo':'Munición','{0}, refilled every shift':'{0}, se recarga cada turno','250, down the road':'250, carretera abajo','Heals':'Cura','50 health':'50 de vida','tap it any time':'tócalo cuando quieras','press H any time':'pulsa H cuando quieras',
+  '600 damage, radius 74':'600 de daño, radio 74','tap it to throw it at the nearest zombie':'tócalo para lanzarlo al zombi más cercano','press G to throw it where you aim':'pulsa G para lanzarlo hacia donde apuntas','Pigs':'Cerdos','4, for 7 seconds':'4, durante 7 segundos','Damage per ram':'Daño por embestida',
+  'tap it to throw the sack':'tócalo para lanzar el saco','press K to throw the sack':'pulsa K para lanzar el saco','every zombie and boss on the road, plus the rest of the wave':'todos los zombis y jefes de la carretera, y el resto de la oleada','tap it during a shift':'tócala durante un turno','press L during a shift':'pulsa L durante un turno',
+  'vaporizes every zombie on screen · bosses lose half their health':'vaporiza a todos los zombis de la pantalla · los jefes pierden la mitad de la vida','press J during a shift':'pulsa J durante un turno','You have':'Tienes',
+  'Walking speed':'Velocidad al andar','Bow damage':'Daño con arco','Bow draw time':'Tiempo de tensado','Reload time':'Tiempo de recarga','Melee damage':'Daño cuerpo a cuerpo','Damage you take':'Daño que recibes','Tips':'Propinas','Explosions':'Explosiones','cannot hurt you':'no te hacen daño',
+  'Burn damage':'Daño por quemadura','Flamethrower range':'Alcance del lanzallamas','Pet damage':'Daño de mascota','Perks':'Ventajas','none':'ninguno','Status':'Estado','wearing it':'la llevas puesta','in your locker':'en tu taquilla',
+  'Pet':'Mascota','{0} per egg blast':'{0} por huevo explosivo','{0} a hit':'{0} por golpe','Attacks':'Ataca','every {0} s':'cada {0} s','Speed':'Velocidad',
+  'up to 5 eggs on the road at once':'hasta 5 huevos a la vez en la carretera','fast bites':'mordiscos rápidos','bowls through a whole line':'arrolla a una fila entera','bounces up to 4 times':'rebota hasta 4 veces','huge headbutt knockback':'cabezazo con un empuje enorme','pounces from range':'salta desde lejos',
+  'hunts flyers and bosses first · fetches amulets':'caza primero voladores y jefes · trae amuletos','double back-leg kick, huge knockback · cannot be ridden':'coz doble con las patas traseras, empuje enorme · no se puede montar','every swipe hits everything in front':'cada zarpazo golpea todo lo que tiene delante',
+  'Grows':'Crece','+10% every shift · now ×{0}':'+10% cada turno · ahora ×{0}','×{0} pet damage':'×{0} daño de mascota','coming to work':'viene a trabajar','at home':'en casa','not adopted':'sin adoptar',
+  'Upgrade · one level per buy phase':'Mejora · un nivel por fase de compra','{0}% melee and bow damage':'{0}% de daño cuerpo a cuerpo y con arco','+{0}% damage':'+{0}% de daño','{0} max health':'{0} de vida máxima','{0}% reload time':'{0}% del tiempo de recarga','{0} door strength':'{0} de resistencia de puertas',
+  'Level':'Nivel','{0} of {1}':'{0} de {1}','Now':'Ahora','Next level':'Siguiente nivel','maxed':'al máximo','This buy phase':'Esta fase de compra','already bought':'ya comprada','available':'disponible',
+  'Amulet · lasts {0} shifts':'Amuleto · dura {0} turnos','{0} per amulet':'{0} por amuleto','You carry':'Llevas','Crumbles':'Se deshace','Where to find':'Dónde encontrarlo','sometimes glints on the road · very rarely from kills · every boss drops one':'a veces brilla en la carretera · muy rara vez al matar · cada jefe suelta uno',
+  'Picture of the {0}':'Imagen de {0}','Open mods':'Abrir mods',
+  '{0} · {1} of normal':'{0} · {1} de lo normal','Damage bonus':'Bonus de daño','+{0}% (guns and melee)':'+{0}% (armas y cuerpo a cuerpo)','{0} of normal':'{0} de lo normal','×{0} damage':'×{0} de daño','Melee in hand':'Arma de mano',
+  '{0} · {1} a hit · {2} a second':'{0} · {1} por golpe · {2} por segundo','Bow':'Arco','{0} per arrow':'{0} por flecha','Doors':'Puertas','take {0} damage':'reciben el {0} del daño','{0} per kill':'{0} por muerte','Amulets':'Amuletos',
+  'Melee weapons and the bow hit at <b>{0}</b> of full damage. Next level: {1}. Raise it in Upgrades, one level per buy phase.':'Las armas cuerpo a cuerpo y el arco pegan al <b>{0}</b> del daño completo. Siguiente nivel: {1}. Súbela en Mejoras, un nivel por fase de compra.',
+  'Shift {0}':'Turno {0}','dev panel used this run':'panel de desarrollo usado en esta partida','Selected. Press Ctrl+C (Cmd+C on Mac) to copy.':'Seleccionado. Pulsa Ctrl+C (Cmd+C en Mac) para copiar.','Copied.':'Copiado.',
+  'Save code':'Código de guardado','Your run saves itself in this browser at every buy phase and when you leave the page. To carry it to another browser or computer, copy this code and paste it on the title screen there.':'Tu partida se guarda sola en este navegador en cada fase de compra y al salir de la página. Para llevarla a otro navegador u ordenador, copia este código y pégalo allí en la pantalla de inicio.',
+  'Copy save code':'Copiar código','No save yet. One is made as soon as you are between shifts.':'Todavía no hay partida guardada. Se crea en cuanto estés entre turnos.',
+  /* title, game over */
+  'Language':'Idioma','Graveyard shift · Alcampo Route 9':'Turno de noche · Alcampo Ruta 9','Saved run: shift {0} · {1} in the drawer.':'Partida guardada: turno {0} · {1} en la caja.','Continue shift {0}':'Seguir en el turno {0}','New run':'Partida nueva',
+  'Hold the supermarket until the shift ends. Every shift brings more of them, and every fourth one brings a boss. One bad shift and you start over.':'Aguanta en el súper hasta que acabe el turno. Cada turno llegan más, y cada cuatro turnos llega un jefe. Un mal turno y vuelves a empezar.',
+  'Clock in':'Fichar','Longest run: {0} survived':'Mejor partida: {0} superados','Use the arrows to walk. Hold Fire to shoot the nearest zombie, or touch the screen to aim.':'Usa las flechas para andar. Mantén Disparar para tirar al zombi más cercano, o toca la pantalla para apuntar.',
+  'A/D to walk, mouse to aim and shoot, Tab to start the shift.':'A/D para andar, ratón para apuntar y disparar, Tab para empezar el turno.','Load a save code':'Cargar un código de guardado','Paste your save code':'Pega tu código de guardado','Load':'Cargar',
+  'Erase the saved run?':'¿Borrar la partida guardada?','That code did not work. Copy the whole code from Your stats and paste it again.':'Ese código no funciona. Copia el código entero desde Tus estadísticas y vuelve a pegarlo.',
+  'They broke through the doors':'Han tirado las puertas','You were bitten':'Te han mordido','{0} survived':'{0} superados','{0} met':'{0} vistos','You used the dev panel, so this run does not count toward your best.':'Has usado el panel de desarrollo, así que esta partida no cuenta para tu récord.',
+  'Longest run: {0}':'Mejor partida: {0}','Clock in again':'Volver a fichar',
+  /* field guide */
+  'Conehead':'Cabeza de cono','A hardhat that grabbed a traffic cone off the lot. The cone blocks every headshot, just like a helmet. Break its legs and the cone falls off.':'Un casco de obra que cogió un cono de tráfico del aparcamiento. El cono bloquea todos los disparos a la cabeza, igual que un casco. Rómpele las piernas y se le cae el cono.',
+  'cone':'cono','helmet':'casco','HP {0} · first on shift {1}':'Vida {0} · primero en el turno {1}','HP {0}':'Vida {0}','shift {0}+':'turno {0}+',
+  'Game screen: an Alcampo supermarket on a desert road with zombies approaching from the right':'Pantalla de juego: un supermercado Alcampo en una carretera del desierto con zombis acercándose por la derecha',
+  /* dev panel */
+  'Override unlocked.':'Control desbloqueado.','Manager override':'Control del encargado','This run no longer counts toward your best.':'Esta partida ya no cuenta para tu récord.','Using anything here stops this run from counting toward your best.':'Si usas algo de aquí, esta partida dejará de contar para tu récord.',
+  'Tips · now {0}':'Propinas · ahora {0}','Set tips':'Fijar propinas','Set':'Fijar','Survival':'Supervivencia','Full health':'Vida al máximo','Fix doors':'Arreglar puertas','God mode':'Modo dios','Arsenal':'Arsenal','All guns':'Todas las armas','Max every mod':'Todos los mods al máximo',
+  'All melee':'Todo cuerpo a cuerpo','All armor':'Todas las armaduras','All pets':'Todas las mascotas','Max upgrades':'Mejoras al máximo','Reset buy limit':'Reiniciar límite de compras','Infinite ammo':'Munición infinita','One-hit kills':'Muertes de un golpe',
+  'Supplies, +5 each':'Suministros, +5 de cada','All':'Todo','+1 random':'+1 al azar','+1 of each':'+1 de cada','Weather (now and next shift)':'Tiempo (ahora y próximo turno)','Spawn (during a shift)':'Invocar (durante un turno)','Clear wave':'Limpiar oleada','Bosses (during a shift)':'Jefes (durante un turno)',
+  'Jump to shift (between shifts)':'Saltar a turno (entre turnos)','Shift number':'Número de turno','Open again with up up down down left right left right B A, or tap the Open 24 hrs sign five times.':'Ábrelo otra vez con arriba arriba abajo abajo izquierda derecha izquierda derecha B A, o toca cinco veces el cartel de Abierto 24 h.',
+  '+{0} in the drawer.':'+{0} en la caja.','Tips set to {0}.':'Propinas fijadas en {0}.','Health full.':'Vida al máximo.','Too late, you are down.':'Demasiado tarde, has caído.','Doors fixed.':'Puertas arregladas.',
+  'God mode on.':'Modo dios activado.','God mode off.':'Modo dios desactivado.','Infinite ammo on.':'Munición infinita activada.','Infinite ammo off.':'Munición infinita desactivada.','One-hit kills on.':'Muertes de un golpe activadas.','One-hit kills off.':'Muertes de un golpe desactivadas.',
+  'All guns unlocked.':'Todas las armas desbloqueadas.','Every gun and melee mod maxed. Playstyle perks are unlocked: switch them on in each gun\'s Mods.':'Todos los mods al máximo. Las ventajas de estilo están desbloqueadas: actívalas en los Mods de cada arma.',
+  'All melee weapons in the stockroom. Equip one there.':'Todas las armas cuerpo a cuerpo en el almacén. Equipa una allí.','All armor in the stockroom. Wear one there.':'Todas las armaduras en el almacén. Ponte una allí.','All pets adopted. Pick one in the stockroom.':'Todas las mascotas adoptadas. Elige una en el almacén.',
+  'All upgrades maxed.':'Todas las mejoras al máximo.','Buy limit reset for this phase.':'Límite de compras reiniciado en esta fase.','+5 {0}.':'+5 {0}.','+5 of everything.':'+5 de todo.','Got {0}.':'Conseguido: {0}.','One of every amulet.':'Uno de cada amuleto.',
+  'Weather set to {0}.':'Tiempo cambiado a {0}.','Start a shift first.':'Empieza un turno primero.','{0} on the road.':'{0} en la carretera.','Nothing to clear between shifts.':'No hay nada que limpiar entre turnos.','Wave cleared.':'Oleada limpia.','Only between shifts.':'Solo entre turnos.','Next up: shift {0}.':'Siguiente: turno {0}.'
+};
+let EN_DATA=null;const EN_HTML={};
+function langSnap(tgt,shape){const o={};for(const k in shape){const v=shape[k];if(v&&typeof v==='object'){if(tgt&&tgt[k]!=null)o[k]=langSnap(tgt[k],v);}else if(tgt&&k in tgt)o[k]=tgt[k];}return o;}
+function langMerge(tgt,src){for(const k in src){const v=src[k];if(v&&typeof v==='object'){if(tgt&&tgt[k]!=null)langMerge(tgt[k],v);}else if(tgt&&k in tgt)tgt[k]=v;}}
+function applyLang(l){
+  LANG=l==='es'?'es':'en';store.set('lang',LANG);
+  const roots={GUNS,MODS,MELEE,MMODS,ARMORS,PETS,LORE,LORE2,GTYPE,AMULETS,ITEMS,UPS,ZT,AMB};
+  if(!EN_DATA){EN_DATA={};for(const k in ES_DATA)EN_DATA[k]=langSnap(roots[k],ES_DATA[k]);}
+  const src=LANG==='es'?ES_DATA:EN_DATA;for(const k in src)langMerge(roots[k],src[k]);
+  try{document.documentElement.lang=LANG;}catch(e){}
+  for(const node of document.querySelectorAll('[data-i18n]')){const k=node.dataset.i18n;if(!(k in EN_HTML))EN_HTML[k]=node.innerHTML;node.innerHTML=LANG==='es'&&ES_HTML[k]!=null?ES_HTML[k]:EN_HTML[k];}
+  try{cv.setAttribute('aria-label',_t('Game screen: an Alcampo supermarket on a desert road with zombies approaching from the right'));}catch(e){}
+}
 /* ---------- desert backdrops ---------- */
 const FARW=W+Math.ceil((WORLD-W)*.15)+60,MIDW=W+Math.ceil((WORLD-W)*.4)+60,POLEW=W+Math.ceil((WORLD-W)*.65)+80;
 const MESAS=[];(function(){let x=-30;while(x<FARW){const w=(rnd(50,130))|0,h=(rnd(34,80))|0;MESAS.push({x,w,h,cap:rnd(.45,.72)});x+=w+((rnd(20,110))|0);}})();
@@ -674,8 +1016,8 @@ function getBG(id){
 }
 const stars=[];for(let i=0;i<70;i++)stars.push({x:rnd(0,W+60),y:rnd(4,140),b:rnd(.25,1),tw:rnd(0,6)});
 const shelf=[];for(let i=0;i<40;i++)shelf.push({x:8+((Math.random()*108)|0),y:pick([164,176,188]),c:pick(['#c8402e','#3f7fbf','#e8d27a','#6fae5f','#d77ab0','#f2f0e6','#f5a443'])});
-const LAMPS=[560,980,1380];
-const lampOn=x=>x!==980||((T*4)%5)<3.8||((T*4)%5)>4.3;
+const LAMPS=[520,820,1100];
+const lampOn=x=>x!==820||((T*4)%5)<3.8||((T*4)%5)>4.3;
 const lm=mk(W,H),L=lm.getContext('2d');
 
 /* ---------- the Alcampo ---------- */
@@ -980,7 +1322,7 @@ function part(x,y,vx,vy,life,c,s,g,o){if(parts.length>900)return;parts.push(Obje
 function blood(x,y,dir,n){for(let i=0;i<n;i++)part(x,y,dir*rnd(10,90)+rnd(-25,25),rnd(-90,-10),rnd(.5,1.1),pick(['#8e1f2a','#b0303a','#6e1820']),Math.random()<.3?2:1,320,{decal:true});}
 function dirt(x,n){for(let i=0;i<n;i++)part(x+rnd(-5,5),GY-1,rnd(-50,50),rnd(-110,-30),rnd(.4,.8),pick(['#6b5338','#8a6c48','#5a452e']),pick([1,2]),380,{decal:Math.random()<.4});}
 function rice(x,y,n){for(let i=0;i<n;i++)part(x+rnd(-4,4),y+rnd(-3,3),rnd(-70,70),rnd(-120,-20),rnd(.8,1.4),pick(['#f3e7b0','#f7f0d8','#e8c25a','#f3e7b0','#c8402e','#6fae5f']),1,360,{decal:true});}
-function flt(x,y,text,c){floaters.push({x,y,text,c,life:1.1,max:1.1});}
+function flt(x,y,text,c){floaters.push({x,y,text:_t(text),c,life:1.1,max:1.1});}
 function jag(pts){const out=[pts[0]];for(let i=1;i<pts.length;i++){const [x0,y0]=pts[i-1],[x1,y1]=pts[i],n=Math.max(2,Math.round(Math.hypot(x1-x0,y1-y0)/9));for(let k=1;k<n;k++)out.push([x0+(x1-x0)*k/n+rnd(-3,3),y0+(y1-y0)*k/n+rnd(-3,3)]);out.push([x1,y1]);}return out;}
 const live=z=>!z.dead&&!z.demo&&!z.under&&!z.carried;
 
@@ -1147,7 +1489,7 @@ function kill(z,head,dir){
   if(z.dead)return;z.dead=true;z.flash=0;
   const t=ZT[z.type],cash=Math.max(1,Math.round((t.cash+(head?2:0))*cashMult()*(1+.05*(run.night-1))));
   run.cash+=cash;run.kills++;if(head)run.heads++;
-  if(z.lastSrc==='pir'){run.pirStacks=(run.pirStacks||0)+1;if(run.pirStacks%10===0)flt(p.x,p.y-36,'PIR +'+run.pirStacks*(trOn('pir','hyper')?10:5)+'% FIRE RATE','#7fe8ff');}
+  if(z.lastSrc==='pir'){run.pirStacks=(run.pirStacks||0)+1;if(run.pirStacks%10===0)flt(p.x,p.y-36,_t('PIR +{0}% FIRE RATE',run.pirStacks*(trOn('pir','hyper')?10:5)),'#7fe8ff');}
   if(night){night.killed++;night.earned+=cash;if(head)night.heads++;}
   flt(z.x,z.y-z.h-4,'+'+money(cash),'#f5a443');if(head)flt(z.x,z.y-z.h-13,'HEADSHOT','#efe6d2');
   if(amu('leech')&&p.alive)p.hp=Math.min(run.hpMax,p.hp+5*amu('leech'));
@@ -1156,8 +1498,8 @@ function kill(z,head,dir){
   if(z.crawl)corpses.push({z,x:z.x,cy:GY,vx:0,vy:0,rot:0,vr:0,t:0,ground:true,flat:true});
   else if(z.type!=='larva'){corpses.push({z,x:z.x,cy:z.y-z.h/2,vx:dir*rnd(30,80)/Math.sqrt(z.mass)+z.kbv*.3,vy:-rnd(50,120)/Math.sqrt(z.mass),rot:0,vr:dir*rnd(5,10)/Math.sqrt(z.mass),t:0,ground:false});if(corpses.length>45)corpses.shift();}
   blood(z.x,z.y-z.h*.6,dir,z.boss?24:8);sfx('kill');
-  if(z.boss){dropAmulet(z.x-10);dropAmulet(z.x+10);banner={text:'BOSS DOWN',sub:t.name+' is finished. +'+money(cash),t:2.4,max:2.4};shake=8;if(bossRef===z)bossRef=null;explode(z.x,z.y-z.h/2,40,{z:200,p:0,s:0},'fire');}
-  else if(Math.random()<.025)dropAmulet(z.x);
+  if(z.boss){dropAmulet(z.x);banner={text:_t('BOSS DOWN'),sub:_t('{0} is finished. +{1}',t.name,money(cash)),t:2.4,max:2.4};shake=8;if(bossRef===z)bossRef=null;explode(z.x,z.y-z.h/2,40,{z:200,p:0,s:0},'fire');}
+  else if(Math.random()<.004)dropAmulet(z.x);
   if(z.type==='bloater')explode(z.x,z.y-10,46,{z:180,p:30,s:40},'gas');
   if(z.type==='jetpack')explode(z.x,z.y-12,26,{z:110,p:10,s:10},'pop');
   if(z.type==='brood'){spawnLarva(z.x,6);explode(z.x,z.y-12,44,{z:120,p:20,s:30},'gas');}
@@ -1364,7 +1706,7 @@ const inGoo=z=>z.y>GY-30?goos.find(g=>Math.abs(z.x-g.x)<g.w/2+z.w/2-2):null;
 function collectAmulet(pk){
   pk.dead=true;if(!run.amus)run.amus=[];run.amus.push({id:pk.id,got:run.night});const A=AMULETS[pk.id];
   if(pk.id==='vital'){run.hpMax+=50;p.hp+=50;}
-  flt(p.x,p.y-34,A.name.toUpperCase(),A.c);flt(p.x,p.y-25,A.desc+' for '+AMU_LIFE+' shifts','#efe6d2');sfx('chime');renderTray();
+  flt(p.x,p.y-34,A.name.toUpperCase(),A.c);flt(p.x,p.y-25,_t('{0} for {1} shifts',A.desc,AMU_LIFE),'#efe6d2');sfx('chime');renderTray();
 }
 function updatePickups(dt){
   for(const pk of pickups){pk.t+=dt;if(p.alive&&Math.abs(pk.x-p.x)<10&&mode!=='dawn')collectAmulet(pk);if(Math.random()<dt*3)part(pk.x+rnd(-3,3),GY-8+rnd(-3,3),0,-10,.5,AMULETS[pk.id].c,1,0);}
@@ -1574,7 +1916,7 @@ function useSole(){
   if(run.inv.hermana<=0){flt(p.x,p.y-30,'NONE LEFT','#a39cb8');sfx('deny');return;}
   if(sole)return;
   run.inv.hermana--;renderTray();
-  sole={t:0,x:camX+W/2,done:false};sfx('choir');banner={text:'HERMANA SOLE',sub:'May the light take you.',t:2.6,max:2.6};
+  sole={t:0,x:camX+W/2,done:false};sfx('choir');banner={text:_t('HERMANA SOLE'),sub:_t('May the light take you.'),t:2.6,max:2.6};
 }
 function updateSole(dt){
   if(!sole)return;sole.t+=dt;sole.x+=(camX+W/2-sole.x)*Math.min(1,dt*3);
@@ -1736,10 +2078,10 @@ function startNight(){
   const q=buildQueue(run.night),am=AMB[run.amb];
   night={queue:q,killed:0,spawnT:1.2,heads:0,earned:0};
   mode='night';paused=false;run.pirStacks=0;run.expired=null;
-  if(Math.random()<.75)dropAmulet(rnd(420,WORLD-60));
-  banner={text:'SHIFT '+run.night,sub:am.name+' · '+fmtT(am.start)+' · Hold the store until '+am.end,t:2.6,max:2.6};
+  if(Math.random()<.25)dropAmulet(rnd(420,WORLD-60));
+  banner={text:_t('SHIFT {0}',run.night),sub:_t('{0} · {1} · Hold the store until {2}',am.name,fmtT(am.start),am.end),t:2.6,max:2.6};
   boltT=rnd(3,6);sfx('start');renderTray();hideOverlay();
-  if(run.amb==='moon'){spawnPigeons(30);banner={text:'FULL MOON',sub:'You turn into a werewolf. The pigeons are on your side tonight.',t:3,max:3};sfx('howl');}
+  if(run.amb==='moon'){spawnPigeons(30);banner={text:_t('FULL MOON'),sub:_t('You turn into a werewolf. The pigeons are on your side tonight.'),t:3,max:3};sfx('howl');}
 }
 function spawnTick(dt){
   night.spawnT-=dt;
@@ -1759,7 +2101,7 @@ function dawn(){
   for(const s of structs)if(s.kind==='turret')s.ammo=s.ammoMax=Math.round(160*(1+amu('tinker')));
   run.nextAmb=pickAmb(run.night+1);
   projs=[];pigeons=[];pigs=[];bossRef=null;p.pull=null;p.root=0;p.reloadT=0;trig.mouse=trig.auto=false;
-  banner={text:AMB[run.amb].end,sub:'Shift '+run.night+' survived. Heading back inside.',t:2.4,max:2.4,dawnT:2.4};
+  banner={text:AMB[run.amb].end,sub:_t('Shift {0} survived. Heading back inside.',run.night),t:2.4,max:2.4,dawnT:2.4};
   sfx('dawn');renderTray();
 }
 function updateDawn(dt){
@@ -1776,7 +2118,7 @@ function gameOver(reason){
   if(mode==='over')return;
   clearSave();
   mode='over';overReason=reason;overT=1.8;trig.mouse=trig.auto=false;
-  if(reason==='door')banner={text:'DOORS DOWN',sub:'They are inside the Alcampo',t:1.8,max:1.8};
+  if(reason==='door')banner={text:_t('DOORS DOWN'),sub:_t('They are inside the Alcampo'),t:1.8,max:1.8};
 }
 
 /* ---------- player & frame update ---------- */
@@ -2010,11 +2352,11 @@ function render(){
   if(bossRef&&!bossRef.dead&&mode==='night'){const b=bossRef;G.fillStyle='rgba(11,10,24,.75)';G.fillRect(90,20,300,17);G.font='8px Silkscreen, monospace';G.textBaseline='top';G.fillStyle='#efe6d2';G.fillText(ZT[b.type].name.toUpperCase(),94,21);
     R0(94,31,292,3,'#3a1a22');R0(94,31,Math.max(0,Math.round(292*b.hp/b.max)),3,'#cf4450');}
   if(mode==='prep'){G.font='8px Silkscreen, monospace';G.textBaseline='top';G.textAlign='center';G.fillStyle='rgba(11,10,24,.7)';G.fillRect(0,4,W,13);G.fillStyle='#f5a443';
-    G.fillText('Z X C V PLACE DEFENSES · TAB STARTS SHIFT '+run.night+' · '+AMB[run.amb].name.toUpperCase(),W/2,7);G.textAlign='left';}
+    G.fillText(touchOn?_t('TAP AN ITEM TO PLACE IT · {0}',AMB[run.amb].name.toUpperCase()):_t('Z X C V PLACE DEFENSES · TAB STARTS SHIFT {0} · {1}',run.night,AMB[run.amb].name.toUpperCase()),W/2,7);G.textAlign='left';}
   if(banner){const k=banner.t/banner.max,a=Math.min(1,(1-k)*6,k*4);G.globalAlpha=a;G.textAlign='center';G.textBaseline='top';G.fillStyle='rgba(11,10,24,.62)';G.fillRect(0,92,W,48);
     G.font='bold 22px Silkscreen, monospace';G.fillStyle='#f5a443';G.fillText(banner.text,W/2,96);G.font='8px Silkscreen, monospace';G.fillStyle='#efe6d2';G.fillText(banner.sub,W/2,126);G.textAlign='left';G.globalAlpha=1;}
   if(p.hurt>0||(p.alive&&p.hp<run.hpMax*.3&&mode==='night')){const a=p.hurt>0?.35:.18+.08*Math.sin(T*6);const g=G.createRadialGradient(W/2,H/2,H*.35,W/2,H/2,H*.95);g.addColorStop(0,'rgba(160,20,30,0)');g.addColorStop(1,'rgba(160,20,30,'+a+')');G.fillStyle=g;G.fillRect(0,0,W,H);}
-  if(paused&&(mode==='night'||mode==='prep')){G.fillStyle='rgba(11,10,24,.6)';G.fillRect(0,0,W,H);G.font='bold 16px Silkscreen, monospace';G.textAlign='center';G.textBaseline='top';G.fillStyle='#efe6d2';G.fillText('PAUSED',W/2,112);G.font='8px Silkscreen, monospace';G.fillText('PRESS P TO RESUME',W/2,134);G.textAlign='left';}
+  if(paused&&(mode==='night'||mode==='prep')){G.fillStyle='rgba(11,10,24,.6)';G.fillRect(0,0,W,H);G.font='bold 16px Silkscreen, monospace';G.textAlign='center';G.textBaseline='top';G.fillStyle='#efe6d2';G.fillText(_t('PAUSED'),W/2,112);G.font='8px Silkscreen, monospace';G.fillText(_t(touchOn?'TAP ▶ TO RESUME':'PRESS P TO RESUME'),W/2,134);G.textAlign='left';}
 }
 /* ---------- HUD ---------- */
 const el={night:$('#hNight'),clock:$('#hClock'),kClock:$('#kClock'),left:$('#hLeft'),cash:$('#hCash'),mHp:$('#mHp'),tHp:$('#tHp'),mDoor:$('#mDoor'),tDoor:$('#tDoor'),mAmmo:$('#mAmmo'),tAmmo:$('#tAmmo'),kGun:$('#kGun'),ammoRow:$('#ammoRow')};
@@ -2031,7 +2373,7 @@ function clockStr(){
   return fmtT(am.start+Math.floor(f*420));
 }
 function updateHUD(){
-  setT('night',String(run.night));setT('clock',clockStr());setT('kClock','Clock · '+AMB[mode==='shop'?run.nextAmb:run.amb].name);
+  setT('night',String(run.night));setT('clock',clockStr());setT('kClock',_t('Clock')+' · '+AMB[mode==='shop'?run.nextAmb:run.amb].name);
   setT('left',night?String(night.queue.length+zombies.filter(z=>!z.dead&&!z.demo).length):'0');setT('cash',money(run.cash));
   setW('mHp',Math.max(0,p.hp)/run.hpMax);setT('tHp',Math.ceil(Math.max(0,p.hp))+'/'+run.hpMax);
   setW('mDoor',run.door/run.doorMax);setT('tDoor',Math.ceil(run.door)+'/'+run.doorMax);
@@ -2039,8 +2381,63 @@ function updateHUD(){
   if(run.weapon==='pir'&&run.pirStacks)gl='PIR +'+run.pirStacks*(trOn('pir','hyper')?10:5)+'%';
   else if(run.weapon==='pistol'&&run.mods.pistol&&run.mods.pistol.sp2)gl='Pulsar'+(run.pulsarCd>0?' '+Math.ceil(run.pulsarCd)+'s':'');
   setT('kGun',gl);
-  if(p.reloadT>0){setW('mAmmo',1-p.reloadT/p.reloadMax);setT('tAmmo','reload');el.ammoRow.classList.add('reloading');}
+  if(p.reloadT>0){setW('mAmmo',1-p.reloadT/p.reloadMax);setT('tAmmo',_t('reload'));el.ammoRow.classList.add('reloading');}
   else{const mm=magOf(run.weapon);setW('mAmmo',run.mags[run.weapon]/mm);setT('tAmmo',run.mags[run.weapon]+'/'+mm);el.ammoRow.classList.remove('reloading');}
+}
+
+/* ---------- touch controls ---------- */
+const stage=$('#stage'),padL=$('#padL'),padR=$('#padR');
+const touchCapable=(()=>{try{return navigator.maxTouchPoints>0||'ontouchstart' in window;}catch(e){return false;}})();
+const touchGuess=(()=>{try{return matchMedia('(pointer:coarse)').matches||(navigator.maxTouchPoints>0&&/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent||''));}catch(e){return false;}})();
+let touchPref=store.get('touch',null),touchOn=touchPref==null?touchGuess:!!touchPref;
+function setTouch(on,remember){
+  touchOn=!!on;if(remember)store.set('touch',touchOn);
+  document.body.classList.toggle('touch',touchOn);
+  if(touchOn)aimMode='auto';
+  releaseHolds();buildPads();renderTray();
+}
+const HOLD={left:'tleft',right:'tright',fire:'auto',melee:'melee'};
+const held=new Map();
+function releaseHolds(){for(const k of held.values())trig[HOLD[k]]=false;held.clear();if(padL)for(const b of stage.querySelectorAll('.pb.on'))b.classList.remove('on');}
+function buildPads(){
+  if(!padL)return;
+  if(!touchOn){padL.innerHTML='';padR.innerHTML='';return;}
+  padL.innerHTML='<div class="prow"><button class="pb" data-hold="left" aria-label="'+_t('Walk left')+'">&#9664;</button><button class="pb" data-hold="right" aria-label="'+_t('Walk right')+'">&#9654;</button></div><div class="pitems" id="padI"></div>';
+  padR.innerHTML='<div class="pfight"><div class="prow"><button class="pb sm" data-tap="swap" id="pSwap"></button><button class="pb sm" data-tap="reload">'+_t('Reload')+'</button><button class="pb sm" data-tap="pause" id="pPause">II</button></div>'+
+    '<div class="prow"><button class="pb" data-hold="melee">'+_t('Hit')+'</button><button class="pb fire" data-hold="fire">'+_t('Fire')+'</button></div></div>'+
+    '<div class="pprep"><button class="pb wide" data-tap="stock">'+_t('Stockroom')+'</button><button class="pb wide go" data-tap="start">'+_t('Start shift')+'</button></div>';
+  renderPads();
+}
+function renderPads(){
+  if(!touchOn||!padL)return;
+  stage.dataset.mode=mode;
+  const sw=$('#pSwap');if(sw)sw.textContent=gunShort(run.weapon);
+  const pp=$('#pPause');if(pp){pp.textContent=paused?'▶':'II';pp.setAttribute('aria-label',_t(paused?'Resume':'Pause'));}
+  const pi=$('#padI');if(!pi)return;
+  pi.innerHTML='';const live=mode==='prep'||mode==='night';
+  for(const id of Object.keys(ITEMS).filter(k=>run.inv[k]>0)){const b=document.createElement('button');b.className='pi';b.dataset.pitem=id;b.disabled=!live;b.setAttribute('aria-label',ITEMS[id].name);
+    b.appendChild(iconCanvas(()=>drawStruct({kind:id},12,16,true)));b.insertAdjacentHTML('beforeend','<span>'+run.inv[id]+'</span>');pi.appendChild(b);}
+}
+function padTap(a){
+  if(a==='swap'){if(mode==='night'||mode==='prep')cycleWeapon(1);}
+  else if(a==='reload'){if(!paused)startReload();}
+  else if(a==='pause')togglePause();
+  else if(a==='stock'){if(mode==='prep')openStock();}
+  else if(a==='start'){if(mode==='prep'&&!paused)startNight();}
+  renderPads();
+}
+if(stage){
+  stage.addEventListener('pointerdown',e=>{
+    const b=e.target.closest('.pad button');if(!b)return;e.preventDefault();ac();if(b.disabled)return;
+    if(b.dataset.hold){const k=b.dataset.hold;held.set(e.pointerId,k);trig[HOLD[k]]=true;b.classList.add('on');try{b.setPointerCapture(e.pointerId);}catch(_){}
+      if(k==='fire')aimMode='auto';if(k==='melee'&&!paused&&(mode==='night'||mode==='prep'))melee();}
+    else if(b.dataset.tap)padTap(b.dataset.tap);
+    else if(b.dataset.pitem){placeItem(b.dataset.pitem);renderPads();}
+  });
+  const up=e=>{const k=held.get(e.pointerId);if(!k)return;held.delete(e.pointerId);if(![...held.values()].includes(k))trig[HOLD[k]]=false;
+    for(const b of stage.querySelectorAll('.pb.on[data-hold="'+k+'"]'))if(![...held.values()].includes(k))b.classList.remove('on');};
+  addEventListener('pointerup',up);addEventListener('pointercancel',up);
+  stage.addEventListener('contextmenu',e=>{if(e.target.closest('.pad'))e.preventDefault();});
 }
 
 /* ---------- tray ---------- */
@@ -2048,30 +2445,34 @@ const tray=$('#tray'),stockEl=$('#stock'),ov=$('#ov');
 function iconCanvas(fn){const c=mk(24,16),prev=G;G=c.getContext('2d');try{fn();}finally{G=prev;}return c;}
 function slot(cls,data,icon,name,sub,disabled){const b=document.createElement('button');b.className='slot'+(cls?' '+cls:'');for(const k in data)b.dataset[k]=data[k];if(disabled)b.disabled=true;if(icon)b.appendChild(icon);b.insertAdjacentHTML('beforeend','<span class="nm">'+name+'</span><span class="sub">'+sub+'</span>');return b;}
 function amuGroups(){const m={};for(const a of run.amus||[]){if(!AMULETS[a.id])continue;const left=AMU_LIFE-(run.night-a.got);const g=m[a.id]||(m[a.id]={id:a.id,n:0,left:99,all:[]});g.n++;g.left=Math.min(g.left,left);g.all.push(left);}return Object.values(m);}
-const leftS=n=>n<=1?'last shift':n+' shifts left';
+const leftS=n=>n<=1?_t('last shift'):_t('{0} shifts left',n);
+const pl=(n,one,many)=>n+' '+_t(n===1?one:many);
 function gunShort(id){return id==='pistol'&&run.mods&&run.mods.pistol&&run.mods.pistol.sp2?'Pulsar':GUNS[id].short;}
 function renderTray(){
   tray.innerHTML='';
   const gw=document.createElement('div');gw.className='group';
-  ownedGuns().forEach((id,i)=>{gw.appendChild(slot(run.weapon===id?'on':'',{w:id},iconCanvas(()=>drawGun(GUNS[id].len>13?4:6,8,0,id)),gunShort(id),i<10?String((i+1)%10):''));});
+  ownedGuns().forEach((id,i)=>{gw.appendChild(slot(run.weapon===id?'on':'',{w:id},iconCanvas(()=>drawGun(GUNS[id].len>13?4:6,8,0,id)),gunShort(id),touchOn?'':(i<10?String((i+1)%10):'')));});
   const mw=document.createElement('div');mw.className='group';
-  mw.appendChild(slot('',{act:'melee'},iconCanvas(()=>drawGun(4,8,0,run.melee)),MELEE[run.melee].short,'F'));
+  mw.appendChild(slot('',{act:'melee'},iconCanvas(()=>drawGun(4,8,0,run.melee)),MELEE[run.melee].short,touchOn?'':'F'));
   tray.append(gw,mw);
   const have=Object.keys(ITEMS).filter(id=>run.inv[id]>0);
   if(have.length){const iw=document.createElement('div');iw.className='group';
-    for(const id of have)iw.appendChild(slot('',{i:id},iconCanvas(()=>drawStruct({kind:id},12,16,true)),ITEMS[id].short+' &times;'+run.inv[id],ITEMS[id].key,!(mode==='prep'||mode==='night')));
+    for(const id of have)iw.appendChild(slot('',{i:id},iconCanvas(()=>drawStruct({kind:id},12,16,true)),ITEMS[id].short+' &times;'+run.inv[id],touchOn?'':ITEMS[id].key,!(mode==='prep'||mode==='night')));
     tray.appendChild(iw);}
   const ag=amuGroups();
   if(ag.length||run.pet||run.cheated){const cw=document.createElement('div');cw.className='chips';
-    if(run.cheated)cw.insertAdjacentHTML('beforeend','<span class="chip" style="--c:#93b27a" title="This run does not count toward your best">Dev panel used</span>');
-    if(run.pet)cw.insertAdjacentHTML('beforeend','<button class="chip" style="--c:#93b27a" data-info="pet:'+run.pet+'">Pet: '+PETS[run.pet].name+'</button>');
+    if(run.cheated)cw.insertAdjacentHTML('beforeend','<span class="chip" style="--c:#93b27a" title="'+_t('This run does not count toward your best')+'">'+_t('Dev panel used')+'</span>');
+    if(run.pet)cw.insertAdjacentHTML('beforeend','<button class="chip" style="--c:#93b27a" data-info="pet:'+run.pet+'">'+_t('Pet: {0}',PETS[run.pet].name)+'</button>');
     for(const g of ag)cw.insertAdjacentHTML('beforeend','<button class="chip" style="--c:'+AMULETS[g.id].c+'" data-info="amu:'+g.id+'" title="'+AMULETS[g.id].desc+'">'+AMULETS[g.id].name+(g.n>1?' &times;'+g.n:'')+' · '+leftS(g.left)+'</button>');
     tray.appendChild(cw);}
   const aw=document.createElement('div');aw.className='actions';
-  if(mode==='prep')aw.innerHTML='<button class="btn small" data-act="stats">Stats (I)</button><button class="btn small" data-act="stock">Stockroom (B)</button><button class="btn go" data-act="start">Start shift '+run.night+' (Tab)</button>';
-  else if(mode==='night')aw.innerHTML='<button class="btn small" data-act="stats">Stats (I)</button><button class="btn small" data-act="pause">'+(paused?'Resume':'Pause')+'</button>';
-  aw.insertAdjacentHTML('beforeend','<button class="btn small" data-act="mute" aria-pressed="'+muted+'">'+(muted?'Sound off':'Sound on')+'</button>');
+  const k=s=>touchOn?'':' ('+s+')';
+  if(mode==='prep')aw.innerHTML='<button class="btn small" data-act="stats">'+_t('Stats')+k('I')+'</button><button class="btn small" data-act="stock">'+_t('Stockroom')+k('B')+'</button><button class="btn go" data-act="start">'+_t('Start shift {0}',run.night)+k('Tab')+'</button>';
+  else if(mode==='night')aw.innerHTML='<button class="btn small" data-act="stats">'+_t('Stats')+k('I')+'</button><button class="btn small" data-act="pause">'+_t(paused?'Resume':'Pause')+'</button>';
+  aw.insertAdjacentHTML('beforeend','<button class="btn small" data-act="mute" aria-pressed="'+muted+'">'+_t(muted?'Sound off':'Sound on')+'</button>');
+  if(touchCapable||touchOn)aw.insertAdjacentHTML('beforeend','<button class="btn small" data-act="touch" aria-pressed="'+touchOn+'">'+_t(touchOn?'Touch controls on':'Touch controls off')+'</button>');
   tray.appendChild(aw);
+  renderPads();
 }
 tray.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;ac();
@@ -2080,8 +2481,9 @@ tray.addEventListener('click',e=>{
   else if(b.dataset.i)placeItem(b.dataset.i);
   else{const a=b.dataset.act;
     if(a==='start')startNight();else if(a==='stock')openStock();else if(a==='pause')togglePause();else if(a==='stats')showSheet(b);else if(a==='melee')melee();
-    else if(a==='mute'){muted=!muted;store.set('muted',muted);renderTray();}}
-  if(b.dataset.act!=='mute')b.blur();
+    else if(a==='mute'){muted=!muted;store.set('muted',muted);renderTray();}
+    else if(a==='touch'){setTouch(!touchOn,true);}}
+  if(b.dataset.act!=='mute'&&b.dataset.act!=='touch')b.blur();
   saveGame();
 });
 
@@ -2089,49 +2491,49 @@ tray.addEventListener('click',e=>{
 const TABS=[['guns','Guns'],['melee','Melee'],['armor','Armor'],['pets','Pets'],['supplies','Supplies'],['ups','Upgrades']];
 function tline(l,r,cls){return '<div class="tline'+(cls?' '+cls:'')+'"><span class="nm">'+l+'</span><span class="dots"></span><span>'+r+'</span></div>';}
 function row(name,price,desc,btn){return '<li class="row">'+tline(name,price)+'<p class="ds">'+desc+'</p>'+btn+'</li>';}
-const wn=(k,id,name)=>'<button class="wname" data-info="'+k+':'+id+'" title="See details">'+name+'</button>';
+const wn=(k,id,name)=>'<button class="wname" data-info="'+k+':'+id+'" title="'+_t('See details')+'">'+name+'</button>';
 const bbtn=(data,label,dis,ghost)=>'<button class="buy'+(ghost?' ghost':'')+'" data-buy="'+data+'"'+(dis?' disabled':'')+'>'+label+'</button>';
 const pair=(a,b)=>'<div class="bpair">'+a+b+'</div>';
-const modsBtn=(k,id)=>'<button class="buy ghost modsb" data-mods="'+k+':'+id+'">Mods</button>';
+const modsBtn=(k,id)=>'<button class="buy ghost modsb" data-mods="'+k+':'+id+'">'+_t('Mods')+'</button>';
 function renderStock(){
-  if(!TABS.some(t=>t[0]===stockTab))stockTab='guns';
+  if(!TABS.some(x=>x[0]===stockTab))stockTab='guns';
   const c=run.cash;let h='';
-  const full=run.buys>=BUY_LIMIT,buyB=(data,price,extra)=>bbtn(data,full?'Limit':'Buy',full||c<price||!!extra);
-  h+='<div class="rhead"><h2>Stockroom</h2><span class="meta">ALCAMPO ROUTE 9 · REGISTER 2 · BEFORE SHIFT '+run.night+'</span><button class="btn small" data-sheet>Your stats (I)</button></div>';
-  if(lastSummary){const s=lastSummary;h+='<div class="tally">'+tline('Shift '+s.night+' survived ('+AMB[s.amb].name.toLowerCase()+')',AMB[s.amb].end)+tline('Kills',s.kills)+tline('Headshots',s.heads)+tline('Tips from kills',money(s.earned))+tline('End of shift bonus',money(s.bonus))+tline('In the drawer',money(c),'total')+'</div>';}
-  else h+='<div class="tally">'+tline('Starting float',money(c),'total')+'</div>';
-  if(run.cheated)h+='<p class="note">You used the dev panel this run, so it will not count toward your best.</p>';
-  if(run.expired&&run.expired.length)h+='<p class="note">Crumbled to dust after '+AMU_LIFE+' shifts: '+run.expired.map(k=>AMULETS[k]?AMULETS[k].name:k).join(', ')+'.</p>';
-  const na=AMB[run.nextAmb];h+='<p class="forecast">Forecast for shift '+run.night+': '+na.name+' · '+fmtT(na.start)+' to '+na.end+(run.night%4===0?' · BOSS TONIGHT: '+ZT[BOSS_ORDER[(run.night/4-1)%BOSS_ORDER.length]].name:'')+'</p>';
-  h+='<p class="forecast'+(full?' full':'')+'">Purchases this buy phase: '+run.buys+' of '+BUY_LIMIT+(full?'. Come back after the next shift.':'.')+' Upgrades don\'t count, but each one only goes up one level per buy phase.</p>';
-  h+='<div class="tabs" role="tablist">'+TABS.map(([k,l])=>'<button class="tab" role="tab" data-tab="'+k+'" aria-selected="'+(stockTab===k)+'">'+l+'</button>').join('')+'</div>';
+  const full=run.buys>=BUY_LIMIT,buyB=(data,price,extra)=>bbtn(data,_t(full?'Limit':'Buy'),full||c<price||!!extra);
+  h+='<div class="rhead"><h2>'+_t('Stockroom')+'</h2><span class="meta">'+_t('ALCAMPO ROUTE 9 · REGISTER 2 · BEFORE SHIFT {0}',run.night)+'</span><button class="btn small" data-sheet>'+_t('Your stats')+(touchOn?'':' (I)')+'</button></div>';
+  if(lastSummary){const s=lastSummary;h+='<div class="tally">'+tline(_t('Shift {0} survived ({1})',s.night,AMB[s.amb].name.toLowerCase()),AMB[s.amb].end)+tline(_t('Kills'),s.kills)+tline(_t('Headshots'),s.heads)+tline(_t('Tips from kills'),money(s.earned))+tline(_t('End of shift bonus'),money(s.bonus))+tline(_t('In the drawer'),money(c),'total')+'</div>';}
+  else h+='<div class="tally">'+tline(_t('Starting float'),money(c),'total')+'</div>';
+  if(run.cheated)h+='<p class="note">'+_t('You used the dev panel this run, so it will not count toward your best.')+'</p>';
+  if(run.expired&&run.expired.length)h+='<p class="note">'+_t('Crumbled to dust after {0} shifts: {1}.',AMU_LIFE,run.expired.map(k=>AMULETS[k]?AMULETS[k].name:k).join(', '))+'</p>';
+  const na=AMB[run.nextAmb];h+='<p class="forecast">'+_t('Forecast for shift {0}: {1} · {2} to {3}',run.night,na.name,fmtT(na.start),na.end)+(run.night%4===0?' · '+_t('BOSS TONIGHT: {0}',ZT[BOSS_ORDER[(run.night/4-1)%BOSS_ORDER.length]].name):'')+'</p>';
+  h+='<p class="forecast'+(full?' full':'')+'">'+_t('Purchases this buy phase: {0} of {1}',run.buys,BUY_LIMIT)+(full?_t('. Come back after the next shift.'):'.')+' '+_t('Upgrades don\'t count, but each one only goes up one level per buy phase.')+'</p>';
+  h+='<div class="tabs" role="tablist">'+TABS.map(([k,l])=>'<button class="tab" role="tab" data-tab="'+k+'" aria-selected="'+(stockTab===k)+'">'+_t(l)+'</button>').join('')+'</div>';
   let body='';
   if(stockTab==='guns'){
     body+='<ul class="rows">';
     for(const id of ORDER){const g=GUNS[id],own=run.owned[id];
-      const main=own?(run.weapon===id?bbtn('','Equipped',true,true):bbtn('equip:'+id,'Equip',false,true)):buyB('gun:'+id,g.price);
-      body+=row(wn('gun',id,id==='pistol'&&modOf(id).sp2?'Pulsargun':g.name),own?(g.price?'owned':'yours'):money(g.price),g.desc,pair(main,modsBtn('gun',id)));}
-    body+='</ul><p class="note">Every gun has mods behind its Mods button, including a playstyle perk that changes how it plays. You can look before you buy.</p>';
+      const main=own?(run.weapon===id?bbtn('',_t('Equipped'),true,true):bbtn('equip:'+id,_t('Equip'),false,true)):buyB('gun:'+id,g.price);
+      body+=row(wn('gun',id,id==='pistol'&&modOf(id).sp2?'Pulsargun':g.name),own?_t(g.price?'owned':'yours'):money(g.price),g.desc,pair(main,modsBtn('gun',id)));}
+    body+='</ul><p class="note">'+_t('Every gun has mods behind its Mods button, including a playstyle perk that changes how it plays. You can look before you buy.')+'</p>';
   }else if(stockTab==='melee'){
-    body+='<ul class="rows">'+MORDER.map(id=>{const M=MELEE[id],own=run.meleeOwned[id];const main=own?(run.melee===id?bbtn('','In hand',true,true):bbtn('melee:'+id,'Equip',false,true)):buyB('melee:'+id,M.price);
-      return row(wn('melee',id,M.name)+' <small>'+Math.round(M.dmg*strMult())+' dmg</small>',own?'owned':money(M.price),M.desc,pair(main,modsBtn('melee',id)));}).join('')+'</ul><p class="note">Melee damage scales with your Strength upgrade. Right now you hit at '+Math.round(strMult()*100)+'% of full damage.</p>';
+    body+='<ul class="rows">'+MORDER.map(id=>{const M=MELEE[id],own=run.meleeOwned[id];const main=own?(run.melee===id?bbtn('',_t('In hand'),true,true):bbtn('melee:'+id,_t('Equip'),false,true)):buyB('melee:'+id,M.price);
+      return row(wn('melee',id,M.name)+' <small>'+_t('{0} dmg',Math.round(M.dmg*strMult()))+'</small>',own?_t('owned'):money(M.price),M.desc,pair(main,modsBtn('melee',id)));}).join('')+'</ul><p class="note">'+_t('Melee damage scales with your Strength upgrade. Right now you hit at {0}% of full damage.',Math.round(strMult()*100))+'</p>';
   }else if(stockTab==='armor'){
-    body+='<ul class="rows">'+AORDER.map(id=>{const A=ARMORS[id],own=run.armorOwned[id];return row(wn('armor',id,A.name),own?'owned':money(A.price),A.desc,own?(run.armor===id?bbtn('','Wearing',true,true):bbtn('armor:'+id,'Wear',false,true)):buyB('armor:'+id,A.price));}).join('')+'</ul>';
+    body+='<ul class="rows">'+AORDER.map(id=>{const A=ARMORS[id],own=run.armorOwned[id];return row(wn('armor',id,A.name),own?_t('owned'):money(A.price),A.desc,own?(run.armor===id?bbtn('',_t('Wearing'),true,true):bbtn('armor:'+id,_t('Wear'),false,true)):buyB('armor:'+id,A.price));}).join('')+'</ul>';
   }else if(stockTab==='pets'){
-    body+='<ul class="rows">'+PORDER.map(id=>{const P=PETS[id],own=run.petOwned[id];return row(wn('pet',id,P.name),own?'owned':money(P.price),P.desc,own?(run.pet===id?bbtn('petoff','Leave home',false,true):bbtn('pet:'+id,'Bring along',false,true)):(full?bbtn('','Limit',true):bbtn('pet:'+id,'Adopt',c<P.price)));}).join('')+'</ul><p class="note">One pet comes to work with you. Pets cannot be hurt. They get a little stronger every shift.</p>';
+    body+='<ul class="rows">'+PORDER.map(id=>{const P=PETS[id],own=run.petOwned[id];return row(wn('pet',id,P.name),own?_t('owned'):money(P.price),P.desc,own?(run.pet===id?bbtn('petoff',_t('Leave home'),false,true):bbtn('pet:'+id,_t('Bring along'),false,true)):(full?bbtn('',_t('Limit'),true):bbtn('pet:'+id,_t('Adopt'),c<P.price)));}).join('')+'</ul><p class="note">'+_t('One pet comes to work with you. Pets cannot be hurt. They get a little stronger every shift.')+'</p>';
   }else if(stockTab==='supplies'){
     const heal=80,rep=90;
-    body+='<ul class="rows">'+Object.keys(ITEMS).map(id=>{const it=ITEMS[id];return row(wn('item',id,it.name)+' <small>(have '+run.inv[id]+')</small>',money(it.price),it.desc,buyB('item:'+id,it.price));}).join('')+
-      row('Patch up',money(heal),'Restore your health to full. Now '+Math.ceil(p.hp)+'/'+run.hpMax+'.',buyB('svc:heal',heal,p.hp>=run.hpMax))+
-      row('Fix the doors',money(rep),'+100 door strength, up to its max. Now '+Math.ceil(run.door)+'/'+run.doorMax+'.',buyB('svc:door',rep,run.door>=run.doorMax))+'</ul>';
+    body+='<ul class="rows">'+Object.keys(ITEMS).map(id=>{const it=ITEMS[id];return row(wn('item',id,it.name)+' <small>('+_t('have {0}',run.inv[id])+')</small>',money(it.price),it.desc,buyB('item:'+id,it.price));}).join('')+
+      row(_t('Patch up'),money(heal),_t('Restore your health to full. Now {0}.',Math.ceil(p.hp)+'/'+run.hpMax),buyB('svc:heal',heal,p.hp>=run.hpMax))+
+      row(_t('Fix the doors'),money(rep),_t('+100 door strength, up to its max. Now {0}.',Math.ceil(run.door)+'/'+run.doorMax),buyB('svc:door',rep,run.door>=run.doorMax))+'</ul>';
   }else if(stockTab==='ups'){
-    body+='<ul class="rows">'+Object.keys(UPS).map(id=>{const u=UPS[id],lv=run.up[id]||0,cost=u.base*(lv+1),maxed=lv>=u.max,done=!!run.perkPhase[id];return row(wn('up',id,u.name)+' <small>'+lv+'/'+u.max+'</small>',maxed?'max':money(cost),u.desc+(id==='str'?' Now '+Math.round(strMult()*100)+'%.':''),bbtn('up:'+id,maxed?'Max':done?'Bought':'Buy',maxed||done||c<cost));}).join('')+'</ul><p class="note">Each upgrade can go up one level per buy phase.</p>';
+    body+='<ul class="rows">'+Object.keys(UPS).map(id=>{const u=UPS[id],lv=run.up[id]||0,cost=u.base*(lv+1),maxed=lv>=u.max,done=!!run.perkPhase[id];return row(wn('up',id,u.name)+' <small>'+lv+'/'+u.max+'</small>',maxed?_t('max'):money(cost),u.desc+(id==='str'?' '+_t('Now {0}%.',Math.round(strMult()*100)):''),bbtn('up:'+id,_t(maxed?'Max':done?'Bought':'Buy'),maxed||done||c<cost));}).join('')+'</ul><p class="note">'+_t('Each upgrade can go up one level per buy phase.')+'</p>';
     const ag=amuGroups();
-    body+='<div class="modgun"><h4>Amulets you carry</h4>'+(ag.length?'<ul class="rows">'+ag.map(g=>'<li class="row">'+tline(wn('amu',g.id,AMULETS[g.id].name),'&times;'+g.n)+'<p class="ds">'+AMULETS[g.id].desc+(g.n>1?' each':'')+' · '+g.all.slice().sort((a,b)=>a-b).map(leftS).join(', ')+'</p></li>').join('')+'</ul>':'<p class="note">None yet. Amulets glint on the road and sometimes drop from kills. Bosses always drop two. Walk over one to pick it up.</p>')+
-      '<p class="note">Each amulet lasts '+AMU_LIFE+' shifts, counting the one you find it in, then crumbles. Two of the same kind stack.</p></div>';
+    body+='<div class="modgun"><h4>'+_t('Amulets you carry')+'</h4>'+(ag.length?'<ul class="rows">'+ag.map(g=>'<li class="row">'+tline(wn('amu',g.id,AMULETS[g.id].name),'&times;'+g.n)+'<p class="ds">'+AMULETS[g.id].desc+(g.n>1?' '+_t('each'):'')+' · '+g.all.slice().sort((a,b)=>a-b).map(leftS).join(', ')+'</p></li>').join('')+'</ul>':'<p class="note">'+_t('Amulets are rare. Sometimes one glints on the road, kills almost never drop one, and every boss drops one. Walk over it to pick it up.')+'</p>')+
+      '<p class="note">'+_t('Each amulet lasts {0} shifts, counting the one you find it in, then crumbles. Two of the same kind stack.',AMU_LIFE)+'</p></div>';
   }
   h+=body;
-  h+='<div class="rfoot"><span class="thanks">THANK YOU, COME AGAIN.</span><span style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn small" data-buy="out">Back outside to place</button><button class="btn go" data-buy="start">Start shift '+run.night+'</button></span></div>';
+  h+='<div class="rfoot"><span class="thanks">'+_t('THANK YOU, COME AGAIN.')+'</span><span style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn small" data-buy="out">'+_t('Back outside to place')+'</button><button class="btn go" data-buy="start">'+_t('Start shift {0}',run.night)+'</button></span></div>';
   stockEl.innerHTML=h;
 }
 stockEl.addEventListener('click',e=>{
@@ -2158,7 +2560,7 @@ function doBuy(data){
     case 'equip':run.weapon=id;break;
     case 'gun':if(pay(GUNS[id].price)){run.owned[id]=true;run.mags[id]=magOf(id);run.weapon=id;}break;
     case 'mod':{const M=MODS[id],m=modOf(id);if(sub==='sp'){if(!m.sp&&pay(M.sp.price))m.sp=true;}else if(sub==='sp2'){if(M.sp2&&!m.sp2&&pay(M.sp2.price))m.sp2=true;}else{const lv=m[sub]||0,cost=modCost(M[sub][sub==='mag'?2:1],lv);if(lv<MODMAX&&pay(cost)){m[sub]=lv+1;if(sub==='mag')run.mags[id]=magOf(id);}}break;}
-    case 'tr':{const m=modOf(id),tt=(MODS[id].tr||[]).find(t=>t.id===sub);if(tt&&!m.tr[sub]&&pay(tt.price)){m.tr[sub]=true;m.act=sub;}break;}
+    case 'tr':{const m=modOf(id),tt=(MODS[id].tr||[]).find(x=>x.id===sub);if(tt&&!m.tr[sub]&&pay(tt.price)){m.tr[sub]=true;m.act=sub;}break;}
     case 'tron':{const m=modOf(id);if(m.tr[sub]){m.act=m.act===sub?null:sub;sfx('click');}break;}
     case 'mmod':{const M=MMODS[id],m=mmodOf(id);if(sub==='sp'){if(!m.sp&&pay(M.sp.price))m.sp=true;}else{const lv=m[sub],cost=modCost(M[sub][1],lv);if(lv<MMODMAX&&pay(cost))m[sub]++;}break;}
     case 'melee':if(run.meleeOwned[id])run.melee=id;else if(pay(MELEE[id].price)){run.meleeOwned[id]=true;run.melee=id;}break;
@@ -2172,133 +2574,135 @@ function doBuy(data){
   return true;
 }
 const winfo=$('#winfo');let infoFrom=null,modsOpen=null;
-const fx1=n=>(Math.round(n*10)/10).toLocaleString('en-US');
+const fx1=n=>(Math.round(n*10)/10).toLocaleString(LANG==='es'?'es-ES':'en-US');
 function openCard(html,focusSel){
   if(mode==='night'&&!paused){togglePause();sheetResume=true;}
   winfo.innerHTML=html;winfo.hidden=false;const f=focusSel&&winfo.querySelector(focusSel);(f||winfo.querySelector('[data-close]')).focus();
 }
+const closeB=()=>'<button class="btn small" data-close>'+_t('Close')+'</button>';
 function showMods(kind,id,from,keep){
   infoFrom=from||infoFrom;modsOpen={kind,id};
   const prevScroll=keep&&winfo.querySelector('.wcard')?winfo.querySelector('.wcard').scrollTop:0;
   const c=run.cash,full=run.buys>=BUY_LIMIT,gun=kind==='gun',own=gun?!!run.owned[id]:!!run.meleeOwned[id],name=gun?GUNS[id].name:MELEE[id].name;
-  const buyB=(data,price,extra)=>bbtn(data,!own?'Buy':full?'Limit':'Buy',!own||full||c<price||!!extra);
-  let r='',t='';
+  const buyB=(data,price,extra)=>bbtn(data,_t(!own?'Buy':full?'Limit':'Buy'),!own||full||c<price||!!extra);
+  let r='',tt='';
   if(gun){const M=MODS[id],m=modOf(id);
     for(const k of ['dmg','mag','rate']){const lv=m[k]||0,cost=modCost(M[k][k==='mag'?2:1],lv),maxed=lv>=MODMAX;
-      const d=k==='mag'?'+'+M.mag[1]+' per load. Now '+magOf(id)+'.':k==='rate'?'+15% fire rate. Now '+(1/rateOf(id)).toFixed(1)+' a second.':'+12% damage with this gun. Now +'+Math.round((gunDmgMult(id)-1)*100)+'%.';
-      r+=row(M[k][0]+' <small>'+lv+'/'+MODMAX+'</small>',maxed?'max':money(cost),d,maxed?bbtn('','Max',true):buyB('mod:'+id+':'+k,cost));}
-    if(M.sp)r+=row(M.sp.name,m.sp?'owned':money(M.sp.price),M.sp.desc,m.sp?bbtn('','Fitted',true,true):buyB('mod:'+id+':sp',M.sp.price));
-    if(M.sp2)r+='<li class="row sp2">'+tline('<b>'+M.sp2.name+'</b>',m.sp2?'owned':money(M.sp2.price))+'<p class="ds">'+M.sp2.desc+'</p>'+(m.sp2?bbtn('','Fitted',true,true):buyB('mod:'+id+':sp2',M.sp2.price))+'</li>';
-    for(const tt of M.tr||[]){const has=!!m.tr[tt.id],on=m.act===tt.id;
-      t+='<li class="row tr'+(on?' on':'')+'">'+tline(tt.name,has?(on?'in use':'owned'):money(tt.price))+'<p class="ds">'+tt.desc+'</p><p class="ds down">Downside: '+tt.down+'</p>'+(has?bbtn('tron:'+id+':'+tt.id,on?'Turn off':'Use',false,!on):buyB('tr:'+id+':'+tt.id,tt.price))+'</li>';}
+      const d=k==='mag'?_t('+{0} per load. Now {1}.',M.mag[1],magOf(id)):k==='rate'?_t('+15% fire rate. Now {0} a second.',(1/rateOf(id)).toFixed(1)):_t('+12% damage with this gun. Now +{0}%.',Math.round((gunDmgMult(id)-1)*100));
+      r+=row(M[k][0]+' <small>'+lv+'/'+MODMAX+'</small>',maxed?_t('max'):money(cost),d,maxed?bbtn('',_t('Max'),true):buyB('mod:'+id+':'+k,cost));}
+    if(M.sp)r+=row(M.sp.name,m.sp?_t('owned'):money(M.sp.price),M.sp.desc,m.sp?bbtn('',_t('Fitted'),true,true):buyB('mod:'+id+':sp',M.sp.price));
+    if(M.sp2)r+='<li class="row sp2">'+tline('<b>'+M.sp2.name+'</b>',m.sp2?_t('owned'):money(M.sp2.price))+'<p class="ds">'+M.sp2.desc+'</p>'+(m.sp2?bbtn('',_t('Fitted'),true,true):buyB('mod:'+id+':sp2',M.sp2.price))+'</li>';
+    for(const x of M.tr||[]){const has=!!m.tr[x.id],on=m.act===x.id;
+      tt+='<li class="row tr'+(on?' on':'')+'">'+tline(x.name,has?_t(on?'in use':'owned'):money(x.price))+'<p class="ds">'+x.desc+'</p><p class="ds down">'+_t('Downside: {0}',x.down)+'</p>'+(has?bbtn('tron:'+id+':'+x.id,_t(on?'Turn off':'Use'),false,!on):buyB('tr:'+id+':'+x.id,x.price))+'</li>';}
   }else{const M=MMODS[id],m=mmodOf(id);
     for(const k of ['dmg','spd']){const lv=m[k],cost=modCost(M[k][1],lv),maxed=lv>=MMODMAX;
-      const d=k==='dmg'?'+15% damage per hit. Now +'+Math.round(15*lv)+'%.':'+15% swing speed. Now +'+Math.round(15*lv)+'%.';
-      r+=row(M[k][0]+' <small>'+lv+'/'+MMODMAX+'</small>',maxed?'max':money(cost),d,maxed?bbtn('','Max',true):buyB('mmod:'+id+':'+k,cost));}
-    r+=row(M.sp.name,m.sp?'owned':money(M.sp.price),M.sp.desc,m.sp?bbtn('','Fitted',true,true):buyB('mmod:'+id+':sp',M.sp.price));}
-  let html='<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+name+' mods</h3><button class="btn small" data-close>Close</button></div>'+
-    '<p class="forecast'+(full?' full':'')+'">'+money(c)+' in the drawer · purchases this buy phase: '+run.buys+' of '+BUY_LIMIT+'</p>'+
-    (own?'':'<p class="note">You don\'t own the '+name.toLowerCase()+' yet. Buy it first to fit these.</p>')+
+      const d=k==='dmg'?_t('+15% damage per hit. Now +{0}%.',Math.round(15*lv)):_t('+15% swing speed. Now +{0}%.',Math.round(15*lv));
+      r+=row(M[k][0]+' <small>'+lv+'/'+MMODMAX+'</small>',maxed?_t('max'):money(cost),d,maxed?bbtn('',_t('Max'),true):buyB('mmod:'+id+':'+k,cost));}
+    r+=row(M.sp.name,m.sp?_t('owned'):money(M.sp.price),M.sp.desc,m.sp?bbtn('',_t('Fitted'),true,true):buyB('mmod:'+id+':sp',M.sp.price));}
+  let html='<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+_t('{0} mods',name)+'</h3>'+closeB()+'</div>'+
+    '<p class="forecast'+(full?' full':'')+'">'+_t('{0} in the drawer · purchases this buy phase: {1} of {2}',money(c),run.buys,BUY_LIMIT)+'</p>'+
+    (own?'':'<p class="note">'+_t('You don\'t own this yet. Buy it first to fit these.')+'</p>')+
     '<ul class="rows">'+r+'</ul>';
-  if(t)html+='<span class="wtag">Playstyle perks</span><p class="note">These change how the gun plays, with a catch. Buying one counts as a purchase. After that, switching it on or off is free. One can be in use at a time.</p><ul class="rows">'+t+'</ul>';
+  if(tt)html+='<span class="wtag">'+_t('Playstyle perks')+'</span><p class="note">'+_t('These change how the gun plays, with a catch. Buying one counts as a purchase. After that, switching it on or off is free. One can be in use at a time.')+'</p><ul class="rows">'+tt+'</ul>';
   html+='</div>';
-  if(!keep)openCard(html);else{winfo.innerHTML=html;winfo.hidden=false;const cd=winfo.querySelector('.wcard');if(cd)cd.scrollTop=prevScroll;const f=keep&&winfo.querySelector('[data-buy="'+keep+'"]');(f&&!f.disabled?f:winfo.querySelector('[data-close]')).focus({preventScroll:true});}
+  if(!keep)openCard(html);else{winfo.innerHTML=html;winfo.hidden=false;const cd=winfo.querySelector('.wcard');if(cd)cd.scrollTop=prevScroll;const f=winfo.querySelector('[data-buy="'+keep+'"]');(f&&!f.disabled?f:winfo.querySelector('[data-close]')).focus({preventScroll:true});}
 }
 const pctS=v=>(v>=1?'+':'−')+Math.round(Math.abs(v-1)*100)+'%';
 function drawPetPreview(id,cx,gy){const keep=pet;pet={id,x:camX+cx,y:(id==='vulture'||id==='redeagle')?gy-6:gy,face:1,cd:1,t:0,walkT:0,roll:0,hitList:[],jump:null,dive:null,atk:0,ball:null};try{drawPet();}finally{pet=keep;}}
 function showInfo(kind,id,from){
   infoFrom=from||null;modsOpen=null;sheetResume=false;
   const stats=[];let name,tag,lore='',desc='',draw=null,cw=40,ch=20;
+  const S=(a,b)=>stats.push([_t(a),b]);
   if(kind==='gun'){
     const g=GUNS[id],m=modOf(id),own=run.owned[id],tr=m.act&&m.tr[m.act]?m.act:null,M=MODS[id];
     name=id==='pistol'&&m.sp2?'Pulsargun':g.name;lore=LORE[id];desc=g.desc;
     const trM={bump:.8,tripod:1.6,slug:7,long:.75,green:1.8,split:.45}[tr]||1,pel=tr==='slug'?1:(g.pellets||1)*(tr==='akimbo'?2:1)*(tr==='split'?3:1);
     const dm=g.dmg*dmgMult()*gunDmgMult(id)*(id==='pistol'&&m.sp?1.3:1)*(id==='bow'?(AR().bow||1)*strMult():1)*trM;
-    tag=GTYPE[g.type]+(pel>1?' · '+pel+(tr==='akimbo'?' bullets a shot':tr==='split'?' beams':' pellets'):'');
-    stats.push(['Damage per hit',fx1(dm)+(pel>1?' × '+pel:'')+(tr==='green'?' (bosses '+fx1(dm/1.8*.3)+')':'')]);
-    stats.push(['Shots per second',fx1(1/rateOf(id))]);
-    stats.push(['Damage per second',fx1(dm*pel/rateOf(id))]);
-    stats.push([g.type==='flame'?'Fuel':g.type==='arrow'?'Arrows in the quiver':'Magazine',String(magOf(id))]);
-    stats.push(['Reload',fx1(reloadOf(id))+' s']);
+    tag=GTYPE[g.type]+(pel>1?' · '+_t(tr==='akimbo'?'{0} bullets a shot':tr==='split'?'{0} beams':'{0} pellets',pel):'');
+    S('Damage per hit',fx1(dm)+(pel>1?' × '+pel:'')+(tr==='green'?' ('+_t('bosses {0}',fx1(dm/1.8*.3))+')':''));
+    S('Shots per second',fx1(1/rateOf(id)));
+    S('Damage per second',fx1(dm*pel/rateOf(id)));
+    S(g.type==='flame'?'Fuel':g.type==='arrow'?'Arrows in the quiver':'Magazine',String(magOf(id)));
+    S('Reload',fx1(reloadOf(id))+' s');
     const rg=Math.round((tr==='slug'?380:g.range)*(tr==='dragon'||tr==='static'?.6:tr==='long'?1.6:1)*(id==='flamer'?(AR().flameRange||1):1));
-    stats.push(['Range',(rg<=170?'short':rg<=300?'medium':'long')+' ('+rg+')']);
+    S('Range',_t(rg<=170?'short':rg<=300?'medium':'long')+' ('+rg+')');
     const pc=g.type==='arrow'?(tr==='boom'?0:m.sp?3:1):g.pierce+(m.sp&&(id==='blunder'||id==='rifle')?1:0)+(tr==='staple'||tr==='slug'?2:0);
-    if(g.type==='hit'||g.type==='arrow'||g.type==='rail')stats.push(['Passes through',pc>=99?'everything':pc>0?pc+(pc===1?' more enemy':' more enemies'):'no']);
-    if(g.type==='arc')stats.push(['Lightning',tr==='static'?'no chain · fries everything within 50':'jumps to '+(m.sp?6:g.chains)]);
-    if(g.spin)stats.push(['Spin-up time',fx1(spinOf(id))+' s']);
-    if(g.charge)stats.push(['Charge time',fx1(g.charge)+' s']);
-    if(id==='pir')stats.push(['Kill stacks','+'+(trOn('pir','hyper')?10:5)+'% fire rate per kill · now +'+(run.pirStacks||0)*(trOn('pir','hyper')?10:5)+'%']);
-    stats.push(['Mods',M.dmg[0]+' '+(m.dmg||0)+'/'+MODMAX+' · '+M.mag[0]+' '+m.mag+'/'+MODMAX+' · '+M.rate[0]+' '+m.rate+'/'+MODMAX]);
-    stats.push(['Special',M.sp.name+(m.sp?' (fitted): ':' (not bought): ')+M.sp.desc]);
-    if(M.sp2)stats.push([M.sp2.name,m.sp2?'fitted · 20% instant kills, bosses lose 10% (every 25 s)':'not bought · '+money(M.sp2.price)]);
-    const tt=tr?M.tr.find(x=>x.id===tr):null;stats.push(['Playstyle perk',tt?tt.name+' (in use) · '+tt.down:'none in use · '+M.tr.map(x=>x.name).join(', ')]);
-    stats.push(['Price',g.price?money(g.price)+(own?' · you own it':''):'free · you own it']);
-    if(id==='bow')stats.push(['Strength','level '+(run.up.str||0)+' · arrows hit at '+Math.round(strMult()*100)+'%']);
+    if(g.type==='hit'||g.type==='arrow'||g.type==='rail')S('Passes through',pc>=99?_t('everything'):pc>0?_t(pc===1?'{0} more enemy':'{0} more enemies',pc):_t('no'));
+    if(g.type==='arc')S('Lightning',tr==='static'?_t('no chain · fries everything within 50'):_t('jumps to {0}',m.sp?6:g.chains));
+    if(g.spin)S('Spin-up time',fx1(spinOf(id))+' s');
+    if(g.charge)S('Charge time',fx1(g.charge)+' s');
+    if(id==='pir')S('Kill stacks',_t('+{0}% fire rate per kill · now +{1}%',trOn('pir','hyper')?10:5,(run.pirStacks||0)*(trOn('pir','hyper')?10:5)));
+    S('Mods',M.dmg[0]+' '+(m.dmg||0)+'/'+MODMAX+' · '+M.mag[0]+' '+m.mag+'/'+MODMAX+' · '+M.rate[0]+' '+m.rate+'/'+MODMAX);
+    S('Special',M.sp.name+' ('+_t(m.sp?'fitted':'not bought')+'): '+M.sp.desc);
+    if(M.sp2)stats.push([M.sp2.name,m.sp2?_t('fitted · 20% instant kills, bosses lose 10% (every 25 s)'):_t('not bought')+' · '+money(M.sp2.price)]);
+    const x=tr?M.tr.find(q=>q.id===tr):null;S('Playstyle perk',x?x.name+' ('+_t('in use')+') · '+x.down:_t('none in use')+' · '+M.tr.map(q=>q.name).join(', '));
+    S('Price',g.price?money(g.price)+(own?' · '+_t('you own it'):''):_t('free')+' · '+_t('you own it'));
+    if(id==='bow')S('Strength',_t('level {0} · arrows hit at {1}%',run.up.str||0,Math.round(strMult()*100)));
     draw=()=>drawGun(g.len>13?13:15,10,0,id,true);
   }else if(kind==='melee'){
     const M=MELEE[id],mm=mmodOf(id),MM=MMODS[id],mul=dmgMult()*(AR().melee||1)*(1+.15*mm.dmg)*strMult(),cd=M.cd/(1+.15*mm.spd);
-    name=M.name;lore=LORE[id];desc=M.desc;tag='Melee'+(M.hold?' · hold to use':'');
-    stats.push(['Damage per hit',fx1(M.dmg*mul)]);
-    stats.push(['Hits per second',fx1(1/cd)]);
-    stats.push(['Damage per second',fx1(M.dmg*mul/cd)]);
-    stats.push(['Strength','level '+(run.up.str||0)+' · hits at '+Math.round(strMult()*100)+'%']);
-    stats.push(['Reach',String(M.reach)]);
-    stats.push(['Knockback',M.kb>=240?'huge':M.kb>=140?'strong':M.kb>=60?'medium':'light']);
-    const sp=[];if(M.heal)sp.push('heals '+M.heal+' per hit');if(M.armorPierce)sp.push('breaks helmets and cones');if(M.shield)sp.push('blocks '+Math.round(M.shield*100)+'% from the front');if(M.rice)sp.push('scatters rice');if(M.stun)sp.push('stuns '+fx1(M.stun)+' s');if(M.slam)sp.push('ground slam');if(M.thrown)sp.push('thrown, comes back');if(M.confuse)sp.push('confuses for '+fx1(M.confuse)+' s');
-    if(sp.length)stats.push(['Effect',sp.join(' · ')]);
-    stats.push(['Mods',MM.dmg[0]+' '+mm.dmg+'/'+MMODMAX+' · '+MM.spd[0]+' '+mm.spd+'/'+MMODMAX]);stats.push(['Special',MM.sp.name+(mm.sp?' (fitted): ':' (not bought): ')+MM.sp.desc]);
-    stats.push(['Price',M.price?money(M.price)+(run.meleeOwned[id]?' · you own it':''):'free · you own it']);
+    name=M.name;lore=LORE[id];desc=M.desc;tag=_t('Melee')+(M.hold?' · '+_t('hold to use'):'');
+    S('Damage per hit',fx1(M.dmg*mul));
+    S('Hits per second',fx1(1/cd));
+    S('Damage per second',fx1(M.dmg*mul/cd));
+    S('Strength',_t('level {0} · hits at {1}%',run.up.str||0,Math.round(strMult()*100)));
+    S('Reach',String(M.reach));
+    S('Knockback',_t(M.kb>=240?'huge':M.kb>=140?'strong':M.kb>=60?'medium':'light'));
+    const sp=[];if(M.heal)sp.push(_t('heals {0} per hit',M.heal));if(M.armorPierce)sp.push(_t('breaks helmets and cones'));if(M.shield)sp.push(_t('blocks {0}% from the front',Math.round(M.shield*100)));if(M.rice)sp.push(_t('scatters rice'));if(M.stun)sp.push(_t('stuns {0} s',fx1(M.stun)));if(M.slam)sp.push(_t('ground slam'));if(M.thrown)sp.push(_t('thrown, comes back'));if(M.confuse)sp.push(_t('confuses for {0} s',fx1(M.confuse)));
+    if(sp.length)S('Effect',sp.join(' · '));
+    S('Mods',MM.dmg[0]+' '+mm.dmg+'/'+MMODMAX+' · '+MM.spd[0]+' '+mm.spd+'/'+MMODMAX);S('Special',MM.sp.name+' ('+_t(mm.sp?'fitted':'not bought')+'): '+MM.sp.desc);
+    S('Price',M.price?money(M.price)+(run.meleeOwned[id]?' · '+_t('you own it'):''):_t('free')+' · '+_t('you own it'));
     draw=()=>drawGun(12,10,0,id,true);
   }else if(kind==='item'){
     const it=ITEMS[id];name=it.name;lore=LORE2.item[id];desc=it.desc;
-    const once=['libro','copasa','lunch','hermana','medkit'].includes(id);tag=(once?'One-time use':'Place on the road')+' · key '+it.key;
-    const S={barricade:[['Health','170 per stack'],['Use','press Z to drop it where you stand']],
-      spikes:[['Damage','70 a second to anything on it'],['Lasts','about 9 seconds of traffic'],['Effect','slows them down']],
-      propane:[['Blast','360 damage, radius 52'],['Careful','also hurts you and your crates']],
-      turret:[['Damage per shot',fx1(22*(1+.5*amu('tinker')))],['Shots per second','4.5'],['Ammo',Math.round(160*(1+amu('tinker')))+', refilled every shift'],['Range','250, down the road']],
-      medkit:[['Heals','50 health'],['Use','press H any time']],
-      libro:[['Blast','600 damage, radius 74'],['Use','press G to throw it where you aim']],
-      copasa:[['Pigs','4, for 7 seconds'],['Damage per ram',fx1(12*nightScale()*petMult())],['Use','press K to throw the sack']],
-      lunch:[['Effect','every zombie and boss on the road, plus the rest of the wave'],['Use','press L during a shift']],
-      hermana:[['Effect','vaporizes every zombie on screen · bosses lose half their health'],['Use','press J during a shift']]}[id]||[];
-    stats.push(...S);stats.push(['You have',String(run.inv[id])]);stats.push(['Price',money(it.price)]);
+    const once=['libro','copasa','lunch','hermana','medkit'].includes(id);tag=_t(once?'One-time use':'Place on the road')+(touchOn?'':' · '+_t('key {0}',it.key));
+    const IS={barricade:[['Health',_t('170 per stack')],['How to use',_t(touchOn?'tap it to drop it where you stand':'press Z to drop it where you stand')]],
+      spikes:[['Damage',_t('70 a second to anything on it')],['Lasts',_t('about 9 seconds of traffic')],['Effect',_t('slows them down')]],
+      propane:[['Blast',_t('360 damage, radius 52')],['Careful',_t('also hurts you and your crates')]],
+      turret:[['Damage per shot',fx1(22*(1+.5*amu('tinker')))],['Shots per second','4.5'],['Ammo',_t('{0}, refilled every shift',Math.round(160*(1+amu('tinker'))))],['Range',_t('250, down the road')]],
+      medkit:[['Heals',_t('50 health')],['How to use',_t(touchOn?'tap it any time':'press H any time')]],
+      libro:[['Blast',_t('600 damage, radius 74')],['How to use',_t(touchOn?'tap it to throw it at the nearest zombie':'press G to throw it where you aim')]],
+      copasa:[['Pigs',_t('4, for 7 seconds')],['Damage per ram',fx1(12*nightScale()*petMult())],['How to use',_t(touchOn?'tap it to throw the sack':'press K to throw the sack')]],
+      lunch:[['Effect',_t('every zombie and boss on the road, plus the rest of the wave')],['How to use',_t(touchOn?'tap it during a shift':'press L during a shift')]],
+      hermana:[['Effect',_t('vaporizes every zombie on screen · bosses lose half their health')],['How to use',_t(touchOn?'tap it during a shift':'press J during a shift')]]}[id]||[];
+    for(const [a,b] of IS)S(a,b);S('You have',String(run.inv[id]));S('Price',money(it.price));
     draw=()=>drawStruct({kind:id},20,18,true);
   }else if(kind==='armor'){
-    const A=ARMORS[id];name=A.name;lore=LORE2.armor[id];desc=A.desc;tag='Armor';cw=60;ch=30;
-    if(A.speed)stats.push(['Walking speed',pctS(A.speed)]);if(A.bow)stats.push(['Bow damage',pctS(A.bow)]);if(A.bowRate)stats.push(['Bow draw time',pctS(A.bowRate)]);
-    if(A.reload)stats.push(['Reload time',pctS(A.reload)]);if(A.melee)stats.push(['Melee damage',pctS(A.melee)]);if(A.taken)stats.push(['Damage you take',pctS(A.taken)]);
-    if(A.cash)stats.push(['Tips',pctS(A.cash)]);if(A.fireproof)stats.push(['Explosions','cannot hurt you']);if(A.burn)stats.push(['Burn damage',pctS(A.burn)]);if(A.flameRange)stats.push(['Flamethrower range',pctS(A.flameRange)]);if(A.pet)stats.push(['Pet damage',pctS(A.pet)]);
-    if(!stats.length)stats.push(['Perks','none']);
-    stats.push(['Price',A.price?money(A.price):'free']);stats.push(['Status',run.armor===id?'wearing it':run.armorOwned[id]?'in your locker':'not bought']);
+    const A=ARMORS[id];name=A.name;lore=LORE2.armor[id];desc=A.desc;tag=_t('Armor');cw=60;ch=30;
+    if(A.speed)S('Walking speed',pctS(A.speed));if(A.bow)S('Bow damage',pctS(A.bow));if(A.bowRate)S('Bow draw time',pctS(A.bowRate));
+    if(A.reload)S('Reload time',pctS(A.reload));if(A.melee)S('Melee damage',pctS(A.melee));if(A.taken)S('Damage you take',pctS(A.taken));
+    if(A.cash)S('Tips',pctS(A.cash));if(A.fireproof)S('Explosions',_t('cannot hurt you'));if(A.burn)S('Burn damage',pctS(A.burn));if(A.flameRange)S('Flamethrower range',pctS(A.flameRange));if(A.pet)S('Pet damage',pctS(A.pet));
+    if(!stats.length)S('Perks',_t('none'));
+    S('Price',A.price?money(A.price):_t('free'));S('Status',_t(run.armor===id?'wearing it':run.armorOwned[id]?'in your locker':'not bought'));
     draw=()=>drawHuman(30,29,1,BODY.walker,playerLook(id,0,false));
   }else if(kind==='pet'){
-    const P=PETS[id],sc=nightScale()*petMult();name=P.name;lore=LORE2.pet[id];desc=P.desc;tag='Pet';cw=60;ch=30;
+    const P=PETS[id],sc=nightScale()*petMult();name=P.name;lore=LORE2.pet[id];desc=P.desc;tag=_t('Pet');cw=60;ch=30;
     const every={chicken:6,armadillo:5,rabbit:4.5,vulture:3,redeagle:2}[id]||P.rate;
-    stats.push(['Damage',id==='chicken'?fx1(160*nightScale())+' per egg blast':fx1(P.dmg*sc)+' a hit']);
-    stats.push(['Attacks','every '+fx1(every)+' s']);
-    if(P.speed)stats.push(['Speed',String(P.speed)]);
+    S('Damage',id==='chicken'?_t('{0} per egg blast',fx1(160*nightScale())):_t('{0} a hit',fx1(P.dmg*sc)));
+    S('Attacks',_t('every {0} s',fx1(every)));
+    if(P.speed)S('Speed',String(P.speed));
     const fx={chicken:'up to 5 eggs on the road at once',dog:'fast bites',armadillo:'bowls through a whole line',rabbit:'bounces up to 4 times',goat:'huge headbutt knockback',wolf:'pounces from range',vulture:'hunts flyers and bosses first · fetches amulets',redeagle:'hunts flyers and bosses first · fetches amulets',horse:'double back-leg kick, huge knockback · cannot be ridden',bear:'every swipe hits everything in front'}[id];
-    if(fx)stats.push(['Effect',fx]);
-    stats.push(['Grows','+10% every shift · now ×'+fx1(nightScale())]);
-    if(petMult()>1)stats.push([ARMORS[run.armor].name,'×'+fx1(petMult())+' pet damage']);
-    stats.push(['Price',money(P.price)]);stats.push(['Status',run.pet===id?'coming to work':run.petOwned[id]?'at home':'not adopted']);
+    if(fx)S('Effect',_t(fx));
+    S('Grows',_t('+10% every shift · now ×{0}',fx1(nightScale())));
+    if(petMult()>1)stats.push([ARMORS[run.armor].name,_t('×{0} pet damage',fx1(petMult()))]);
+    S('Price',money(P.price));S('Status',_t(run.pet===id?'coming to work':run.petOwned[id]?'at home':'not adopted'));
     draw=()=>drawPetPreview(id,30,28);
   }else if(kind==='up'){
-    const u=UPS[id],lv=run.up[id]||0,maxed=lv>=u.max;name=u.name;lore=LORE2.up[id];desc=u.desc;tag='Upgrade · one level per buy phase';cw=30;ch=15;
-    const now={str:Math.round(strMult()*100)+'% melee and bow damage',dmg:'+'+12*lv+'% damage',hp:run.hpMax+' max health',reload:Math.round(Math.pow(.85,lv)*100)+'% reload time',door:run.doorMax+' door strength'}[id];
-    const next={str:Math.round((.3+.17*(lv+1))*100)+'%',dmg:'+'+12*(lv+1)+'%',hp:(run.hpMax+25)+' max health',reload:Math.round(Math.pow(.85,lv+1)*100)+'%',door:(run.doorMax+100)+''}[id];
-    stats.push(['Level',lv+' of '+u.max]);stats.push(['Now',now]);stats.push(['Next level',maxed?'maxed':next+' · '+money(u.base*(lv+1))]);stats.push(['This buy phase',run.perkPhase[id]?'already bought':'available']);
+    const u=UPS[id],lv=run.up[id]||0,maxed=lv>=u.max;name=u.name;lore=LORE2.up[id];desc=u.desc;tag=_t('Upgrade · one level per buy phase');cw=30;ch=15;
+    const now={str:_t('{0}% melee and bow damage',Math.round(strMult()*100)),dmg:_t('+{0}% damage',12*lv),hp:_t('{0} max health',run.hpMax),reload:_t('{0}% reload time',Math.round(Math.pow(.85,lv)*100)),door:_t('{0} door strength',run.doorMax)}[id];
+    const next={str:Math.round((.3+.17*(lv+1))*100)+'%',dmg:'+'+12*(lv+1)+'%',hp:_t('{0} max health',run.hpMax+25),reload:Math.round(Math.pow(.85,lv+1)*100)+'%',door:String(run.doorMax+100)}[id];
+    S('Level',_t('{0} of {1}',lv,u.max));S('Now',now);S('Next level',maxed?_t('maxed'):next+' · '+money(u.base*(lv+1)));S('This buy phase',_t(run.perkPhase[id]?'already bought':'available'));
     draw=()=>drawUpIcon(id,15,8);
   }else if(kind==='amu'){
-    const A=AMULETS[id],g=amuGroups().find(x=>x.id===id);name=A.name;lore=LORE2.amu[id];desc=A.desc+(g&&g.n>1?' each.':'.');tag='Amulet · lasts '+AMU_LIFE+' shifts';cw=30;ch=15;
-    stats.push(['Effect',A.desc+' per amulet']);stats.push(['You carry',g?String(g.n):'none']);if(g)stats.push(['Crumbles',g.all.slice().sort((a,b)=>a-b).map(leftS).join(', ')]);
-    stats.push(['Where to find','glints on the road · 2.5% of kills · bosses drop two']);
+    const A=AMULETS[id],g=amuGroups().find(q=>q.id===id);name=A.name;lore=LORE2.amu[id];desc=A.desc+(g&&g.n>1?' '+_t('each')+'.':'.');tag=_t('Amulet · lasts {0} shifts',AMU_LIFE);cw=30;ch=15;
+    S('Effect',_t('{0} per amulet',A.desc));S('You carry',g?String(g.n):_t('none'));if(g)S('Crumbles',g.all.slice().sort((a,b)=>a-b).map(leftS).join(', '));
+    S('Where to find',_t('sometimes glints on the road · very rarely from kills · every boss drops one'));
     draw=()=>drawAmulet(15,13,id);
   }else return;
-  const html='<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+name+'</h3><button class="btn small" data-close>Close</button></div>'+
-    '<div class="wpic"><canvas width="'+cw+'" height="'+ch+'" aria-label="Picture of the '+name+'"></canvas></div><span class="wtag">'+tag+'</span>'+(lore?'<p class="wlore">'+lore+'</p>':'')+'<p style="margin:0">'+desc+'</p>'+
+  const html='<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+name+'</h3>'+closeB()+'</div>'+
+    '<div class="wpic"><canvas width="'+cw+'" height="'+ch+'" aria-label="'+_t('Picture of the {0}',name)+'"></canvas></div><span class="wtag">'+tag+'</span>'+(lore?'<p class="wlore">'+lore+'</p>':'')+'<p style="margin:0">'+desc+'</p>'+
     '<div class="wstats">'+stats.map(([a,b])=>tline(a,b)).join('')+'</div>'+
-    ((kind==='gun'||kind==='melee')&&mode==='shop'?'<div><button class="btn small" data-mods="'+kind+':'+id+'">Open mods</button></div>':'')+'</div>';
+    ((kind==='gun'||kind==='melee')&&mode==='shop'?'<div><button class="btn small" data-mods="'+kind+':'+id+'">'+_t('Open mods')+'</button></div>':'')+'</div>';
   openCard(html);
   const c=winfo.querySelector('canvas'),g=c.getContext('2d'),prev=G;G=g;
   try{g.fillStyle='rgba(255,255,255,.04)';for(let x=0;x<cw;x+=4)g.fillRect(x,0,1,ch);if(draw)draw();}finally{G=prev;}
@@ -2309,33 +2713,33 @@ function showSheet(from){
   const pct=n=>Math.round(n*100)+'%',lv=run.up.str||0;
   const M=MELEE[run.melee],mm=mmodOf(run.melee),hit=M.dmg*dmgMult()*(AR().melee||1)*(1+.15*mm.dmg)*strMult(),cd=M.cd/(1+.15*mm.spd);
   const rows=[
-    ['Walking speed',fx1(speedOf())+' · '+pct(speedOf()/72)+' of normal'],
-    ['Health',Math.ceil(Math.max(0,p.hp))+' of '+run.hpMax],
+    ['Walking speed',_t('{0} · {1} of normal',fx1(speedOf()),pct(speedOf()/72))],
+    ['Health',_t('{0} of {1}',Math.ceil(Math.max(0,p.hp)),run.hpMax)],
     ['Damage you take',pct(AR().taken||1)],
-    ['Damage bonus','+'+Math.round((dmgMult()-1)*100)+'% (guns and melee)'],
-    ['Reload time',pct(Math.pow(.85,run.up.reload)*(AR().reload||1)*Math.pow(.75,amu('quick')))+' of normal'],
-    ['Headshots','×'+fx1(2*(1+.6*amu('eagle')))+' damage'],
-    ['Melee in hand',M.name+' · '+fx1(hit)+' a hit · '+fx1(hit/cd)+' a second']
+    ['Damage bonus',_t('+{0}% (guns and melee)',Math.round((dmgMult()-1)*100))],
+    ['Reload time',_t('{0} of normal',pct(Math.pow(.85,run.up.reload)*(AR().reload||1)*Math.pow(.75,amu('quick'))))],
+    ['Headshots',_t('×{0} damage',fx1(2*(1+.6*amu('eagle'))))],
+    ['Melee in hand',_t('{0} · {1} a hit · {2} a second',M.name,fx1(hit),fx1(hit/cd))]
   ];
-  if(run.owned.bow)rows.push(['Bow',fx1(GUNS.bow.dmg*dmgMult()*gunDmgMult('bow')*(AR().bow||1)*strMult())+' per arrow']);
-  rows.push(['Doors',Math.ceil(run.door)+' of '+run.doorMax+(amu('bulwark')?' · take '+pct(guardMult())+' damage':'')]);
-  rows.push(['Tips',pct(cashMult())+' per kill']);
+  if(run.owned.bow)rows.push(['Bow',_t('{0} per arrow',fx1(GUNS.bow.dmg*dmgMult()*gunDmgMult('bow')*(AR().bow||1)*strMult()))]);
+  rows.push(['Doors',_t('{0} of {1}',Math.ceil(run.door),run.doorMax)+(amu('bulwark')?' · '+_t('take {0} damage',pct(guardMult())):'')]);
+  rows.push(['Tips',_t('{0} per kill',pct(cashMult()))]);
   rows.push(['Armor',ARMORS[run.armor].name]);
-  rows.push(['Pet',run.pet?PETS[run.pet].name:'none']);
+  rows.push(['Pet',run.pet?PETS[run.pet].name:_t('none')]);
   const am=amuGroups().map(g=>AMULETS[g.id].name+(g.n>1?' ×'+g.n:'')+' ('+leftS(g.left)+')');
-  rows.push(['Amulets',am.length?am.join(', '):'none']);
-  openCard('<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">Your stats</h3><button class="btn small" data-close>Close</button></div>'+
-    '<div class="strbox"><div class="tline total"><span class="nm">Strength</span><span class="dots"></span><span>'+lv+' / '+UPS.str.max+'</span></div>'+
+  rows.push(['Amulets',am.length?am.join(', '):_t('none')]);
+  openCard('<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+_t('Your stats')+'</h3>'+closeB()+'</div>'+
+    '<div class="strbox"><div class="tline total"><span class="nm">'+UPS.str.name+'</span><span class="dots"></span><span>'+lv+' / '+UPS.str.max+'</span></div>'+
     '<div class="strtrack" aria-hidden="true"><div style="width:'+Math.round(100*lv/UPS.str.max)+'%"></div></div>'+
-    '<p class="note">Melee weapons and the bow hit at <b>'+pct(strMult())+'</b> of full damage. Next level: '+(lv>=UPS.str.max?'maxed':pct(.3+.17*(lv+1)))+'. Raise it in Upgrades, one level per buy phase.</p></div>'+
-    '<div class="wstats">'+rows.map(([a,b])=>tline(a,b)).join('')+'</div>'+saveBox()+'<p class="note">Shift '+run.night+(run.cheated?' · dev panel used this run':'')+'</p></div>');
+    '<p class="note">'+_t('Melee weapons and the bow hit at <b>{0}</b> of full damage. Next level: {1}. Raise it in Upgrades, one level per buy phase.',pct(strMult()),lv>=UPS.str.max?_t('maxed'):pct(.3+.17*(lv+1)))+'</p></div>'+
+    '<div class="wstats">'+rows.map(([a,b])=>tline(_t(a),b)).join('')+'</div>'+saveBox()+'<p class="note">'+_t('Shift {0}',run.night)+(run.cheated?' · '+_t('dev panel used this run'):'')+'</p></div>');
 }
 function hideInfo(){if(sheetResume&&paused&&mode==='night')togglePause();sheetResume=false;modsOpen=null;winfo.hidden=true;winfo.innerHTML='';if(infoFrom&&document.body.contains(infoFrom))infoFrom.focus();infoFrom=null;}
 winfo.addEventListener('click',e=>{
   if(e.target.closest('[data-copy]')){const ta=$('#saveCode'),msg=$('#copyMsg');if(!ta)return;
-    const fallback=()=>{ta.focus();ta.select();msg.textContent='Selected. Press Ctrl+C (Cmd+C on Mac) to copy.';};
-    try{navigator.clipboard.writeText(ta.value).then(()=>{msg.textContent='Copied.';},fallback);}catch(err){fallback();}return;}
-  const om=e.target.closest('[data-mods]');if(om){const [k,i]=om.dataset.mods.split(':');const fr=infoFrom;showMods(k,i,fr);return;}
+    const fallback=()=>{ta.focus();ta.select();msg.textContent=_t('Selected. Press Ctrl+C (Cmd+C on Mac) to copy.');};
+    try{navigator.clipboard.writeText(ta.value).then(()=>{msg.textContent=_t('Copied.');},fallback);}catch(err){fallback();}return;}
+  const om=e.target.closest('[data-mods]');if(om){const [k,i]=om.dataset.mods.split(':');showMods(k,i,infoFrom);return;}
   const bb=e.target.closest('[data-buy]');
   if(bb&&modsOpen){if(bb.disabled||!bb.dataset.buy)return;ac();const d=bb.dataset.buy;doBuy(d);
     if(mode==='shop'){const y=window.scrollY;renderStock();window.scrollTo(0,y);const nb=stockEl.querySelector('[data-mods="'+modsOpen.kind+':'+modsOpen.id+'"]');if(nb)infoFrom=nb;}
@@ -2343,8 +2747,8 @@ winfo.addEventListener('click',e=>{
   if(e.target===winfo||e.target.closest('[data-close]'))hideInfo();});
 function saveBox(){
   const sv=loadSave();
-  return '<div class="savebox"><span class="wtag">Save code</span><p class="note">Your run saves itself in this browser at every buy phase and when you leave the page. To carry it to another browser or computer, copy this code and paste it on the title screen there.</p>'+
-    (sv?'<textarea id="saveCode" readonly rows="3" aria-label="Save code">'+encodeSave(sv)+'</textarea><button class="btn small" data-copy>Copy save code</button><span class="note" id="copyMsg" role="status"></span>':'<p class="note">No save yet. One is made as soon as you are between shifts.</p>')+'</div>';
+  return '<div class="savebox"><span class="wtag">'+_t('Save code')+'</span><p class="note">'+_t('Your run saves itself in this browser at every buy phase and when you leave the page. To carry it to another browser or computer, copy this code and paste it on the title screen there.')+'</p>'+
+    (sv?'<textarea id="saveCode" readonly rows="3" aria-label="'+_t('Save code')+'">'+encodeSave(sv)+'</textarea><button class="btn small" data-copy>'+_t('Copy save code')+'</button><span class="note" id="copyMsg" role="status"></span>':'<p class="note">'+_t('No save yet. One is made as soon as you are between shifts.')+'</p>')+'</div>';
 }
 
 /* ---------- saving ---------- */
@@ -2370,62 +2774,62 @@ function clearSave(){try{localStorage.removeItem(STORE_PREFIX+SAVE_KEY);}catch(e
 function encodeSave(s){return 'GS1.'+btoa(unescape(encodeURIComponent(JSON.stringify(s))));}
 function decodeSave(code){try{code=String(code).replace(/\s+/g,'');if(!code.startsWith('GS1.'))return null;const s=JSON.parse(decodeURIComponent(escape(atob(code.slice(4)))));return s&&s.v===1&&s.run&&typeof s.run.night==='number'?s:null;}catch(e){return null;}}
 function continueRun(s){
-  ac();zombies=[];corpses=[];parts=[];decals=[];floaters=[];tracers=[];booms=[];bolts=[];beams=[];weeds=[];projs=[];goos=[];pickups=[];eggs=[];
+  ac();zombies=[];corpses=[];parts=[];decals=[];floaters=[];tracers=[];booms=[];bolts=[];beams=[];weeds=[];projs=[];goos=[];pickups=[];eggs=[];pulses=[];
   banner=null;paused=false;night=null;bossRef=null;sole=null;pigs=[];pigeons=[];
   run=normalizeRun(s.run);for(const id of ORDER)if(run.owned[id])run.mags[id]=magOf(id);
-  structs=Array.isArray(s.structs)?s.structs.filter(x=>x&&x.kind):[];resetPlayer(Math.min(run.hpMax,s.hp||run.hpMax));lastSummary=s.summary||null;
-  hideOverlay();spawnPet();
+  structs=Array.isArray(s.structs)?s.structs.filter(x=>x&&x.kind&&x.x<WORLD):[];resetPlayer(Math.min(run.hpMax,s.hp||run.hpMax));lastSummary=s.summary||null;
+  hideOverlay();spawnPet();if(touchOn)aimMode='auto';
   if(s.where==='shop')openStock();
-  else{mode='prep';stockEl.hidden=true;tray.hidden=false;renderTray();banner={text:'WELCOME BACK',sub:'Shift '+run.night+'. Your defenses are where you left them.',t:2.6,max:2.6};saveGame();}
+  else{mode='prep';stockEl.hidden=true;tray.hidden=false;renderTray();banner={text:_t('WELCOME BACK'),sub:_t('Shift {0}. Your defenses are where you left them.',run.night),t:2.6,max:2.6};saveGame();}
   if(!devEl.hidden)renderDev();
 }
 function openStock(){
-  mode='shop';paused=false;tray.hidden=true;stockEl.hidden=false;hideOverlay();renderStock();saveGame();
+  mode='shop';paused=false;releaseHolds();tray.hidden=true;stockEl.hidden=false;hideOverlay();renderStock();renderPads();saveGame();
   const r=stockEl.getBoundingClientRect();if(r.top>window.innerHeight*.8)stockEl.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function closeStock(){
   mode='prep';run.amb=run.nextAmb;stockEl.hidden=true;tray.hidden=false;
   p.x=170;p.inside=0;p.alpha=1;p.face=1;spawnPet();weeds=[];renderTray();
   {const cab=$('#cab')||cv,r=cab.getBoundingClientRect();if(r.top<0||r.top>window.innerHeight*.5)cab.scrollIntoView({behavior:'smooth',block:'start'});}
-  banner={text:fmtT(AMB[run.amb].start-30),sub:AMB[run.amb].name+'. Set your defenses before the doors open.',t:2.4,max:2.4};
+  banner={text:fmtT(AMB[run.amb].start-30),sub:_t('{0}. Set your defenses before the doors open.',AMB[run.amb].name),t:2.4,max:2.4};
   saveGame();
 }
 function showOverlay(h){ov.innerHTML=h;ov.hidden=false;}
 function hideOverlay(){ov.hidden=true;}
-const plural=(n,w)=>n+' '+w+(n===1?'':'s');
+const langBtns=()=>'<span class="lang" role="group" aria-label="'+_t('Language')+'"><button data-lang="en" aria-pressed="'+(LANG==='en')+'">English</button><button data-lang="es" aria-pressed="'+(LANG==='es')+'">Español</button></span>';
 function titleCard(){
   const sv=loadSave();
-  showOverlay('<div class="card"><p class="k">Graveyard shift · Alcampo Route 9</p><h2>Graveyard Shift</h2>'+
-    (sv?'<p>Saved run: shift '+sv.run.night+' · '+money(sv.run.cash)+' in the drawer.</p><div class="btns"><button class="btn go" id="btnCont">Continue shift '+sv.run.night+'</button><button class="btn" id="btnStart">New run</button></div>'
-       :'<p>Hold the supermarket until the shift ends. Every shift brings more of them, and every fourth one brings a boss. One bad shift and you start over.</p><div class="btns"><button class="btn go" id="btnStart">Clock in</button></div>')+
-    (best?'<p class="muted">Longest run: '+plural(best,'shift')+' survived</p>':'<p class="muted">A/D to walk, mouse to aim and shoot, Tab to start the shift.</p>')+
-    '<details><summary>Load a save code</summary><div class="coderow"><input id="codeIn" type="text" placeholder="Paste your save code" aria-label="Save code" autocomplete="off"><button class="btn small" id="codeLoad">Load</button></div><p class="muted" id="codeMsg" role="status"></p></details></div>');
+  showOverlay('<div class="card"><p class="k">'+_t('Graveyard shift · Alcampo Route 9')+'</p><h2>Graveyard Shift</h2>'+
+    (sv?'<p>'+_t('Saved run: shift {0} · {1} in the drawer.',sv.run.night,money(sv.run.cash))+'</p><div class="btns"><button class="btn go" id="btnCont">'+_t('Continue shift {0}',sv.run.night)+'</button><button class="btn" id="btnStart">'+_t('New run')+'</button></div>'
+       :'<p>'+_t('Hold the supermarket until the shift ends. Every shift brings more of them, and every fourth one brings a boss. One bad shift and you start over.')+'</p><div class="btns"><button class="btn go" id="btnStart">'+_t('Clock in')+'</button></div>')+
+    (best?'<p class="muted">'+_t('Longest run: {0} survived',pl(best,'shift','shifts'))+'</p>':'<p class="muted">'+_t(touchOn?'Use the arrows to walk. Hold Fire to shoot the nearest zombie, or touch the screen to aim.':'A/D to walk, mouse to aim and shoot, Tab to start the shift.')+'</p>')+
+    '<div class="langrow">'+langBtns()+'</div>'+
+    '<details><summary>'+_t('Load a save code')+'</summary><div class="coderow"><input id="codeIn" type="text" placeholder="'+_t('Paste your save code')+'" aria-label="'+_t('Save code')+'" autocomplete="off"><button class="btn small" id="codeLoad">'+_t('Load')+'</button></div><p class="muted" id="codeMsg" role="status"></p></details></div>');
   let armed=false;
-  $('#btnStart').addEventListener('click',e=>{if(sv&&!armed){armed=true;e.currentTarget.textContent='Erase the saved run?';return;}clearSave();clockIn();});
+  $('#btnStart').addEventListener('click',e=>{if(sv&&!armed){armed=true;e.currentTarget.textContent=_t('Erase the saved run?');return;}clearSave();clockIn();});
   if(sv)$('#btnCont').addEventListener('click',()=>continueRun(sv));
-  const load=()=>{const s=decodeSave($('#codeIn').value);if(!s){$('#codeMsg').textContent='That code did not work. Copy the whole code from Your stats and paste it again.';return;}store.set(SAVE_KEY,s);continueRun(s);};
+  const load=()=>{const s=decodeSave($('#codeIn').value);if(!s){$('#codeMsg').textContent=_t('That code did not work. Copy the whole code from Your stats and paste it again.');return;}store.set(SAVE_KEY,s);continueRun(s);};
   $('#codeLoad').addEventListener('click',load);
   $('#codeIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();load();}});
 }
 function showGameOver(){
   const survived=run.night-1;
   if(!run.cheated){best=Math.max(best,survived);store.set(BEST_KEY,best);}
-  const why=overReason==='door'?'They broke through the doors':'You were bitten';
-  showOverlay('<div class="card"><p class="k">Shift '+run.night+' · '+clockStr()+' · '+AMB[run.amb].name+'</p><h2>'+why+'</h2><p>'+plural(survived,'shift')+' survived · '+plural(run.kills,'kill')+' · '+plural(run.heads,'headshot')+' · '+plural(run.bosses,'boss').replace('bosss','bosses')+' met</p>'+
-    (run.cheated?'<p class="muted">You used the dev panel, so this run does not count toward your best.</p>':'')+
-    '<p class="muted">Longest run: '+plural(best,'shift')+'</p><div><button class="btn go" id="btnAgain">Clock in again</button></div></div>');
+  const why=_t(overReason==='door'?'They broke through the doors':'You were bitten');
+  showOverlay('<div class="card"><p class="k">'+_t('Shift {0}',run.night)+' · '+clockStr()+' · '+AMB[run.amb].name+'</p><h2>'+why+'</h2><p>'+_t('{0} survived',pl(survived,'shift','shifts'))+' · '+pl(run.kills,'kill','kills')+' · '+pl(run.heads,'headshot','headshots')+' · '+_t('{0} met',pl(run.bosses,'boss','bosses'))+'</p>'+
+    (run.cheated?'<p class="muted">'+_t('You used the dev panel, so this run does not count toward your best.')+'</p>':'')+
+    '<p class="muted">'+_t('Longest run: {0}',pl(best,'shift','shifts'))+'</p><div><button class="btn go" id="btnAgain">'+_t('Clock in again')+'</button></div></div>');
   $('#btnAgain').addEventListener('click',clockIn);renderTray();
 }
 function clockIn(){
-  ac();newRun();zombies=[];corpses=[];parts=[];decals=[];floaters=[];tracers=[];booms=[];bolts=[];beams=[];weeds=[];lastSummary=null;banner=null;paused=false;
-  hideOverlay();spawnPet();p.x=140;p.inside=1;p.alpha=0;p.face=-1;
+  ac();newRun();zombies=[];corpses=[];parts=[];decals=[];floaters=[];tracers=[];booms=[];bolts=[];beams=[];weeds=[];pulses=[];lastSummary=null;banner=null;paused=false;
+  hideOverlay();spawnPet();p.x=140;p.inside=1;p.alpha=0;p.face=-1;if(touchOn)aimMode='auto';
   if(!devEl.hidden)renderDev();
   openStock();
 }
-function togglePause(){if(mode!=='night'&&mode!=='prep')return;paused=!paused;trig.mouse=trig.auto=false;renderTray();}
+function togglePause(){if(mode!=='night'&&mode!=='prep')return;paused=!paused;trig.mouse=trig.auto=false;releaseHolds();renderTray();}
 
 /* ---------- input ---------- */
-let touchUI=false;
 addEventListener('keydown',e=>{
   const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'))return;
   if(!winfo.hidden){if(e.key==='Escape'||e.key.toLowerCase()==='i'){e.preventDefault();hideInfo();}return;}
@@ -2453,21 +2857,36 @@ addEventListener('keydown',e=>{
   else if(k==='b'&&mode==='prep')openStock();
 });
 addEventListener('keyup',e=>{const k=e.key.toLowerCase();if(k==='a'||k==='arrowleft')keys.left=false;if(k==='d'||k==='arrowright')keys.right=false;if(k==='f')keys.melee=false;});
-addEventListener('blur',()=>{keys.left=keys.right=keys.melee=false;trig.mouse=trig.auto=trig.tleft=trig.tright=trig.melee=trig.rmouse=false;});
+addEventListener('blur',()=>{keys.left=keys.right=keys.melee=false;trig.mouse=trig.auto=trig.tleft=trig.tright=trig.melee=trig.rmouse=false;releaseHolds();});
 function setMouse(e){const r=cv.getBoundingClientRect();mouse.x=(e.clientX-r.left)*W/r.width;mouse.y=(e.clientY-r.top)*H/r.height;}
-cv.addEventListener('pointermove',e=>{setMouse(e);aimMode='mouse';});
+let canvasPtr=null;
+cv.addEventListener('pointermove',e=>{if(e.pointerType==='touch'&&canvasPtr!==e.pointerId)return;setMouse(e);aimMode='mouse';});
 cv.addEventListener('pointerdown',e=>{
-  if(!ov.hidden)return;ac();setMouse(e);aimMode='mouse';
+  if(e.pointerType==='touch'&&!touchOn&&touchPref==null)setTouch(true,false);
+  if(!ov.hidden)return;ac();setMouse(e);aimMode='mouse';canvasPtr=e.pointerId;
   if(e.button===2){trig.rmouse=true;melee();e.preventDefault();return;}
   if(mode==='night'&&!paused){trig.mouse=true;try{cv.setPointerCapture(e.pointerId);}catch(_){}}
   e.preventDefault();
 });
-const endPtr=()=>{trig.mouse=false;trig.rmouse=false;};
+const endPtr=e=>{if(e&&e.pointerId!=null&&canvasPtr!=null&&e.pointerId!==canvasPtr&&e.pointerType==='touch')return;trig.mouse=false;trig.rmouse=false;canvasPtr=null;if(touchOn)aimMode='auto';};
 cv.addEventListener('pointerup',endPtr);cv.addEventListener('pointercancel',endPtr);addEventListener('pointerup',endPtr);
+addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&!touchOn&&touchPref==null)setTouch(true,false);},{capture:true});
 cv.addEventListener('contextmenu',e=>e.preventDefault());
 cv.addEventListener('wheel',e=>{if(mode!=='night'&&mode!=='prep')return;e.preventDefault();cycleWeapon(e.deltaY>0?1:-1);},{passive:false});
-document.addEventListener('visibilitychange',()=>{if(document.hidden){saveGame();if(mode==='night'&&!paused)togglePause();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){saveGame();releaseHolds();if(mode==='night'&&!paused)togglePause();}});
 addEventListener('pagehide',saveGame);
+
+/* ---------- language ---------- */
+function setLang(l){
+  if(l!=='es')l='en';
+  applyLang(l);
+  for(const k in hudCache)delete hudCache[k];
+  buildPads();renderTray();if(mode==='shop')renderStock();if(!winfo.hidden)hideInfo();
+  if(mode==='title')titleCard();else if(mode==='over'&&!ov.hidden)showGameOver();
+  if(!devEl.hidden)renderDev();buildGuide();
+  for(const b of document.querySelectorAll('[data-lang]'))b.setAttribute('aria-pressed',String(b.dataset.lang===LANG));
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(!b)return;ac();setLang(b.dataset.lang);});
 
 /* ---------- dev panel (secret) ---------- */
 const devEl=$('#dev');let devMsg='';
@@ -2475,65 +2894,67 @@ const KON=['arrowup','arrowup','arrowdown','arrowdown','arrowleft','arrowright',
 function konami(k){k=String(k).toLowerCase();konBuf.push(k);if(konBuf.length>KON.length)konBuf.shift();
   if(konBuf.length===KON.length&&konBuf.every((v,i)=>v===KON[i])){konBuf=[];toggleDev();return true;}return false;}
 let neonTaps=[];
-$('#neon').addEventListener('click',()=>{const n=performance.now();neonTaps=neonTaps.filter(t=>n-t<2000);neonTaps.push(n);if(neonTaps.length>=5){neonTaps=[];toggleDev();}});
-function toggleDev(){devEl.hidden=!devEl.hidden;if(!devEl.hidden){devMsg='Override unlocked.';renderDev();sfx('cash');}}
+$('#neon').addEventListener('click',()=>{const n=performance.now();neonTaps=neonTaps.filter(x=>n-x<2000);neonTaps.push(n);if(neonTaps.length>=5){neonTaps=[];toggleDev();}});
+function toggleDev(){devEl.hidden=!devEl.hidden;if(!devEl.hidden){devMsg=_t('Override unlocked.');renderDev();sfx('cash');}}
 function renderDev(){
-  const tg=(k,label)=>'<button data-dev="'+k+'" aria-pressed="'+DEV[k]+'">'+label+'</button>';
+  const tg=(k,label)=>'<button data-dev="'+k+'" aria-pressed="'+DEV[k]+'">'+_t(label)+'</button>';
   const sec=(label,inner)=>'<div><span class="k">'+label+'</span><div class="dev-row">'+inner+'</div></div>';
-  let h='<div class="dev-head"><b>Manager override</b><button data-dev="close">Close</button></div>';
-  h+='<p class="dev-note">'+(run.cheated?'This run no longer counts toward your best.':'Using anything here stops this run from counting toward your best.')+'</p>';
-  h+=sec('Tips · now '+money(run.cash),'<button data-dev="cash:500">+$500</button><button data-dev="cash:5000">+$5,000</button><input id="devCash" type="number" min="0" step="100" value="'+run.cash+'" aria-label="Set tips"><button data-dev="setcash">Set</button>');
-  h+=sec('Survival','<button data-dev="heal">Full health</button><button data-dev="door">Fix doors</button>'+tg('god','God mode'));
-  h+=sec('Arsenal','<button data-dev="guns">All guns</button><button data-dev="mods">Max every mod</button><button data-dev="melees">All melee</button><button data-dev="armors">All armor</button><button data-dev="pets">All pets</button><button data-dev="ups">Max upgrades</button><button data-dev="limit">Reset buy limit</button>'+tg('ammo','Infinite ammo')+tg('onehit','One-hit kills'));
-  h+=sec('Supplies, +5 each',Object.keys(ITEMS).map(k=>'<button data-dev="item:'+k+'">'+ITEMS[k].short+'</button>').join('')+'<button data-dev="items">All</button>');
-  h+=sec('Amulets','<button data-dev="amu1">+1 random</button><button data-dev="amuall">+1 of each</button>');
-  h+=sec('Weather (now and next shift)',Object.keys(AMB).map(k=>'<button data-dev="amb:'+k+'" aria-pressed="'+(run.amb===k)+'">'+AMB[k].name+'</button>').join(''));
-  h+=sec('Spawn (during a shift)',['walker','runner','hardhat','vaulter','bloater','digger','fireman','jetpack','soldier','gunner','brute'].map(k=>'<button data-dev="spawn:'+k+'">'+ZT[k].name+'</button>').join('')+'<button data-dev="spawn:cone">Conehead</button><button data-dev="clear">Clear wave</button>');
-  h+=sec('Bosses (during a shift)',BOSS_ORDER.map(k=>'<button data-dev="spawn:'+k+'">'+ZT[k].name+'</button>').join(''));
-  h+=sec('Jump to shift (between shifts)','<input id="devNight" type="number" min="1" max="99" value="'+run.night+'" aria-label="Shift number"><button data-dev="night">Set</button>');
-  h+='<p class="dev-msg" role="status">'+devMsg+'</p><p class="dev-note">Open again with up up down down left right left right B A, or tap the Open 24 hrs sign five times.</p>';
+  const db=(k,label)=>'<button data-dev="'+k+'">'+_t(label)+'</button>';
+  let h='<div class="dev-head"><b>'+_t('Manager override')+'</b>'+db('close','Close')+'</div>';
+  h+='<p class="dev-note">'+_t(run.cheated?'This run no longer counts toward your best.':'Using anything here stops this run from counting toward your best.')+'</p>';
+  h+=sec(_t('Tips · now {0}',money(run.cash)),'<button data-dev="cash:500">+$500</button><button data-dev="cash:5000">+$5,000</button><input id="devCash" type="number" min="0" step="100" value="'+run.cash+'" aria-label="'+_t('Set tips')+'">'+db('setcash','Set'));
+  h+=sec(_t('Survival'),db('heal','Full health')+db('door','Fix doors')+tg('god','God mode'));
+  h+=sec(_t('Arsenal'),db('guns','All guns')+db('mods','Max every mod')+db('melees','All melee')+db('armors','All armor')+db('pets','All pets')+db('ups','Max upgrades')+db('limit','Reset buy limit')+tg('ammo','Infinite ammo')+tg('onehit','One-hit kills'));
+  h+=sec(_t('Supplies, +5 each'),Object.keys(ITEMS).map(k=>'<button data-dev="item:'+k+'">'+ITEMS[k].short+'</button>').join('')+db('items','All'));
+  h+=sec(_t('Amulets'),db('amu1','+1 random')+db('amuall','+1 of each'));
+  h+=sec(_t('Weather (now and next shift)'),Object.keys(AMB).map(k=>'<button data-dev="amb:'+k+'" aria-pressed="'+(run.amb===k)+'">'+AMB[k].name+'</button>').join(''));
+  h+=sec(_t('Spawn (during a shift)'),['walker','runner','hardhat','vaulter','bloater','digger','fireman','jetpack','soldier','gunner','brute'].map(k=>'<button data-dev="spawn:'+k+'">'+ZT[k].name+'</button>').join('')+db('spawn:cone','Conehead')+db('clear','Clear wave'));
+  h+=sec(_t('Bosses (during a shift)'),BOSS_ORDER.map(k=>'<button data-dev="spawn:'+k+'">'+ZT[k].name+'</button>').join(''));
+  h+=sec(_t('Jump to shift (between shifts)'),'<input id="devNight" type="number" min="1" max="99" value="'+run.night+'" aria-label="'+_t('Shift number')+'">'+db('night','Set'));
+  h+='<p class="dev-msg" role="status">'+devMsg+'</p><p class="dev-note">'+_t('Open again with up up down down left right left right B A, or tap the Open 24 hrs sign five times.')+'</p>';
   devEl.innerHTML=h;
 }
 function devAct(a,v){
   devMsg='';
   const wasClean=!run.cheated;run.cheated=true;
   switch(a){
-    case 'cash':run.cash+=+v;devMsg='+'+money(+v)+' in the drawer.';sfx('cash');break;
-    case 'setcash':run.cash=Math.max(0,parseInt($('#devCash').value,10)||0);devMsg='Tips set to '+money(run.cash)+'.';break;
-    case 'heal':if(p.alive){p.hp=run.hpMax;devMsg='Health full.';}else devMsg='Too late, you are down.';break;
-    case 'door':run.door=run.doorMax;devMsg='Doors fixed.';break;
-    case 'god':case 'ammo':case 'onehit':DEV[a]=!DEV[a];devMsg=(a==='god'?'God mode':a==='ammo'?'Infinite ammo':'One-hit kills')+(DEV[a]?' on.':' off.');break;
-    case 'guns':ORDER.forEach(id=>{if(!run.owned[id]){run.owned[id]=true;run.mags[id]=magOf(id);}});devMsg='All guns unlocked.';break;
-    case 'mods':ORDER.forEach(id=>{const m=modOf(id);m.mag=MODMAX;m.rate=MODMAX;m.dmg=MODMAX;m.sp=true;if(MODS[id].sp2)m.sp2=true;for(const t of MODS[id].tr||[])m.tr[t.id]=true;run.mags[id]=magOf(id);});MORDER.forEach(id=>{const m=mmodOf(id);m.dmg=MMODMAX;m.spd=MMODMAX;m.sp=true;});devMsg='Every gun and melee mod maxed. Playstyle perks are unlocked: switch them on in each gun\'s Mods.';break;
-    case 'melees':MORDER.forEach(id=>run.meleeOwned[id]=true);devMsg='All melee weapons in the stockroom. Equip one there.';break;
-    case 'armors':AORDER.forEach(id=>run.armorOwned[id]=true);devMsg='All armor in the stockroom. Wear one there.';break;
-    case 'pets':PORDER.forEach(id=>run.petOwned[id]=true);devMsg='All pets adopted. Pick one in the stockroom.';break;
-    case 'ups':for(const k in UPS)while(run.up[k]<UPS[k].max){run.up[k]++;if(k==='hp'){run.hpMax+=25;p.hp+=25;}if(k==='door'){run.doorMax+=100;run.door+=100;}}devMsg='All upgrades maxed.';break;
-    case 'limit':run.buys=0;run.perkPhase={};devMsg='Buy limit reset for this phase.';break;
-    case 'item':run.inv[v]+=5;devMsg='+5 '+ITEMS[v].name.toLowerCase()+'.';break;
-    case 'items':for(const k in ITEMS)run.inv[k]+=5;devMsg='+5 of everything.';break;
-    case 'amu1':{const k=pick(Object.keys(AMULETS));collectAmulet({id:k});devMsg='Got '+AMULETS[k].name+'.';break;}
-    case 'amuall':for(const k in AMULETS)collectAmulet({id:k});devMsg='One of every amulet.';break;
-    case 'amb':run.amb=v;run.nextAmb=v;devMsg='Weather set to '+AMB[v].name.toLowerCase()+'.';break;
+    case 'cash':run.cash+=+v;devMsg=_t('+{0} in the drawer.',money(+v));sfx('cash');break;
+    case 'setcash':run.cash=Math.max(0,parseInt($('#devCash').value,10)||0);devMsg=_t('Tips set to {0}.',money(run.cash));break;
+    case 'heal':if(p.alive){p.hp=run.hpMax;devMsg=_t('Health full.');}else devMsg=_t('Too late, you are down.');break;
+    case 'door':run.door=run.doorMax;devMsg=_t('Doors fixed.');break;
+    case 'god':case 'ammo':case 'onehit':DEV[a]=!DEV[a];devMsg=_t((a==='god'?'God mode':a==='ammo'?'Infinite ammo':'One-hit kills')+(DEV[a]?' on.':' off.'));break;
+    case 'guns':ORDER.forEach(id=>{if(!run.owned[id]){run.owned[id]=true;run.mags[id]=magOf(id);}});devMsg=_t('All guns unlocked.');break;
+    case 'mods':ORDER.forEach(id=>{const m=modOf(id);m.mag=MODMAX;m.rate=MODMAX;m.dmg=MODMAX;m.sp=true;if(MODS[id].sp2)m.sp2=true;for(const x of MODS[id].tr||[])m.tr[x.id]=true;run.mags[id]=magOf(id);});MORDER.forEach(id=>{const m=mmodOf(id);m.dmg=MMODMAX;m.spd=MMODMAX;m.sp=true;});devMsg=_t('Every gun and melee mod maxed. Playstyle perks are unlocked: switch them on in each gun\'s Mods.');break;
+    case 'melees':MORDER.forEach(id=>run.meleeOwned[id]=true);devMsg=_t('All melee weapons in the stockroom. Equip one there.');break;
+    case 'armors':AORDER.forEach(id=>run.armorOwned[id]=true);devMsg=_t('All armor in the stockroom. Wear one there.');break;
+    case 'pets':PORDER.forEach(id=>run.petOwned[id]=true);devMsg=_t('All pets adopted. Pick one in the stockroom.');break;
+    case 'ups':for(const k in UPS)while(run.up[k]<UPS[k].max){run.up[k]++;if(k==='hp'){run.hpMax+=25;p.hp+=25;}if(k==='door'){run.doorMax+=100;run.door+=100;}}devMsg=_t('All upgrades maxed.');break;
+    case 'limit':run.buys=0;run.perkPhase={};devMsg=_t('Buy limit reset for this phase.');break;
+    case 'item':run.inv[v]+=5;devMsg=_t('+5 {0}.',ITEMS[v].name);break;
+    case 'items':for(const k in ITEMS)run.inv[k]+=5;devMsg=_t('+5 of everything.');break;
+    case 'amu1':{const k=pick(Object.keys(AMULETS));collectAmulet({id:k});devMsg=_t('Got {0}.',AMULETS[k].name);break;}
+    case 'amuall':for(const k in AMULETS)collectAmulet({id:k});devMsg=_t('One of every amulet.');break;
+    case 'amb':run.amb=v;run.nextAmb=v;devMsg=_t('Weather set to {0}.',AMB[v].name.toLowerCase());break;
     case 'spawn':
-      if(mode!=='night'){devMsg='Start a shift first.';break;}
-      {const z=spawnZombie(v==='cone'?'hardhat':v);if(v==='cone'&&!z.cone){z.cone=true;z.helmet=200*nightScale();z.h+=4;z.headH+=4;}devMsg=(v==='cone'?'Conehead':ZT[v].name)+' on the road.';}break;
+      if(mode!=='night'){devMsg=_t('Start a shift first.');break;}
+      {const z=spawnZombie(v==='cone'?'hardhat':v);if(v==='cone'&&!z.cone){z.cone=true;z.helmet=200*nightScale();z.h+=4;z.headH+=4;}devMsg=_t('{0} on the road.',v==='cone'?_t('Conehead'):ZT[v].name);}break;
     case 'clear':
-      if(mode!=='night'){devMsg='Nothing to clear between shifts.';break;}
-      night.queue.length=0;zombies.slice().forEach(z=>{if(!z.dead&&!z.demo){z.under=false;z.carried=null;kill(z,false,1);}});devMsg='Wave cleared.';break;
+      if(mode!=='night'){devMsg=_t('Nothing to clear between shifts.');break;}
+      night.queue.length=0;zombies.slice().forEach(z=>{if(!z.dead&&!z.demo){z.under=false;z.carried=null;kill(z,false,1);}});devMsg=_t('Wave cleared.');break;
     case 'night':
-      if(mode!=='prep'&&mode!=='shop'){devMsg='Only between shifts.';break;}
-      run.night=clamp(parseInt($('#devNight').value,10)||1,1,99);devMsg='Next up: shift '+run.night+'.';break;
+      if(mode!=='prep'&&mode!=='shop'){devMsg=_t('Only between shifts.');break;}
+      run.night=clamp(parseInt($('#devNight').value,10)||1,1,99);devMsg=_t('Next up: shift {0}.',run.night);break;
   }
-  if(wasClean)devMsg+=' This run no longer counts toward your best.';
+  if(wasClean)devMsg+=' '+_t('This run no longer counts toward your best.');
   renderDev();renderTray();if(mode==='shop')renderStock();saveGame();
 }
 devEl.addEventListener('click',e=>{const b=e.target.closest('[data-dev]');if(!b)return;ac();const [a,v]=b.dataset.dev.split(':');if(a==='close'){devEl.hidden=true;return;}devAct(a,v);});
 devEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'){const b=e.target.nextElementSibling;if(b)b.click();}});
 
 /* ---------- field guide ---------- */
-(function guide(){
-  const card=(grid,key,boss)=>{
+function buildGuide(){
+  const zg=$('#zgrid'),bg=$('#bgrid');zg.innerHTML='';bg.innerHTML='';
+  const card=(grid,key,boss,i)=>{
     const id=key==='cone'?'hardhat':key,t=ZT[id],c=mk(44,44),g=c.getContext('2d');g.fillStyle='#11102a';g.fillRect(0,0,44,44);g.fillStyle='#2b2736';g.fillRect(0,40,44,4);
     const prev=G;G=g;
     const z={type:id,face:-1,walkT:1,alt:id==='jetpack'?8:0,cone:key==='cone',pole:id==='vaulter',x:0,y:40,w:t.w,h:t.h,skin:'#7f9a6a',shirt:'#5b4a6e',pants:'#2f2c40',hair:id==='walker'?'#2a2430':null,helmet:(id==='hardhat'||id==='soldier'||id==='gunner')?1:0,flash:0,atk:0,stain:1,hp:1,max:1,aimT:0,ab:boss?bossInit(id):null};
@@ -2542,21 +2963,24 @@ devEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INP
       butcher:{skin:'#a9b08f',shirt:'#5a4a4a',pants:'#2a2630'},brood:{skin:'#a8a07a',shirt:'#8a7f5a',pants:'#4a4030'},voltz:{skin:'#9aa58a',shirt:'#e9edf0'},king:{skin:'#8a9a78',shirt:'#5b2a7a',pants:'#3a2050'},sheriff:{skin:'#c9c3a8',shirt:'#7a5232',pants:'#3a3040'},teresa:{skin:'#9aa58a',shirt:'#8a5a7a',pants:'#5a3a6a'},chuchi:{skin:'#a9b08f',shirt:'#e9e2d0',pants:'#3a3a44'},patrick:{skin:'#9aa58a',shirt:'#c8402e',pants:'#2f4f86'}}[id];
     if(tweak)Object.assign(z,tweak);
     try{const e=drawZombie(z,id==='brood'?24:id==='vaulter'?26:22,id==='jetpack'?32:40,false);if(e)R0(e.x,e.y,1,1,'#e3f5a8');}finally{G=prev;}
-    const info=key==='cone'?{name:'Conehead',hp:t.hp,pace:'Slow',night:3,note:'A hardhat that grabbed a traffic cone off the lot. The cone blocks every headshot, just like a helmet. Break its legs and the cone falls off.'}:t;
-    const armor=key==='cone'?' · cone':(id==='hardhat'||id==='soldier'||id==='gunner')?' · helmet':'';
+    const info=key==='cone'?{name:_t('Conehead'),hp:t.hp,pace:ZT.walker.pace,night:3,note:_t('A hardhat that grabbed a traffic cone off the lot. The cone blocks every headshot, just like a helmet. Break its legs and the cone falls off.')}:t;
+    const armor=key==='cone'?' · '+_t('cone'):(id==='hardhat'||id==='soldier'||id==='gunner')?' · '+_t('helmet'):'';
     const d=document.createElement('div');d.className='zcard'+(boss?' boss':'');d.appendChild(c);
-    const st=boss?'HP '+t.hp+' · boss':'HP '+info.hp+armor+' · '+info.pace+' · shift '+info.night+'+';
+    const st=boss?_t('HP {0} · first on shift {1}',t.hp,4*(i+1)):_t('HP {0}',info.hp)+armor+' · '+info.pace+' · '+_t('shift {0}+',info.night);
     d.insertAdjacentHTML('beforeend','<h3>'+info.name+'</h3><span class="st">'+st+'</span><p>'+(boss?t.title:info.note)+'</p>');
     grid.appendChild(d);
   };
-  for(const k of ['walker','runner','hardhat','cone','vaulter','bloater','digger','fireman','jetpack','soldier','gunner','brute'])card($('#zgrid'),k,false);
-  BOSS_ORDER.forEach(k=>card($('#bgrid'),k,true));
-  const notes=$('#bgrid').querySelectorAll('.st');BOSS_ORDER.forEach((k,i)=>{notes[i].textContent='HP '+ZT[k].hp+' · first on shift '+(4*(i+1));});
-})();
+  ['walker','runner','hardhat','cone','vaulter','bloater','digger','fireman','jetpack','soldier','gunner','brute'].forEach((k,i)=>card(zg,k,false,i));
+  BOSS_ORDER.forEach((k,i)=>card(bg,k,true,i));
+}
 
 /* ---------- boot ---------- */
 function boot(data){
   newRun();
+  applyLang(LANG);
+  document.body.classList.toggle('touch',touchOn);if(touchOn)aimMode='auto';
+  buildGuide();buildPads();
+  for(const b of document.querySelectorAll('[data-lang]'))b.setAttribute('aria-pressed',String(b.dataset.lang===LANG));
   if(data&&data.run&&data.mode==='prep'){try{run=normalizeRun(data.run);structs=data.structs||[];resetPlayer(data.hp||run.hpMax);mode='prep';hideOverlay();spawnPet();}catch(e){newRun();}}
   if(mode==='title'){
     spawnZombie('walker',395,true);spawnZombie('runner',428,true);const ch=spawnZombie('hardhat',458,true);if(!ch.cone){ch.cone=true;ch.helmet=200;ch.h+=4;ch.headH+=4;}spawnZombie('jetpack',418,true);spawnZombie('vaulter',470,true);spawnZombie('fireman',440,true);
@@ -2566,7 +2990,7 @@ function boot(data){
   if(document.fonts&&document.fonts.load)document.fonts.load('8px Silkscreen').catch(()=>{});
   let last=performance.now();
   function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
-    try{if(!paused&&mode!=='shop')update(dt);else if(mode==='shop'){T+=dt;updateAmbient(dt);updateFx(dt);}render();updateHUD();}catch(err){console.error(err);}
+    try{if(!paused&&mode!=='shop')update(dt);else if(mode==='shop'){T+=dt;updateAmbient(dt);updateFx(dt);}render();updateHUD();if(touchOn&&stage.dataset.mode!==mode)renderPads();}catch(err){console.error(err);}
     requestAnimationFrame(frame);}
   requestAnimationFrame(frame);
 }
