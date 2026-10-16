@@ -230,6 +230,7 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
         <dt>I</dt><dd>Your stats: strength, speed and the rest</dd>
         <dt>Z X C V</dt><dd>Place crate, spikes, propane, turret</dd>
         <dt>G</dt><dd>Throw the Libro Tere Profe</dd>
+        <dt>K</dt><dd>Throw a COPASA pig feed sack</dd>
         <dt>J</dt><dd>Call Hermana Sole</dd>
         <dt>H</dt><dd>Use a first-aid kit</dd>
         <dt>Tab / B / P</dt><dd>Start shift / stockroom / pause</dd>
@@ -410,6 +411,7 @@ const ITEMS={
   turret:{name:'Sentry turret',short:'Turret',key:'V',price:450,desc:'Fires down the road by itself. Restocked every shift.'},
   medkit:{name:'First-aid kit',short:'First aid',key:'H',price:60,desc:'Heals 50 when you use it.'},
   libro:{name:'Libro Tere Profe',short:'Libro',key:'G',price:350,desc:'One-time throw. The textbook explodes on impact and flattens everything nearby.'},
+  copasa:{name:'COPASA pig feed',short:'COPASA',key:'K',price:600,desc:'One-time throw. The feed sack bursts where it lands and a pack of five pigs charges out to ram the zombies for 12 seconds.'},
   hermana:{name:'Hermana Sole',short:'H. Sole',key:'J',price:1500,desc:'One-time use. A nun descends from the sky and vaporizes every zombie on screen with a beam of light. Bosses lose half their health.'}
 };
 const BUY_LIMIT=4;
@@ -471,7 +473,7 @@ const AMB={
 
 /* ---------- state ---------- */
 let run,p,night=null,pet=null,sole=null;
-let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[];
+let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[];
 let mode='title',paused=false,camX=0,shake=0,T=0,banner=null,overT=0,overReason='',lastSummary=null,muzT=0,doorHit=0;
 let flashW=0,boltT=4,lightning=null,thunderT=0,weedT=3,bossRef=null,stockTab='guns',flameS=0,sawS=0;
 const keys={left:false,right:false,melee:false};
@@ -483,9 +485,9 @@ let aimMode='mouse',aimX=300,aimY=200;
 function newRun(){
   run={night:1,cash:120,hpMax:100,doorMax:250,door:250,owned:{pistol:true},weapon:'pistol',mags:{pistol:12},mods:{},mmods:{},buys:0,perkPhase:{},
     melee:'bat',meleeOwned:{bat:true},armor:'vest',armorOwned:{vest:true},pet:null,petOwned:{},amu:{},
-    inv:{barricade:1,spikes:0,propane:0,turret:0,medkit:1,libro:1,hermana:0},up:{str:0,dmg:0,hp:0,reload:0,door:0},kills:0,heads:0,amb:'night',nextAmb:'night',bosses:0,
+    inv:{barricade:1,spikes:0,propane:0,turret:0,medkit:1,libro:1,copasa:0,hermana:0},up:{str:0,dmg:0,hp:0,reload:0,door:0},kills:0,heads:0,amb:'night',nextAmb:'night',bosses:0,
     cheated:DEV.god||DEV.ammo||DEV.onehit};
-  structs=[];goos=[];pickups=[];eggs=[];projs=[];night=null;pet=null;bossRef=null;sole=null;resetPlayer(100);
+  structs=[];goos=[];pickups=[];eggs=[];projs=[];pigs=[];night=null;pet=null;bossRef=null;sole=null;resetPlayer(100);
 }
 function resetPlayer(hp){p={x:190,y:GY,face:1,hp,alive:true,walkT:0,fireCd:0,reloadT:0,reloadMax:1,meleeCd:0,meleeT:0,hurt:0,spin:0,charge:0,rot:0,ang:0,pull:null,root:0,inside:0,alpha:1};}
 
@@ -565,6 +567,7 @@ const SFX={
   bite(){noise(.06,900,2,.12);},
   thud(){tone(90,40,.2,.25,'sine');noise(.15,300,1,.2,'lowpass');},
   whip(){noise(.15,2600,3,.15,'highpass');},
+  oink(){tone(520,300,.12,.07,'square');tone(460,260,.1,.06,'square',.1);},
   squelch(){tone(200,80,.2,.12,'sine');noise(.2,500,2,.1);},
   thunder(){noise(1.6,140,.5,.6,'lowpass');tone(50,30,1.2,.3,'sine');}
 };
@@ -799,6 +802,9 @@ function drawStruct(s,x,gy,icon){
     R0(x-7,gy-11,14,10,'#e9e2d0');R0(x-7,gy-11,14,1,'#fffaf0');R0(x-2,gy-12,4,1,'#8a8494');R0(x-1,gy-9,2,6,'#cf4450');R0(x-3,gy-7,6,2,'#cf4450');
   }else if(s.kind==='libro'){
     R0(x-5,gy-13,10,12,'#b8323a');R0(x-5,gy-13,2,12,'#7a1d24');R0(x+4,gy-12,1,10,'#f3efe4');R0(x-2,gy-10,5,1,'#f1d9a8');R0(x-2,gy-8,4,1,'#f1d9a8');R0(x-2,gy-5,5,2,'#f1d9a8');
+  }else if(s.kind==='copasa'){
+    R0(x-5,gy-13,10,12,'#c9a46a');R0(x-6,gy-12,1,10,'#a8844f');R0(x+5,gy-12,1,10,'#a8844f');R0(x-4,gy-15,8,2,'#b8935a');R0(x-1,gy-16,2,1,'#7a5a3a');
+    R0(x-5,gy-9,10,4,'#2f7a3f');R0(x-4,gy-8,2,2,'#f3efe4');R0(x-1,gy-8,2,2,'#f3efe4');R0(x+2,gy-8,2,2,'#f3efe4');R0(x-3,gy-4,6,2,'#e8a0a8');
   }else if(s.kind==='hermana'){
     R0(x-1,gy-15,3,14,'#c9a26a');R0(x-4,gy-12,9,2,'#c9a26a');R0(x-1,gy-15,1,14,'#e8c99a');R0(x-4,gy-12,9,1,'#e8c99a');R0(x-6,gy-16,1,1,'#ffe27a');R0(x+5,gy-15,1,1,'#ffe27a');R0(x+4,gy-5,1,1,'#ffe27a');R0(x-5,gy-6,1,1,'#ffe27a');
   }
@@ -845,6 +851,17 @@ function drawNun(x,y){
   R(-1,13,2,9,'#c9a26a');R(-3,15,6,2,'#c9a26a');R(-3,19,2,2,'#e9c3a0');R(1,19,2,2,'#e9c3a0');
   R(-4,31,3,1,'#2a2630');R(1,31,3,1,'#2a2630');
 }
+
+function drawPig(pg){
+  const x=Math.round(pg.x-camX),y=Math.round(pg.y),f=pg.face,R=(lx,ly,w,h,c)=>{G.fillStyle=c;G.fillRect(f>0?x+lx:x-lx-w,y+ly,w,h);};
+  const st=Math.floor(pg.walkT)%2,a=pg.atk>0?2:0,fade=pg.t<1?pg.t:1;
+  G.globalAlpha=fade;
+  R(-8,-8,2,1,'#d98a94');R(-9,-9,1,1,'#d98a94');
+  R(-7,-9,12,6,'#e8a0a8');R(-7,-9,12,1,'#f5c0c6');R(-7,-4,12,1,'#c9787f');
+  R(4+a,-10,5,5,'#e8a0a8');R(8+a,-8,2,3,'#d98a94');R(9+a,-7,1,1,'#7a3a40');R(4+a,-11,2,2,'#c9787f');R(7+a,-9,1,1,'#1d1724');
+  R(-6,-3,2,3-st,'#c9787f');R(-2,-3,2,2+st,'#c9787f');R(1,-3,2,3-st,'#c9787f');R(3,-3,2,2+st,'#c9787f');
+  G.globalAlpha=1;
+}
 /* ---------- fx helpers ---------- */
 function part(x,y,vx,vy,life,c,s,g,o){if(parts.length>900)return;parts.push(Object.assign({x,y,vx,vy,life,max:life,c,s:s||1,g:g==null?300:g},o||{}));}
 function blood(x,y,dir,n){for(let i=0;i<n;i++)part(x,y,dir*rnd(10,90)+rnd(-25,25),rnd(-90,-10),rnd(.5,1.1),pick(['#8e1f2a','#b0303a','#6e1820']),Math.random()<.3?2:1,320,{decal:true});}
@@ -868,6 +885,7 @@ function placeItem(kind){
   if(kind==='medkit')return useMedkit();
   if(kind==='libro')return throwBook();
   if(kind==='hermana')return useSole();
+  if(kind==='copasa')return throwSack();
   if(run.inv[kind]<=0){flt(p.x,p.y-30,'NONE LEFT','#a39cb8');sfx('deny');return;}
   const x=Math.round(clamp(p.x+p.face*16,PMIN+6,WORLD-10));
   if(kind!=='spikes'&&structs.some(s=>s.kind!=='spikes'&&Math.abs(s.x-x)<12)){flt(x,GY-28,'NO ROOM','#a39cb8');sfx('deny');return;}
@@ -879,6 +897,34 @@ function useMedkit(){
   if(!p.alive||run.inv.medkit<=0||!(mode==='prep'||mode==='night'))return;
   if(p.hp>=run.hpMax){flt(p.x,p.y-30,'FULL HEALTH','#a39cb8');return;}
   run.inv.medkit--;p.hp=Math.min(run.hpMax,p.hp+50);flt(p.x,p.y-30,'+50','#93b27a');sfx('cash');renderTray();
+}
+function throwSack(){
+  if(mode!=='night'||!p.alive||paused){if(mode==='prep')flt(p.x,p.y-30,'WAIT FOR THE SHIFT','#a39cb8');return;}
+  if(run.inv.copasa<=0){flt(p.x,p.y-30,'NO SACKS LEFT','#a39cb8');sfx('deny');return;}
+  run.inv.copasa--;renderTray();
+  const a=p.ang;projs.push({kind:'sack',x:p.x+p.face*3,y:p.y-17,vx:Math.cos(a)*260,vy:Math.sin(a)*260-110,g:420,rot:0,t:0});
+  flt(p.x,p.y-32,'COPASA!','#7fd38a');sfx('swing');
+}
+function sackBurst(x){
+  x=clamp(x,PMIN+10,WORLD-10);
+  for(let i=0;i<30;i++)part(x+rnd(-4,4),GY-6,rnd(-110,110),rnd(-170,-40),rnd(.6,1.2),pick(['#c9a46a','#e8c27a','#a8844f','#7a5a3a']),pick([1,1,2]),380,{decal:Math.random()<.5});
+  for(let i=0;i<5;i++)pigs.push({x:x+rnd(-6,6),y:GY-4,vx:rnd(-90,90),vy:-rnd(120,200),face:Math.random()<.5?-1:1,t:12,cd:rnd(.2,.6),atk:0,walkT:0,air:true});
+  flt(x,GY-34,'COPASA','#7fd38a');sfx('oink');shake=Math.max(shake,2);
+}
+function updatePigs(dt){
+  const dmg=30*nightScale();
+  for(const pg of pigs){
+    pg.t-=dt;pg.cd-=dt;if(pg.atk>0)pg.atk-=dt;
+    if(pg.t<=0){pg.dead=true;for(let i=0;i<6;i++)part(pg.x,pg.y-5,rnd(-30,30),rnd(-50,-10),.4,'#f5c0c6',2,-20);continue;}
+    if(pg.air){pg.vy+=520*dt;pg.x+=pg.vx*dt;pg.y+=pg.vy*dt;if(pg.y>=GY){pg.y=GY;pg.air=false;}continue;}
+    let tg=null,bd=280;for(const z of zombies){if(!live(z)||z.y<GY-20)continue;const d=Math.abs(z.x-pg.x);if(d<bd){bd=d;tg=z;}}
+    if(tg){const dx=tg.x-pg.x;pg.face=Math.sign(dx)||pg.face;
+      if(Math.abs(dx)>tg.w/2+7){pg.x+=pg.face*125*dt;pg.walkT+=dt*125*.22;}
+      else if(pg.cd<=0){pg.cd=.55;pg.atk=.15;damage(tg,dmg,false,pg.face,130,'pet');if(Math.random()<.3)sfx('oink');}}
+    else if(Math.random()<dt*1.5){pg.face=-pg.face;}
+    pg.x=clamp(pg.x,PMIN-10,WORLD);
+  }
+  pigs=pigs.filter(pg=>!pg.dead);
 }
 function throwBook(){
   if(mode!=='night'||!p.alive||paused){if(mode==='prep')flt(p.x,p.y-30,'WAIT FOR THE SHIFT','#a39cb8');return;}
@@ -1087,6 +1133,10 @@ function updateProjs(dt){
       let hz=null;for(const z of zombies){if(!live(z))continue;if(segHit(px,py,q.x,q.y,z.x-z.w/2,z.y-z.h,z.w,z.h)!==null){hz=z;break;}}
       if(hz){damage(hz,q.dmg,false,Math.sign(q.vx)||1,20,'gun');makeGoo(hz.x);q.dead=true;}
       else if(q.y>=GY){makeGoo(q.x);q.dead=true;}
+    }else if(q.kind==='sack'){
+      q.rot+=dt*8;
+      let hit=q.y>=GY-1;for(const z of zombies){if(live(z)&&segHit(px,py,q.x,q.y,z.x-z.w/2,z.y-z.h,z.w,z.h)!==null){hit=true;break;}}
+      if(hit){q.dead=true;sackBurst(q.x);}
     }else if(q.kind==='book'){
       q.rot+=dt*14;
       let hit=q.y>=GY-1;for(const z of zombies){if(live(z)&&segHit(px,py,q.x,q.y,z.x-z.w/2,z.y-z.h,z.w,z.h)!==null){hit=true;break;}}
@@ -1471,7 +1521,7 @@ function updateDawn(dt){
   else{p.inside+=dt;p.alpha=Math.max(0,1-p.inside/.5);}
   if(p.inside>.5&&(!banner||banner.dawnT==null||banner.dawnT<=0))goShop();
 }
-function goShop(){run.night++;run.buys=0;run.perkPhase={};night=null;corpses=[];for(const id of ownedGuns())run.mags[id]=magOf(id);p.reloadT=0;keys.left=keys.right=false;trig.mouse=trig.auto=false;openStock();}
+function goShop(){pigs=[];run.night++;run.buys=0;run.perkPhase={};night=null;corpses=[];for(const id of ownedGuns())run.mags[id]=magOf(id);p.reloadT=0;keys.left=keys.right=false;trig.mouse=trig.auto=false;openStock();}
 function gameOver(reason){
   if(mode==='over')return;
   clearSave();
@@ -1538,7 +1588,7 @@ function update(dt){
   if(mode==='title')for(const z of zombies)z.walkT+=dt*.8;
   if(mode==='prep'||mode==='night'||mode==='over')updatePlayer(dt);
   if(mode==='dawn')updateDawn(dt);
-  if(mode==='night'||mode==='over'){updateZombies(dt);updateStructs(dt);updateProjs(dt);updateSole(dt);}
+  if(mode==='night'||mode==='over'){updateZombies(dt);updateStructs(dt);updateProjs(dt);updateSole(dt);updatePigs(dt);}
   if(mode==='prep'||mode==='night'||mode==='dawn'){updatePet(dt);updateEggs(dt);updatePickups(dt);}
   if(mode==='night')spawnTick(dt);
   updateAmbient(dt);
@@ -1603,11 +1653,13 @@ function drawWorld(){
   for(const z of zombies){if(z.type!=='sheriff'||!z.ab)continue;const a=z.ab,hx=z.x-camX+z.face*9,hy=z.y-15;
     if(a.aim>0){G.strokeStyle='rgba(255,70,70,'+(.4+.4*Math.sin(T*30))+')';G.setLineDash([3,3]);G.beginPath();G.moveTo(hx,hy);G.lineTo(a.ax-camX+(a.ax-z.x)*.6,a.ay+(a.ay-hy)*.6);G.stroke();G.setLineDash([]);}
     if(a.rope){const tx=a.rope.s?a.rope.s.x:p.x,ty=a.rope.s?GY-8:p.y-12,k=1-a.rope.t/.6;G.strokeStyle='#c9a26a';G.beginPath();G.moveTo(hx,hy-3);G.quadraticCurveTo((hx+tx-camX)/2,Math.min(hy,ty)-20,tx-camX,ty);G.stroke();G.strokeStyle='#c9a26a';G.beginPath();G.arc(tx-camX,ty,4+k*2,0,Math.PI*2);G.stroke();}}
+  for(const pg of pigs)drawPig(pg);
   drawPet();
   drawPlayerSprite();
   for(const q of projs){const x=q.x-camX;
     if(q.kind==='arrow'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(Math.atan2(q.vy,q.vx));G.fillStyle='#c9b08a';G.fillRect(-7,0,7,1);G.fillStyle='#9aa0aa';G.fillRect(0,-1,2,3);G.fillStyle='#cf4450';G.fillRect(-8,-1,2,1);G.fillRect(-8,1,2,1);G.restore();}
     else if(q.kind==='goo'){R0(x-2,q.y-2,4,4,'#7fe07a');R0(x-1,q.y-1,1,1,'#d4ffc9');}
+    else if(q.kind==='sack'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(q.rot);G.fillStyle='#c9a46a';G.fillRect(-4,-5,8,10);G.fillStyle='#2f7a3f';G.fillRect(-4,-2,8,3);G.fillStyle='#7a5a3a';G.fillRect(-1,-6,2,1);G.restore();}
     else if(q.kind==='book'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(q.rot);G.fillStyle='#b8323a';G.fillRect(-4,-3,8,6);G.fillStyle='#f3efe4';G.fillRect(3,-2,1,4);G.restore();}
     else if(q.kind==='hook'){const o=q.owner;G.strokeStyle='#8a8f99';G.beginPath();G.moveTo(o.x-camX+o.face*10,o.y-20);G.lineTo(x,q.y);G.stroke();R0(x-2,q.y-2,4,4,'#c9ccd4');R0(x+(q.vx>0?2:-3),q.y-4,1,3,'#c9ccd4');}
     else if(q.kind==='slug'){R0(x-1,q.y,3,1,'#ffe39a');}}
@@ -1921,7 +1973,7 @@ function saveBox(){
 const SAVE_KEY='run1';
 function normalizeRun(r){
   r.up=Object.assign({str:0,dmg:0,hp:0,reload:0,door:0},r.up||{});
-  r.inv=Object.assign({barricade:0,spikes:0,propane:0,turret:0,medkit:0,libro:0,hermana:0},r.inv||{});
+  r.inv=Object.assign({barricade:0,spikes:0,propane:0,turret:0,medkit:0,libro:0,copasa:0,hermana:0},r.inv||{});
   r.mods=r.mods||{};r.mmods=r.mmods||{};r.amu=r.amu||{};r.owned=r.owned||{};r.owned.pistol=true;r.mags=r.mags||{};
   r.meleeOwned=r.meleeOwned||{};r.meleeOwned.bat=true;r.armorOwned=r.armorOwned||{};r.armorOwned.vest=true;r.petOwned=r.petOwned||{};
   if(!MELEE[r.melee]||!r.meleeOwned[r.melee])r.melee='bat';if(!ARMORS[r.armor]||!r.armorOwned[r.armor])r.armor='vest';if(r.pet&&!PETS[r.pet])r.pet=null;
@@ -1939,7 +1991,7 @@ function encodeSave(s){return 'GS1.'+btoa(unescape(encodeURIComponent(JSON.strin
 function decodeSave(code){try{code=String(code).replace(/\s+/g,'');if(!code.startsWith('GS1.'))return null;const s=JSON.parse(decodeURIComponent(escape(atob(code.slice(4)))));return s&&s.v===1&&s.run&&typeof s.run.night==='number'?s:null;}catch(e){return null;}}
 function continueRun(s){
   ac();zombies=[];corpses=[];parts=[];decals=[];floaters=[];tracers=[];booms=[];bolts=[];beams=[];weeds=[];projs=[];goos=[];pickups=[];eggs=[];
-  banner=null;paused=false;night=null;bossRef=null;sole=null;
+  banner=null;paused=false;night=null;bossRef=null;sole=null;pigs=[];
   run=normalizeRun(s.run);for(const id of ORDER)if(run.owned[id])run.mags[id]=magOf(id);
   structs=Array.isArray(s.structs)?s.structs.filter(x=>x&&x.kind):[];resetPlayer(Math.min(run.hpMax,s.hp||run.hpMax));lastSummary=s.summary||null;
   hideOverlay();spawnPet();
@@ -2014,6 +2066,7 @@ addEventListener('keydown',e=>{
   else if(IKEYS[k])placeItem(IKEYS[k]);
   else if(k==='g')throwBook();
   else if(k==='j')useSole();
+  else if(k==='k')throwSack();
   else if(k==='h')useMedkit();
   else if(k==='q')cycleWeapon(-1);else if(k==='e')cycleWeapon(1);
   else if(k==='b'&&mode==='prep')openStock();
