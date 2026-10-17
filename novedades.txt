@@ -5,3 +5,4 @@
         *Amuletos un poco más raros
         *Las cajas ahora tienen barra de vida
         *Llamas verdes del lanzallamas más débiles
+        *Mascotas más débiles

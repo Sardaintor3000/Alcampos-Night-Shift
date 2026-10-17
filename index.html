@@ -450,15 +450,15 @@ const ARMORS={
 const AORDER=Object.keys(ARMORS);
 const PETS={
   chicken:{name:'Bomb chicken',price:600,desc:'Lays an egg every 6 seconds. Eggs explode when a zombie steps on them.'},
-  dog:{name:'Desert mutt',price:900,dmg:20,rate:.45,speed:115,reach:10,desc:'A fast little biter.'},
-  armadillo:{name:'Bowling armadillo',price:1400,dmg:60,desc:'Curls into a ball and bowls through a whole line of them.'},
-  rabbit:{name:'Fat rabbit',price:1600,dmg:50,desc:'Rolls into a ball of fur and slams into them, bouncing from one to the next up to four times per attack.'},
-  goat:{name:'America',price:2200,dmg:45,rate:.9,speed:110,reach:12,desc:'A zombie goat named America. Charges in and headbutts them flying.'},
-  wolf:{name:'Coyote wolf',price:2000,dmg:42,rate:.6,speed:145,reach:12,pounce:true,desc:'Pounces from range and knocks them flat.'},
-  vulture:{name:'Vulture',price:2500,dmg:55,desc:'Dive-bombs from the sky, hunts flyers first, and fetches amulets for you.'},
-  redeagle:{name:'Red eagle',price:3200,dmg:90,desc:'A blood-red eagle. Dives faster and hits harder than the vulture, and also fetches amulets.'},
-  horse:{name:'Wally',price:2800,dmg:70,rate:1.1,speed:150,reach:14,desc:'A horse called Wally. Not for riding. Gallops at them and kicks with both back legs.'},
-  bear:{name:'Grizzly',price:3500,dmg:95,rate:1.05,speed:80,reach:16,swipe:true,desc:'Slow, but every swipe hits everything in front of it.'}
+  dog:{name:'Desert mutt',price:900,dmg:14,rate:.45,speed:115,reach:10,desc:'A fast little biter.'},
+  armadillo:{name:'Bowling armadillo',price:1400,dmg:42,desc:'Curls into a ball and bowls through a whole line of them.'},
+  rabbit:{name:'Fat rabbit',price:1600,dmg:35,desc:'Rolls into a ball of fur and slams into them, bouncing from one to the next up to four times per attack.'},
+  goat:{name:'America',price:2200,dmg:31,rate:.9,speed:110,reach:12,desc:'A zombie goat named America. Charges in and headbutts them flying.'},
+  wolf:{name:'Coyote wolf',price:2000,dmg:29,rate:.6,speed:145,reach:12,pounce:true,desc:'Pounces from range and knocks them flat.'},
+  vulture:{name:'Vulture',price:2500,dmg:38,desc:'Dive-bombs from the sky, hunts flyers first, and fetches amulets for you.'},
+  redeagle:{name:'Red eagle',price:3200,dmg:63,desc:'A blood-red eagle. Dives faster and hits harder than the vulture, and also fetches amulets.'},
+  horse:{name:'Wally',price:2800,dmg:49,rate:1.1,speed:150,reach:14,desc:'A horse called Wally. Not for riding. Gallops at them and kicks with both back legs.'},
+  bear:{name:'Grizzly',price:3500,dmg:66,rate:1.05,speed:80,reach:16,swipe:true,desc:'Slow, but every swipe hits everything in front of it.'}
 };
 const PORDER=Object.keys(PETS);
 const LORE={
@@ -1731,7 +1731,7 @@ function updatePickups(dt){
 }
 function updateEggs(dt){
   for(const e of eggs){e.arm-=dt;e.t-=dt;
-    if(e.arm<=0)for(const z of zombies){if(live(z)&&z.y>GY-6&&Math.abs(z.x-e.x)<z.w/2+4){e.dead=true;explode(e.x,GY-4,36,{z:160*nightScale(),p:0,s:0},'egg');break;}}
+    if(e.arm<=0)for(const z of zombies){if(live(z)&&z.y>GY-6&&Math.abs(z.x-e.x)<z.w/2+4){e.dead=true;explode(e.x,GY-4,36,{z:112*nightScale(),p:0,s:0},'egg');break;}}
     if(e.t<=0)e.dead=true;}
   eggs=eggs.filter(e=>!e.dead);
 }
@@ -2693,7 +2693,7 @@ function showInfo(kind,id,from){
   }else if(kind==='pet'){
     const P=PETS[id],sc=nightScale()*petMult();name=P.name;lore=LORE2.pet[id];desc=P.desc;tag=_t('Pet');cw=60;ch=30;
     const every={chicken:6,armadillo:5,rabbit:4.5,vulture:3,redeagle:2}[id]||P.rate;
-    S('Damage',id==='chicken'?_t('{0} per egg blast',fx1(160*nightScale())):_t('{0} a hit',fx1(P.dmg*sc)));
+    S('Damage',id==='chicken'?_t('{0} per egg blast',fx1(112*nightScale())):_t('{0} a hit',fx1(P.dmg*sc)));
     S('Attacks',_t('every {0} s',fx1(every)));
     if(P.speed)S('Speed',String(P.speed));
     const fx={chicken:'up to 5 eggs on the road at once',dog:'fast bites',armadillo:'bowls through a whole line',rabbit:'bounces up to 4 times',goat:'huge headbutt knockback',wolf:'pounces from range',vulture:'hunts flyers and bosses first · fetches amulets',redeagle:'hunts flyers and bosses first · fetches amulets',horse:'double back-leg kick, huge knockback · cannot be ridden',bear:'every swipe hits everything in front'}[id];
