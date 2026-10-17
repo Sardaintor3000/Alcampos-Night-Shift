@@ -72,7 +72,7 @@ Son muy raros y muy potentes (+25% de daño, +50 de vida, +60% de daño en la ca
   - **Libro Tere Profe**: un libro de texto que explota.
   - **Pienso COPASA**: suelta una piara de cerdos que embiste a los zombis.
   - **Lonchera**: lo que hay dentro no es comida, y limpia la carretera entera.
-  - **Hermana Sole**: una monja que baja del cielo y vaporiza a todos los zombis de la pantalla.
+  - **Hermana Sole**: una monja que baja del cielo y con su rayo de luz les quita la mitad de la vida a todos los zombis de la pantalla.
 - **Mejoras de la base** para la propia tienda, con 3 niveles cada una:
   - **Torreta en el tejado**: dispara sola a los zombis que se acercan a la tienda.
   - **Puertas electrificadas**: cada zombi que golpea las puertas se lleva una descarga.

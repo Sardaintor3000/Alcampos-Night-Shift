@@ -517,7 +517,7 @@ const ITEMS={
   libro:{name:'Libro Tere Profe',short:'Libro',key:'G',price:350,desc:'One-time throw. The textbook explodes on impact and flattens everything nearby.'},
   copasa:{name:'COPASA pig feed',short:'COPASA',key:'K',price:1400,desc:'One-time throw. The feed sack bursts where it lands and four pigs charge out to ram the zombies for 7 seconds.'},
   lunch:{name:'Lunch box',short:'Lunch',key:'L',price:24000,desc:'One-time use. Whatever is in this lunch box is not food. Open it and the whole road is wiped clean: every zombie, every boss, and the rest of the wave.'},
-  hermana:{name:'Hermana Sole',short:'H. Sole',key:'J',price:1500,desc:'One-time use. A nun descends from the sky and vaporizes every zombie on screen with a beam of light. Bosses lose half their health.'}
+  hermana:{name:'Hermana Sole',short:'H. Sole',key:'J',price:1300,desc:'One-time use. A nun descends from the sky and her beam of light burns away half the health of every zombie on screen. The weak ones vanish. Bosses lose 7.5% of their health.'}
 };
 const BASE={
   roof:{name:'Roof turret',desc:'A turret bolted to the Alcampo roof. Shoots the nearest zombie close to the store, flyers included, and never runs out of ammo.',max:3,prices:[900,1600,2600]},
@@ -857,7 +857,7 @@ ITEMS:{
   libro:{desc:'Se lanza una vez. El libro de texto explota al impactar y aplasta todo lo que hay cerca.'},
   copasa:{name:'Pienso COPASA',desc:'Se lanza una vez. El saco revienta donde cae y cuatro cerdos salen a embestir a los zombis durante 7 segundos.'},
   lunch:{name:'Lonchera',short:'Lonchera',desc:'Un solo uso. Lo que hay en esta lonchera no es comida. Ábrela y la carretera queda limpia: todos los zombis, todos los jefes y el resto de la oleada.'},
-  hermana:{desc:'Un solo uso. Una monja baja del cielo y vaporiza con un rayo de luz a todos los zombis de la pantalla. Los jefes pierden la mitad de la vida.'}
+  hermana:{desc:'Un solo uso. Una monja baja del cielo y su rayo de luz le quita la mitad de la vida a cada zombi de la pantalla. Los más débiles desaparecen. Los jefes pierden un 7,5% de la vida.'}
 },
 UPS:{
   str:{name:'Fuerza',desc:'Las armas cuerpo a cuerpo y el arco empiezan al 30% del daño. Cada nivel suma un 17% de su daño completo, hasta el 200%.'},
@@ -956,12 +956,12 @@ const ES={
   'Special':'Especial','fitted':'montado','not bought':'sin comprar','fitted · 20% instant kills, bosses lose 10% (every 25 s)':'montado · 20% de muertes instantáneas, los jefes pierden un 10% (cada 25 s)','Playstyle perk':'Ventaja de estilo','none in use':'ninguna en uso',
   'Price':'Precio','you own it':'es tuya','free':'gratis','Strength':'Fuerza','level {0} · arrows hit at {1}%':'nivel {0} · las flechas pegan al {1}%','hold to use':'mantén para usar','Hits per second':'Golpes por segundo','level {0} · hits at {1}%':'nivel {0} · pegas al {1}%',
   'Reach':'Alcance','Knockback':'Empuje','huge':'enorme','strong':'fuerte','light':'ligero','heals {0} per hit':'cura {0} por golpe','breaks helmets and cones':'rompe cascos y conos','blocks {0}% from the front':'bloquea el {0}% de frente','scatters rice':'esparce arroz','stuns {0} s':'aturde {0} s','shockwave: hits and staggers everything within {0}':'onda expansiva: golpea y aturde todo lo que esté a {0}','thrown, comes back':'se lanza y vuelve','confuses for {0} s':'confunde {0} s','Effect':'Efecto',
-  'One-time use':'Un solo uso','Place on the road':'Se coloca en la carretera','key {0}':'tecla {0}','Health':'Vida','170 per stack':'170 por montón','tap it to drop it where you stand':'tócala para soltarla donde estás','press Z to drop it where you stand':'pulsa Z para soltarla donde estás',
+  'One-time use':'Un solo uso','Place on the road':'Se coloca en la carretera','key {0}':'tecla {0}','Health':'Vida','every zombie on screen loses half its health · bosses lose 7.5%':'cada zombi de la pantalla pierde la mitad de su vida · los jefes pierden un 7,5%','140 per stack':'140 por montón','50 a second to anything on it':'50 por segundo a lo que esté encima','wears down while they walk over it, about 6 seconds of traffic':'se gasta cuando pasan por encima, unos 6 segundos de tráfico','280 damage, radius 46':'280 de daño, radio 46','120, zombies stop to smash it':'120, los zombis se paran a destrozarla','tap it to drop it where you stand':'tócala para soltarla donde estás','press Z to drop it where you stand':'pulsa Z para soltarla donde estás',
   'Damage':'Daño','70 a second to anything on it':'70 por segundo a lo que esté encima','Lasts':'Dura','about 9 seconds of traffic':'unos 9 segundos de tráfico','slows them down':'los frena','Blast':'Explosión','360 damage, radius 52':'360 de daño, radio 52','Careful':'Cuidado','also hurts you and your crates':'también te daña a ti y a tus cajas',
   'Damage per shot':'Daño por disparo','Ammo':'Munición','{0}, refilled every shift':'{0}, se recarga cada turno','250, down the road':'250, carretera abajo','Heals':'Cura','50 health':'50 de vida','tap it any time':'tócalo cuando quieras','press H any time':'pulsa H cuando quieras',
   '600 damage, radius 74':'600 de daño, radio 74','tap it to throw it at the nearest zombie':'tócalo para lanzarlo al zombi más cercano','press G to throw it where you aim':'pulsa G para lanzarlo hacia donde apuntas','Pigs':'Cerdos','4, for 7 seconds':'4, durante 7 segundos','Damage per ram':'Daño por embestida',
   'tap it to throw the sack':'tócalo para lanzar el saco','press K to throw the sack':'pulsa K para lanzar el saco','every zombie and boss on the road, plus the rest of the wave':'todos los zombis y jefes de la carretera, y el resto de la oleada','tap it during a shift':'tócala durante un turno','press L during a shift':'pulsa L durante un turno',
-  'vaporizes every zombie on screen · bosses lose half their health':'vaporiza a todos los zombis de la pantalla · los jefes pierden la mitad de la vida','press J during a shift':'pulsa J durante un turno','You have':'Tienes',
+  'vaporizes half of the zombies on screen · bosses lose 7.5% of their health':'vaporiza a la mitad de los zombis de la pantalla · los jefes pierden un 7,5% de la vida','press J during a shift':'pulsa J durante un turno','You have':'Tienes',
   'Walking speed':'Velocidad al andar','Bow damage':'Daño con arco','Bow draw time':'Tiempo de tensado','Reload time':'Tiempo de recarga','Melee damage':'Daño cuerpo a cuerpo','Damage you take':'Daño que recibes','Tips':'Propinas','Explosions':'Explosiones','cannot hurt you':'no te hacen daño',
   'Burn damage':'Daño por quemadura','Flamethrower range':'Alcance del lanzallamas','Pet damage':'Daño de mascota','Perks':'Ventajas','none':'ninguno','Status':'Estado','wearing it':'la llevas puesta','in your locker':'en tu taquilla',
   'Pet':'Mascota','{0} per egg blast':'{0} por huevo explosivo','{0} a hit':'{0} por golpe','Attacks':'Ataca','every {0} s':'cada {0} s','Speed':'Velocidad',
@@ -1245,6 +1245,7 @@ function drawStruct(s,x,gy,icon){
   }else if(s.kind==='spikes'){
     const k=icon?1:s.dur/s.max;R0(x-11,gy-2,22,2,'#2b2834');R0(x-11,gy-2,22,1,'#45404f');
     for(let i=0;i<22;i+=3){if(k<.5&&(i%6===0))continue;R0(x-11+i,gy-4,1,2,'#cfc9d6');}
+    if(!icon){R0(x-9,gy-9,18,3,'#14121f');R0(x-8,gy-8,Math.max(0,Math.round(16*k)),1,k>.6?'#93b27a':k>.3?'#f5a443':'#cf4450');}
   }else if(s.kind==='propane'){
     R0(x-3,gy-9,7,9,'#e4dfd3');R0(x-3,gy-9,7,2,'#c63c45');R0(x-1,gy-11,3,2,'#7b7787');R0(x-3,gy-5,7,1,'#bdb7aa');R0(x+2,gy-8,1,7,'#cfc9bc');
     if(!icon)R0(x,gy-12,1,1,(T*3%1)<.5?'#ff5a4a':'#5a2a2a');
@@ -1252,7 +1253,7 @@ function drawStruct(s,x,gy,icon){
     R0(x-5,gy-4,2,4,'#4b4a57');R0(x+3,gy-4,2,4,'#4b4a57');R0(x-1,gy-6,2,6,'#4b4a57');
     R0(x-5,gy-11,10,6,'#59684a');R0(x-5,gy-11,10,1,'#71825d');R0(x-3,gy-9,2,2,'#2f3826');
     G.save();G.translate(Math.round(x+3),Math.round(gy-8));G.rotate(icon?0:s.ang);G.fillStyle='#25252b';G.fillRect(0,-1,9,2);G.restore();
-    if(!icon){R0(x-5,gy-13,10,1,'#3a3548');R0(x-5,gy-13,Math.ceil(10*s.ammo/s.ammoMax),1,s.ammo>0?'#f5a443':'#cf4450');if(s.flash>0)R0(x+11,gy-10,3,3,'#fff3c4');}
+    if(!icon){R0(x-5,gy-13,10,1,'#3a3548');R0(x-5,gy-13,Math.ceil(10*s.ammo/s.ammoMax),1,s.ammo>0?'#f5a443':'#9aa0aa');if(s.max){const k=Math.max(0,s.hp/s.max);R0(x-6,gy-17,12,3,'#14121f');R0(x-5,gy-16,Math.round(10*k),1,k>.6?'#93b27a':k>.3?'#f5a443':'#cf4450');}if(s.flash>0)R0(x+11,gy-10,3,3,'#fff3c4');}
   }else if(s.kind==='medkit'){
     R0(x-7,gy-11,14,10,'#e9e2d0');R0(x-7,gy-11,14,1,'#fffaf0');R0(x-2,gy-12,4,1,'#8a8494');R0(x-1,gy-9,2,6,'#cf4450');R0(x-3,gy-7,6,2,'#cf4450');
   }else if(s.kind==='libro'){
@@ -1387,10 +1388,10 @@ const live=z=>!z.dead&&!z.demo&&!z.under&&!z.carried;
 /* ---------- placement & items ---------- */
 function addStruct(kind,x){
   const s={kind,x,hit:0};
-  if(kind==='barricade')Object.assign(s,{w:16,h:20,hp:170,max:170});
-  if(kind==='spikes')Object.assign(s,{w:22,h:3,dur:320,max:320});
+  if(kind==='barricade')Object.assign(s,{w:16,h:20,hp:140,max:140});
+  if(kind==='spikes')Object.assign(s,{w:22,h:3,dur:220,max:220});
   if(kind==='propane')Object.assign(s,{w:7,h:10});
-  if(kind==='turret'){const m=1+amu('tinker');Object.assign(s,{w:12,h:12,ammo:Math.round(160*m),ammoMax:Math.round(160*m),cd:0,flash:0,ang:0});}
+  if(kind==='turret'){const m=1+amu('tinker');Object.assign(s,{w:12,h:12,hp:120,max:120,ammo:Math.round(120*m),ammoMax:Math.round(120*m),cd:0,flash:0,ang:0});}
   structs.push(s);return s;
 }
 function placeItem(kind){
@@ -1579,6 +1580,7 @@ function bookBoom(x,y){
 }
 function breakStruct(s){
   s.dead=true;
+  if(s.kind==='turret')for(let i=0;i<12;i++)part(s.x+rnd(-6,6),GY-rnd(2,12),rnd(-70,70),rnd(-110,-30),rnd(.5,1),pick(['#59684a','#4b4a57','#25252b','#f5a443']),2,380,{bounce:true});
   if(s.kind==='barricade')for(let i=0;i<16;i++)part(s.x+rnd(-8,8),GY-rnd(2,18),rnd(-80,80),rnd(-120,-30),rnd(.6,1.2),pick(['#6f4a2c','#8b603a','#4a301c']),2,380,{bounce:true});
 }
 function hurtPlayer(d,fromX){
@@ -1885,7 +1887,7 @@ function diggerAI(z,dt){
   if(z.dig==='under'){z.digT-=dt;const chase=p.alive&&Math.abs(p.x-z.x)<60,tx=chase?p.x:DOOR_X,dir=tx<z.x?-1:1;z.face=dir;z.x+=dir*52*dt;if(Math.random()<dt*14)dirt(z.x,1);
     if(z.digT<=0||Math.abs(tx-z.x)<14||(dir<0&&z.x-z.w/2<=DOOR_X+4)){z.dig='up';z.under=false;dirt(z.x,10);sfx('dig');}return true;}
   if(z.dig==='up'){z.sink-=dt*60;if(z.sink<=0){z.sink=0;z.dig=null;z.digCd=7;}return true;}
-  if(z.digCd<=0&&z.stun<=0){const ahead=structs.some(s=>!s.dead&&(s.kind==='barricade'||s.kind==='spikes'||s.kind==='propane')&&(s.x-z.x)*z.face>0&&(s.x-z.x)*z.face<40);
+  if(z.digCd<=0&&z.stun<=0){const ahead=structs.some(s=>!s.dead&&(s.kind==='barricade'||s.kind==='spikes'||s.kind==='propane'||s.kind==='turret')&&(s.x-z.x)*z.face>0&&(s.x-z.x)*z.face<40);
     if(ahead||Math.random()<dt*.25){z.dig='down';z.sink=0;dirt(z.x,6);sfx('dig');return true;}}
   return false;
 }
@@ -1982,10 +1984,10 @@ function useSole(){
 function updateSole(dt){
   if(!sole)return;sole.t+=dt;sole.x+=(camX+W/2-sole.x)*Math.min(1,dt*3);
   if(!sole.done&&sole.t>=1){sole.done=true;flashW=Math.max(flashW,.8);shake=Math.max(shake,4);
-    for(const z of zombies.slice()){if(z.dead||z.demo)continue;if(z.x<camX-12||z.x>camX+W+12)continue;
-      z.under=false;z.sink=0;
-      if(z.boss){damage(z,z.max*.5,false,1,0,'holy');}
-      else{z.carried=null;z.holy=true;z.lastSrc='holy';kill(z,false,0);}}
+    const seen=zombies.filter(z=>!z.dead&&!z.demo&&z.x>=camX-12&&z.x<=camX+W+12);
+    for(const z of seen)if(z.boss){z.under=false;z.sink=0;damage(z,z.max*.075,false,1,0,'holy');}
+    for(const z of seen){if(z.boss||z.dead)continue;z.under=false;z.sink=0;z.carried=null;
+      if(z.hp<=z.max*.5){z.holy=true;z.lastSrc='holy';kill(z,false,0);}else{z.hp-=z.max*.5;z.flash=.15;z.lastSrc='holy';for(let i=0;i<5;i++)part(z.x+rnd(-4,4),z.y-rnd(0,z.h),rnd(-10,10),rnd(-60,-20),rnd(.5,.9),pick(['#fff8d8','#ffe27a']),1,-30);}}
     for(const q of projs)if(q.kind==='slug'||q.kind==='hook'){q.dead=true;if(q.owner&&q.owner.ab)q.owner.ab.hookOut=false;}}
   if(sole.t>2.8)sole=null;
 }
@@ -2061,7 +2063,7 @@ function updateZombies(dt){
       if(z.alt>2&&Math.random()<dt*25)part(z.x-z.face*6,z.y-8,rnd(-8,8),rnd(20,50),.25,pick(['#f5a443','#ffd27a','#c9741f']),1,0);}
     const reachP=low&&!z.doorOnly&&p.alive&&Math.abs(dp)<z.w/2+6&&(Math.sign(dp)===dir||Math.abs(dp)<3);
     let bl=null,bg=1e9;
-    for(const s of structs){if(!low||s.kind!=='barricade'||s.dead)continue;const gap=(s.x-z.x)*dir;if(gap>-3&&gap<s.w/2+z.w/2+1+z.gap&&gap<bg){bl=s;bg=gap;}}
+    for(const s of structs){if(!low||(s.kind!=='barricade'&&s.kind!=='turret')||s.dead)continue;const gap=(s.x-z.x)*dir;if(gap>-3&&gap<s.w/2+z.w/2+1+z.gap&&gap<bg){bl=s;bg=gap;}}
     const reachDoor=low&&dir<0&&z.x-z.w/2<=DOOR_X+1+z.gap;
     let target=null;
     if(reachP&&(!bl||Math.abs(dp)<bg))target=p;else if(bl)target=bl;else if(reachDoor)target='door';
@@ -2085,15 +2087,15 @@ function updateStructs(dt){
   for(const s of structs){
     if(s.dead)continue;if(s.hit>0)s.hit-=dt;
     if(s.kind==='spikes'){
-      for(const z of zombies){if(!live(z)||z.thrown)continue;if(Math.abs(z.x-s.x)<s.w/2+z.w/2-2&&z.y>GY-4){z.slow=true;z.hp-=70*dt;s.dur-=34*dt;z.lastSrc='trap';if(Math.random()<dt*5)blood(z.x,z.y-2,0,1);if(z.hp<=0)kill(z,false,z.face);}}
+      for(const z of zombies){if(!live(z)||z.thrown)continue;if(Math.abs(z.x-s.x)<s.w/2+z.w/2-2&&z.y>GY-4){z.slow=true;z.hp-=50*dt;s.dur-=34*dt;z.lastSrc='trap';if(Math.random()<dt*5)blood(z.x,z.y-2,0,1);if(z.hp<=0)kill(z,false,z.face);}}
       if(s.dur<=0)s.dead=true;
     }else if(s.kind==='propane'){
-      for(const z of zombies){if(live(z)&&!z.thrown&&Math.abs(z.x-s.x)<z.w/2+6&&z.y>GY-6){s.dead=true;explode(s.x,GY-6,52,{z:360,p:35,s:25},'fire');break;}}
+      for(const z of zombies){if(live(z)&&!z.thrown&&Math.abs(z.x-s.x)<z.w/2+6&&z.y>GY-6){s.dead=true;explode(s.x,GY-6,46,{z:280,p:35,s:25},'fire');break;}}
     }else if(s.kind==='turret'){
       if(s.flash>0)s.flash-=dt;s.cd-=dt;
       let bz=null,bd=1e9;for(const z of zombies){if(!live(z))continue;const d=z.x-s.x;if(d>4&&d<240&&d<bd){bd=d;bz=z;}}
       if(bz){const ta=Math.atan2((bz.y-bz.h*.6)-(GY-8),bz.x-(s.x+3));s.ang+=(ta-s.ang)*Math.min(1,dt*12);
-        if(s.ammo>0&&s.cd<=0){s.cd=.22;s.ammo--;s.flash=.05;hitscan(s.x+3+Math.cos(s.ang)*9,GY-8+Math.sin(s.ang)*9,s.ang+rnd(-.03,.03),{dmg:22*(1+.5*amu('tinker')),pierce:0,range:250,kb:14},1,'turret');sfx('turret');}}
+        if(s.ammo>0&&s.cd<=0){s.cd=.26;s.ammo--;s.flash=.05;hitscan(s.x+3+Math.cos(s.ang)*9,GY-8+Math.sin(s.ang)*9,s.ang+rnd(-.03,.03),{dmg:16*(1+.5*amu('tinker')),pierce:0,range:250,kb:14},1,'turret');sfx('turret');}}
       else s.ang*=Math.max(0,1-dt*4);
     }
   }
@@ -2173,7 +2175,7 @@ function dawn(){
   const bonus=25+10*run.night;run.cash+=bonus;run.pirStacks=0;
   lastSummary={night:run.night,amb:run.amb,kills:night.killed,heads:night.heads,earned:night.earned,bonus,cash:run.cash};
   if(!run.cheated){best=Math.max(best,run.night);store.set(BEST_KEY,best);}
-  for(const s of structs)if(s.kind==='turret')s.ammo=s.ammoMax=Math.round(160*(1+amu('tinker')));
+  for(const s of structs)if(s.kind==='turret')s.ammo=s.ammoMax=Math.round(120*(1+amu('tinker')));
   run.nextAmb=pickAmb(run.night+1);
   projs=[];pigeons=[];pigs=[];strikes=[];carts=[];bossRef=null;p.pull=null;p.root=0;p.reloadT=0;trig.mouse=trig.auto=false;
   banner={text:AMB[run.amb].end,sub:_t('Shift {0} survived. Heading back inside.',run.night),t:2.4,max:2.4,dawnT:2.4};
@@ -2770,15 +2772,15 @@ function showInfo(kind,id,from){
   }else if(kind==='item'){
     const it=ITEMS[id];name=it.name;lore=LORE2.item[id];desc=it.desc;
     const once=['libro','copasa','lunch','hermana','medkit'].includes(id);tag=_t(once?'One-time use':'Place on the road')+(touchOn?'':' · '+_t('key {0}',it.key));
-    const IS={barricade:[['Health',_t('170 per stack')],['How to use',_t(touchOn?'tap it to drop it where you stand':'press Z to drop it where you stand')]],
-      spikes:[['Damage',_t('70 a second to anything on it')],['Lasts',_t('about 9 seconds of traffic')],['Effect',_t('slows them down')]],
-      propane:[['Blast',_t('360 damage, radius 52')],['Careful',_t('also hurts you and your crates')]],
-      turret:[['Damage per shot',fx1(22*(1+.5*amu('tinker')))],['Shots per second','4.5'],['Ammo',_t('{0}, refilled every shift',Math.round(160*(1+amu('tinker'))))],['Range',_t('250, down the road')]],
+    const IS={barricade:[['Health',_t('140 per stack')],['How to use',_t(touchOn?'tap it to drop it where you stand':'press Z to drop it where you stand')]],
+      spikes:[['Damage',_t('50 a second to anything on it')],['Health',_t('wears down while they walk over it, about 6 seconds of traffic')],['Effect',_t('slows them down')]],
+      propane:[['Blast',_t('280 damage, radius 46')],['Careful',_t('also hurts you and your crates')]],
+      turret:[['Damage per shot',fx1(16*(1+.5*amu('tinker')))],['Shots per second','3.8'],['Ammo',_t('{0}, refilled every shift',Math.round(120*(1+amu('tinker'))))],['Health',_t('120, zombies stop to smash it')],['Range',_t('250, down the road')]],
       medkit:[['Heals',_t('50 health')],['How to use',_t(touchOn?'tap it any time':'press H any time')]],
       libro:[['Blast',_t('600 damage, radius 74')],['How to use',_t(touchOn?'tap it to throw it at the nearest zombie':'press G to throw it where you aim')]],
       copasa:[['Pigs',_t('4, for 7 seconds')],['Damage per ram',fx1(12*nightScale()*petMult())],['How to use',_t(touchOn?'tap it to throw the sack':'press K to throw the sack')]],
       lunch:[['Effect',_t('every zombie and boss on the road, plus the rest of the wave')],['How to use',_t(touchOn?'tap it during a shift':'press L during a shift')]],
-      hermana:[['Effect',_t('vaporizes every zombie on screen · bosses lose half their health')],['How to use',_t(touchOn?'tap it during a shift':'press J during a shift')]]}[id]||[];
+      hermana:[['Effect',_t('every zombie on screen loses half its health · bosses lose 7.5%')],['How to use',_t(touchOn?'tap it during a shift':'press J during a shift')]]}[id]||[];
     for(const [a,b] of IS)S(a,b);S('You have',String(run.inv[id]));S('Price',money(it.price));
     draw=()=>drawStruct({kind:id},20,18,true);
   }else if(kind==='armor'){
@@ -2896,7 +2898,7 @@ function continueRun(s){
   ac();zombies=[];corpses=[];parts=[];decals=[];floaters=[];tracers=[];booms=[];bolts=[];beams=[];weeds=[];projs=[];goos=[];pickups=[];eggs=[];pulses=[];
   banner=null;paused=false;night=null;bossRef=null;sole=null;pigs=[];pigeons=[];
   run=normalizeRun(s.run);for(const id of ORDER)if(run.owned[id])run.mags[id]=magOf(id);
-  structs=Array.isArray(s.structs)?s.structs.filter(x=>x&&x.kind&&x.x<WORLD):[];resetPlayer(Math.min(run.hpMax,s.hp||run.hpMax));lastSummary=s.summary||null;
+  structs=Array.isArray(s.structs)?s.structs.filter(x=>x&&x.kind&&x.x<WORLD):[];for(const x of structs)if(x.kind==='turret'&&!x.max){x.hp=x.max=120;}resetPlayer(Math.min(run.hpMax,s.hp||run.hpMax));lastSummary=s.summary||null;
   hideOverlay();spawnPet();if(touchOn)aimMode='auto';
   if(s.where==='shop')openStock();
   else{mode='prep';stockEl.hidden=true;tray.hidden=false;renderTray();banner={text:_t('WELCOME BACK'),sub:_t('Shift {0}. Your defenses are where you left them.',run.night),t:2.6,max:2.6};saveGame();}

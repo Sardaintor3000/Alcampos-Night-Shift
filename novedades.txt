@@ -19,3 +19,6 @@
         *Motosierra más débil
         *Muchos menos zombis por turno en los turnos avanzados (el turno 60 pasa de unos 2.260 a unos 300)
         *Cada zombi da más propinas cuanto más avanzado es el turno, para compensar
+        *Las defensas del suelo son más débiles: cajas con menos vida, pinchos y propano hacen menos daño, y la torreta dispara más lento, hace menos daño y tiene menos munición
+        *Los pinchos y las torretas tienen barra de vida, y los zombis se paran a destrozar las torretas
+        *Hermana Sole más débil: quita la mitad de la vida a los zombis y un 7,5% a los jefes, pero cuesta menos ($1,300)
