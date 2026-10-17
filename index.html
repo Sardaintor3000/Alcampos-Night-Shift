@@ -643,7 +643,8 @@ function reloadOf(id){return (run.amb==='heat'&&mode==='night'?1.15:1)*GUNS[id].
 function dmgMult(){return (1+.12*run.up.dmg)*(1+.25*amu('might'));}
 const isWolf=()=>!!run&&run.amb==='moon'&&(mode==='night'||mode==='over');
 function petMult(){return AR().pet||1;}
-const SPEED_MAX=120;
+const SPEED_MAX=120,HP_MAX=250;
+const hpFor=r=>Math.min(HP_MAX,100+25*((r.up&&r.up.hp)||0)+50*((r.amus||[]).filter(a=>a&&a.id==='vital').length));
 function speedOf(){return Math.min(SPEED_MAX,72*(run.amb==='snow'&&mode==='night'?.85:1)*(AR().speed||1)*(1+.2*amu('swift'))*(isWolf()?1.35:1));}
 function strMult(){return .3+.17*(run.up.str||0);}
 function cashMult(){return (AR().cash||1)*(1+.3*amu('midas'));}
@@ -922,7 +923,7 @@ const ES={
   /* canvas and floaters */
   'NONE LEFT':'NO QUEDA','NO ROOM':'NO HAY SITIO','FULL HEALTH':'VIDA AL MÁXIMO','WAIT FOR THE SHIFT':'ESPERA AL TURNO','NO SACKS LEFT':'NO QUEDAN SACOS','COPASA!':'¡COPASA!',
   'LUNCH BREAK!':'¡HORA DE COMER!','NO BOOKS LEFT':'NO QUEDAN LIBROS','LIBRO TERE PROFE!':'¡LIBRO TERE PROFE!','CONE OFF':'FUERA CONO','HELMET OFF':'FUERA CASCO','LEGS BROKEN':'PIERNAS ROTAS',
-  'VOID':'VACÍO','LIGHT HOLE -10%':'AGUJERO DE LUZ -10%','BLOCKED':'BLOQUEADO','ZAPPED!':'¡CALAMBRAZO!','SLIP!':'¡RESBALÓN!','TURRET LIMIT: {0}':'LÍMITE DE TORRETAS: {0}','Limit':'Límite','{0} on the road at once':'{0} a la vez en la carretera','RED MOON':'LUNA ROJA','They are faster and angrier tonight, but every kill pays double tips.':'Esta noche son más rápidos y más rabiosos, pero cada muerte paga el doble de propinas.','HEATWAVE':'OLA DE CALOR','Fire burns hotter and longer, zombies drag their feet, and your sweaty hands reload slower.':'El fuego quema más y dura más, los zombis arrastran los pies y con las manos sudadas recargas más lento.','METEOR SHOWER':'LLUVIA DE METEORITOS','Watch the sky. When a fiery streak points at the road, get out of the way.':'Mira al cielo. Cuando una estela de fuego apunte a la carretera, apártate.','SNOW IN THE DESERT':'NIEVE EN EL DESIERTO','Everyone is slower on the ice, zombies slip, and fire goes out fast.':'Sobre el hielo todo el mundo va más lento, los zombis resbalan y el fuego se apaga enseguida.','PIR +{0}% FIRE RATE':'PIR +{0}% CADENCIA','HEADSHOT':'A LA CABEZA','BOSS DOWN':'JEFE ABATIDO',
+  'VOID':'VACÍO','LIGHT HOLE -10%':'AGUJERO DE LUZ -10%','BLOCKED':'BLOQUEADO','ZAPPED!':'¡CALAMBRAZO!','SLIP!':'¡RESBALÓN!','TURRET LIMIT: {0}':'LÍMITE DE TORRETAS: {0}','cap {0}':'tope {0}','Limit':'Límite','{0} on the road at once':'{0} a la vez en la carretera','RED MOON':'LUNA ROJA','They are faster and angrier tonight, but every kill pays double tips.':'Esta noche son más rápidos y más rabiosos, pero cada muerte paga el doble de propinas.','HEATWAVE':'OLA DE CALOR','Fire burns hotter and longer, zombies drag their feet, and your sweaty hands reload slower.':'El fuego quema más y dura más, los zombis arrastran los pies y con las manos sudadas recargas más lento.','METEOR SHOWER':'LLUVIA DE METEORITOS','Watch the sky. When a fiery streak points at the road, get out of the way.':'Mira al cielo. Cuando una estela de fuego apunte a la carretera, apártate.','SNOW IN THE DESERT':'NIEVE EN EL DESIERTO','Everyone is slower on the ice, zombies slip, and fire goes out fast.':'Sobre el hielo todo el mundo va más lento, los zombis resbalan y el fuego se apaga enseguida.','PIR +{0}% FIRE RATE':'PIR +{0}% CADENCIA','HEADSHOT':'A LA CABEZA','BOSS DOWN':'JEFE ABATIDO',
   '{0} is finished. +{1}':'{0}, fuera de combate. +{1}','SILENCE IN CLASS!':'¡SILENCIO EN CLASE!','STACKS LOST':'ACUMULACIÓN PERDIDA','ENRAGED':'FURIOSA','OVERCHARGE':'SOBRECARGA',
   'IT LIVES!':'¡ESTÁ VIVO!','CATCH!':'¡AHÍ VA!','RISE, SUBJECTS!':'¡ALZAOS, SÚBDITOS!','YOINK':'¡MÍO!','LASSOED':'ATRAPADO','HOP!':'¡HOP!','May the light take you.':'Que la luz os lleve.',
   'CLASS IS IN SESSION':'EMPIEZA LA CLASE','DINNER IS SERVED':'LA CENA ESTÁ SERVIDA','PIPE BURST!':'¡REVIENTA LA TUBERÍA!','SHIFT {0}':'TURNO {0}',
@@ -1779,7 +1780,7 @@ const inGoo=z=>z.y>GY-30?goos.find(g=>Math.abs(z.x-g.x)<g.w/2+z.w/2-2):null;
 /* ---------- pickups, eggs, pets ---------- */
 function collectAmulet(pk){
   pk.dead=true;if(!run.amus)run.amus=[];run.amus.push({id:pk.id,got:run.night});const A=AMULETS[pk.id];
-  if(pk.id==='vital'){run.hpMax+=50;p.hp+=50;}
+  if(pk.id==='vital')recalcHp();
   flt(p.x,p.y-34,A.name.toUpperCase(),A.c);flt(p.x,p.y-25,_t('{0} for {1} shifts',A.desc,AMU_LIFE),'#efe6d2');sfx('chime');renderTray();
 }
 function updatePickups(dt){
@@ -2225,7 +2226,8 @@ function updateDawn(dt){
 }
 function goShop(){pigs=[];run.night++;run.buys=0;run.perkPhase={};night=null;corpses=[];for(const id of ownedGuns())run.mags[id]=magOf(id);p.reloadT=0;keys.left=keys.right=false;trig.mouse=trig.auto=false;expireAmulets();openStock();}
 function expireAmulets(){const gone=[];run.amus=(run.amus||[]).filter(a=>{if(run.night-a.got>=AMU_LIFE){gone.push(a.id);return false;}return true;});
-  for(const id of gone)if(id==='vital')run.hpMax-=50;p.hp=Math.min(p.hp,run.hpMax);run.expired=gone.length?gone:null;}
+  recalcHp();run.expired=gone.length?gone:null;}
+function recalcHp(){const nm=hpFor(run),d=nm-run.hpMax;run.hpMax=nm;if(d>0)p.hp+=d;p.hp=Math.min(p.hp,run.hpMax);}
 function gameOver(reason){
   if(mode==='over')return;
   clearSave();
@@ -2729,7 +2731,7 @@ function doBuy(data){
     case 'item':if(pay(ITEMS[id].price))run.inv[id]++;break;
     case 'svc':if(id==='heal'&&p.hp<run.hpMax&&pay(80))p.hp=run.hpMax;if(id==='door'&&run.door<run.doorMax&&pay(90))run.door=Math.min(run.doorMax,run.door+100);break;
     case 'base':{const B=BASE[id],lv=run.base[id]||0;if(lv<B.max&&pay(B.prices[lv]))run.base[id]=lv+1;break;}
-    case 'up':{const u=UPS[id],lv=run.up[id]||0,cost=u.base*(lv+1);if(lv<u.max&&pay(cost)){run.up[id]=lv+1;if(id==='hp'){run.hpMax+=25;p.hp+=25;}if(id==='door'){run.doorMax+=100;run.door+=100;}}break;}
+    case 'up':{const u=UPS[id],lv=run.up[id]||0,cost=u.base*(lv+1);if(lv<u.max&&pay(cost)){run.up[id]=lv+1;if(id==='hp')recalcHp();if(id==='door'){run.doorMax+=100;run.door+=100;}}break;}
   }
   return true;
 }
@@ -2850,7 +2852,7 @@ function showInfo(kind,id,from){
   }else if(kind==='up'){
     const u=UPS[id],lv=run.up[id]||0,maxed=lv>=u.max;name=u.name;lore=LORE2.up[id];desc=u.desc;tag=_t('Upgrade · one level per buy phase');cw=30;ch=15;
     const now={str:_t('{0}% melee and bow damage',Math.round(strMult()*100)),dmg:_t('+{0}% damage',12*lv),hp:_t('{0} max health',run.hpMax),reload:_t('{0}% reload time',Math.round(Math.pow(.85,lv)*100)),door:_t('{0} door strength',run.doorMax)}[id];
-    const next={str:Math.round((.3+.17*(lv+1))*100)+'%',dmg:'+'+12*(lv+1)+'%',hp:_t('{0} max health',run.hpMax+25),reload:Math.round(Math.pow(.85,lv+1)*100)+'%',door:String(run.doorMax+100)}[id];
+    const next={str:Math.round((.3+.17*(lv+1))*100)+'%',dmg:'+'+12*(lv+1)+'%',hp:_t('{0} max health',Math.min(HP_MAX,run.hpMax+25)),reload:Math.round(Math.pow(.85,lv+1)*100)+'%',door:String(run.doorMax+100)}[id];
     S('Level',_t('{0} of {1}',lv,u.max));S('Now',now);S('Next level',maxed?_t('maxed'):next+' · '+money(u.base*(lv+1)));S('This buy phase',_t(run.perkPhase[id]?'already bought':'available'));
     draw=()=>drawUpIcon(id,15,8);
   }else if(kind==='base'){
@@ -2878,7 +2880,7 @@ function showSheet(from){
   const M=MELEE[run.melee],mm=mmodOf(run.melee),hit=M.dmg*dmgMult()*(AR().melee||1)*(1+.15*mm.dmg)*strMult(),cd=M.cd/(1+.15*mm.spd);
   const rows=[
     ['Walking speed',_t('{0} · {1} of normal',fx1(speedOf()),pct(speedOf()/72))+(speedOf()>=SPEED_MAX?' · '+_t('max'):'')],
-    ['Health',_t('{0} of {1}',Math.ceil(Math.max(0,p.hp)),run.hpMax)],
+    ['Health',_t('{0} of {1}',Math.ceil(Math.max(0,p.hp)),run.hpMax)+(run.hpMax>=HP_MAX?' · '+_t('max'):' · '+_t('cap {0}',HP_MAX))],
     ['Damage you take',pct(AR().taken||1)],
     ['Damage bonus',_t('+{0}% (guns and melee)',Math.round((dmgMult()-1)*100))],
     ['Reload time',_t('{0} of normal',pct(Math.pow(.85,run.up.reload)*(AR().reload||1)*Math.pow(.75,amu('quick'))))],
@@ -2927,6 +2929,7 @@ function normalizeRun(r){
   if(!MELEE[r.melee]||!r.meleeOwned[r.melee])r.melee='bat';if(!ARMORS[r.armor]||!r.armorOwned[r.armor])r.armor='vest';if(r.pet&&!PETS[r.pet])r.pet=null;
   if(!GUNS[r.weapon]||!r.owned[r.weapon])r.weapon='pistol';if(!AMB[r.amb])r.amb='night';if(!AMB[r.nextAmb])r.nextAmb=r.amb;
   r.base=Object.assign({roof:0,zap:0,carts:0,cold:0},r.base||{});r.bossSeen=r.bossSeen||{};if(r.bossNext==null)r.bossNext=Math.floor(Math.max(0,r.night-1)/4);
+  r.hpMax=hpFor(r);
   r.buys=r.buys||0;r.perkPhase=r.perkPhase||{};r.kills=r.kills||0;r.heads=r.heads||0;r.bosses=r.bosses||0;delete r.golden;
   return r;
 }
@@ -3138,7 +3141,7 @@ function devAct(a,v){
     case 'melees':MORDER.forEach(id=>run.meleeOwned[id]=true);devMsg=_t('All melee weapons in the stockroom. Equip one there.');break;
     case 'armors':AORDER.forEach(id=>run.armorOwned[id]=true);devMsg=_t('All armor in the stockroom. Wear one there.');break;
     case 'pets':PORDER.forEach(id=>run.petOwned[id]=true);devMsg=_t('All pets adopted. Pick one in the stockroom.');break;
-    case 'ups':for(const k in UPS)while(run.up[k]<UPS[k].max){run.up[k]++;if(k==='hp'){run.hpMax+=25;p.hp+=25;}if(k==='door'){run.doorMax+=100;run.door+=100;}}for(const k in BASE)run.base[k]=BASE[k].max;devMsg=_t('All upgrades maxed.');break;
+    case 'ups':for(const k in UPS)while(run.up[k]<UPS[k].max){run.up[k]++;if(k==='hp')recalcHp();if(k==='door'){run.doorMax+=100;run.door+=100;}}for(const k in BASE)run.base[k]=BASE[k].max;devMsg=_t('All upgrades maxed.');break;
     case 'limit':run.buys=0;run.perkPhase={};devMsg=_t('Buy limit reset for this phase.');break;
     case 'item':run.inv[v]+=5;devMsg=_t('+5 {0}.',ITEMS[v].name);break;
     case 'items':for(const k in ITEMS)run.inv[k]+=5;devMsg=_t('+5 of everything.');break;

@@ -28,3 +28,4 @@
         *New weather: red moon (faster zombies but double tips), heatwave, meteor shower and desert snow
         *No more than 3 turrets on the road at once
         *Walking speed is capped at 120 (167% of normal)
+        *Max health is capped at 250
