@@ -18,4 +18,5 @@
         *Deep into a run, 2 or 3 bosses can show up in the same shift, one after another
         *New Base tab in the stockroom: roof turret, electric doors, cart launcher and freezer aisle
         *Flamethrower slightly weaker
-        *Rail driver weaker (less damage and a longer charge)
+        *Rail driver much weaker (much less damage, slower charge and it no longer goes through everything)
+        *Chainsaw weaker
