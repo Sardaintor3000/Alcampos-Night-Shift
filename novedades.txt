@@ -10,3 +10,8 @@
         *El mazo ahora lanza una onda expansiva
         *En la tormenta caen rayos que pueden darte a ti o a los zombis (apártate cuando veas el brillo azul en el suelo)
         *Minigun un poco más débil
+        *Empiezas solo con tu pistola, el bate y 2 cajas (sin libro ni botiquín)
+        *Los jefes salen cada 5 turnos: la primera vez son más débiles y cada vez que vuelven tienen más vida
+        *Muy avanzada la partida pueden salir 2 o 3 jefes en el mismo turno, uno detrás de otro
+        *Nueva pestaña Base en el almacén: torreta en el tejado, puertas electrificadas, lanzacarritos y pasillo de congelados
+        *Lanzallamas un poco más débil

@@ -33,7 +33,8 @@ No hace falta instalar nada. Funciona en ordenador, en móvil y en tableta. La p
 ## Mecánicas
 
 ### Turnos y compras
-- Cada turno trae más zombis que el anterior, y **cada cuatro turnos aparece un jefe**.
+- Cada turno trae más zombis que el anterior, y **cada cinco turnos aparece un jefe**. La primera vez que te encuentras a un jefe es más débil; cada vez que vuelve tiene más vida. Muy avanzada la partida pueden salir dos o tres jefes en el mismo turno, uno detrás de otro.
+- Empiezas solo con tu pistola, el bate y dos cajas.
 - A cada turno llevas **una sola arma y un arma cuerpo a cuerpo**. Se eligen en el almacén con *Equipar*.
 - Entre turnos solo puedes hacer **4 compras**. Las mejoras no cuentan para ese límite, pero cada una solo sube **un nivel por fase de compra**.
 - Si te muerden o tiran las puertas, la partida se acaba y vuelves a empezar desde el turno 1.
@@ -48,13 +49,13 @@ Las armas cuerpo a cuerpo y el arco empiezan muy flojos, al 30% de su daño. Con
 
 ### Mods y ventajas de estilo
 Cada arma tiene su botón de **Mods** para mejorar el daño, el cargador y la cadencia. Además, cada una tiene una **ventaja de estilo** que cambia por completo cómo se juega, pero siempre con su pega:
-- **Llamas verdes** para el lanzallamas: un 80% más de daño contra zombis normales, pero solo un 30% contra jefes.
+- **Llamas verdes** para el lanzallamas: un 35% más de daño contra zombis normales, pero solo un 30% contra jefes.
 - **Akimbo** para la pistola: dos balas por disparo, a cambio de mucha más dispersión.
 - **Bombas pegajosas** para el lanzababas: se pegan al zombi y explotan, pero se acabaron los muros de moco que frenan.
 - **Trípode** para la minigun: +60% de daño, pero no puedes moverte mientras disparas.
 
 ### Tiempo
-Noche despejada, día abrasador, tormenta (el fuego dura la mitad), tormenta de arena (solo ves lo que tienes cerca) y la rarísima **luna llena** (1 turno de cada 20).
+Noche despejada, día abrasador, tormenta (el fuego dura la mitad y caen rayos que te pueden dar a ti o a los zombis), tormenta de arena (solo ves lo que tienes cerca) y la rarísima **luna llena** (1 turno de cada 20).
 
 ### Amuletos
 Son muy raros y muy potentes (+25% de daño, +50 de vida, +60% de daño en la cabeza...), pero **se deshacen a los 3 turnos**. Cada jefe suelta uno.
@@ -72,6 +73,11 @@ Son muy raros y muy potentes (+25% de daño, +50 de vida, +60% de daño en la ca
   - **Pienso COPASA**: suelta una piara de cerdos que embiste a los zombis.
   - **Lonchera**: lo que hay dentro no es comida, y limpia la carretera entera.
   - **Hermana Sole**: una monja que baja del cielo y vaporiza a todos los zombis de la pantalla.
+- **Mejoras de la base** para la propia tienda, con 3 niveles cada una:
+  - **Torreta en el tejado**: dispara sola a los zombis que se acercan a la tienda.
+  - **Puertas electrificadas**: cada zombi que golpea las puertas se lleva una descarga.
+  - **Lanzacarritos**: cada pocos segundos sale un carrito de la compra disparado por las puertas.
+  - **Pasillo de congelados**: el aire frío frena a los zombis cerca de la tienda.
 
 ---
 

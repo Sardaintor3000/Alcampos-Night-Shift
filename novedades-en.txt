@@ -1,0 +1,20 @@
+// English version of novedades.txt. The game shows this one when it is in English.
+// Lines starting with // are hidden.
+
+  ## Version 1.6
+     -Larisa Update
+        *Wally the horse and a bit more
+        *You can only carry one gun and one melee weapon at a time (swap them in the stockroom)
+        *Amulets are a bit rarer
+        *Crates now have a health bar
+        *Weaker green flames for the flamethrower
+        *Weaker pets
+        *Much pricier lunch box ($24,000)
+        *The sledgehammer now sends out a shockwave
+        *Thunderstorms drop lightning that can hit you or the zombies (move away when you see the blue glow on the ground)
+        *Minigun slightly weaker
+        *You start with just your pistol, the bat and 2 crates (no book or first-aid kit)
+        *Bosses come every 5 shifts: weaker the first time you meet them, tougher every time they come back
+        *Deep into a run, 2 or 3 bosses can show up in the same shift, one after another
+        *New Base tab in the stockroom: roof turret, electric doors, cart launcher and freezer aisle
+        *Flamethrower slightly weaker

@@ -282,7 +282,9 @@ body.touch button{touch-action:manipulation}
         <li>When the shift ends you run back inside, collect tips plus a bonus, and restock. Defenses stay where you left them.</li>
         <li>Between shifts you can make 4 purchases. Upgrades don't count toward that, but each upgrade only goes up one level per buy phase.</li>
         <li>Melee weapons and the bow start very weak. The Strength upgrade makes them hit harder.</li>
-        <li>Every fourth shift ends with a boss.</li>
+        <li>Every fifth shift ends with a boss. The first time you meet a boss it is weaker, and every time it comes back it has more health. Deep into a run, a boss shift can bring two or three of them, one after another.</li>
+        <li>In the stockroom's Base tab you can upgrade the store itself: a roof turret, electric doors, a cart launcher and freezer air.</li>
+        <li>You start with just your pistol, the bat and two crates.</li>
       </ol>
     </section>
     <section data-i18n="mCtl">
@@ -373,7 +375,7 @@ const GUNS={
   rifle:{type:'hit',name:'Assault rifle',short:'Rifle',dmg:17,rate:.095,mag:30,reload:2.7,spread:.05,pellets:1,range:420,pierce:0,kb:28,price:1900,shake:.6,len:14,snd:'rifle',desc:'Thirty rounds, fully automatic.'},
   pir:{type:'hit',name:'PIR',short:'PIR',dmg:16,rate:.11,mag:35,reload:2.6,spread:.04,pellets:1,range:430,pierce:0,kb:26,price:3800,shake:.6,len:15,snd:'rifle',tracer:'#7fe8ff',desc:'A futuristic AK-47. Every zombie it kills makes it fire 5% faster for the rest of the shift, with no limit.'},
   goo:{type:'goo',name:'Xeno gloop launcher',short:'Gloop',dmg:20,rate:.9,mag:3,reload:2.6,spread:0,range:300,pierce:0,kb:0,price:2400,shake:1,len:12,snd:'goo',desc:'Alien tech. Lobs walls of mucus that last 12 seconds. Zombies wade through at 30% speed, bosses at 80%.'},
-  flamer:{type:'flame',name:'Flamethrower',short:'Flamer',dmg:7,rate:.05,mag:120,reload:3.2,spread:.25,range:95,pierce:0,kb:6,price:2900,shake:.2,len:13,snd:'flame',desc:'Short range. Sets everything in the cone on fire.'},
+  flamer:{type:'flame',name:'Flamethrower',short:'Flamer',dmg:6,rate:.05,mag:120,reload:3.2,spread:.25,range:95,pierce:0,kb:6,price:2900,shake:.2,len:13,snd:'flame',desc:'Short range. Sets everything in the cone on fire.'},
   arc:{type:'arc',name:'Arc caster',short:'Arc',dmg:45,rate:.5,mag:8,reload:2.4,spread:0,range:260,pierce:0,kb:20,price:3600,shake:1,len:12,chains:4,snd:'zap',desc:'Lightning that jumps to four more of them and stuns each one.'},
   minigun:{type:'hit',name:'Minigun',short:'Minigun',dmg:12,rate:.048,mag:200,reload:5.2,spread:.09,pellets:1,range:400,pierce:0,kb:24,price:4500,shake:.8,spin:.45,len:15,snd:'minigun',desc:'Spins up for half a second, then never stops.'},
   rail:{type:'rail',name:'Rail driver',short:'Rail',dmg:260,rate:1.3,mag:3,reload:3.4,spread:0,range:700,pierce:99,kb:160,price:6500,shake:4,len:17,charge:.55,snd:'rail',desc:'Hold to charge for half a second. The beam goes through everything on the road.'}
@@ -489,6 +491,7 @@ const LORE2={
   item:{barricade:'Two crates of canned peaches from the back. Stacked right, they hold a surprising amount of dead weight.',spikes:'Sold as a driveway security strip. Works just as well on feet that stopped feeling pain years ago.',propane:'Barbecue gas from the patio aisle. The label says keep away from heat. The zombies did not read it.',turret:'A tripod, a motion sensor and a lot of ammo. The manager calls it the night supervisor.',medkit:'Plasters, gauze, iodine and a lollipop. The lollipop is the important part.',libro:'Teresa\'s textbook, three kilos of homework and something that ticks. Nobody wants to know what is inside.',copasa:'A 25 kilo sack of COPASA pig feed. The pigs smell it from the next county and they arrive hungry.',lunch:'Someone left it in the staff fridge with a note: DO NOT OPEN. It hums, it is warm to the touch and the fridge light stopped working.',hermana:'A wooden cross from Hermana Sole\'s chapel down the road. Hold it up and she comes.'},
   armor:{vest:'Blue, polyester, with the Alcampo logo on the back. Smells like the stockroom.',track:'Bought at a petrol station for running away. Now it is for running back.',leather:'Hand-stitched by a hunter who lived out on the mesa. The sleeves still smell of campfire.',bando:'Loops for every shell and magazine you own. Clinks when you walk.',padded:'Hockey pads, a bike helmet and three rolls of duct tape.',cashier:'The red tabard of a cashier of the month. Customers tip better. So do zombies, somehow.',fire:'From the volunteer fire station. A little singed, still certified.',dictator:'Found in a costume shop that went out of business. The medals are plastic, but the authority feels real.',riot:'Police surplus. Heavy, hot and almost nothing gets through.'},
   pet:{chicken:'She has laid explosive eggs ever since she ate a bag of fertilizer. Nobody asks how.',dog:'Showed up behind the bins and never left. Bites first, asks later.',armadillo:'Rolls into a ball when scared. Nothing scares it anymore, it just likes rolling.',rabbit:'Too fat to hop, so it rolls. It still hits like a sack of potatoes.',goat:'America died once and came back angrier. Her horns are the hardest thing in the desert.',wolf:'Half coyote, half wolf, all teeth.',vulture:'Circles the store all night waiting for leftovers. You are paying it in leftovers.',redeagle:'Nobody has seen another eagle this color. It came down out of a sunset and stayed.',horse:'Wally wandered in from a ranch nobody owns anymore. He will not let anyone ride him, but he will kick anything that gets close to you.',bear:'A grizzly who learned that supermarket staff share their lunch.'},
+  base:{roof:'Bought from a hardware store going out of business. The manager climbs up every morning to wipe the dew off the sights.',zap:'An electrician from the village wired them in an afternoon and asked to be paid in jamón.',carts:'Forty trolleys, a garage door spring and a lot of bad ideas.',cold:'The frozen food aisle was always too cold. Now that is a feature.'},
   up:{str:'Lifting crates of water all day finally pays off.',dmg:'Fewer shaky hands, more holes in the right places.',hp:'A thicker jacket from the staff locker. Teeth slip right off it.',reload:'Practice in the break room with an empty magazine.',door:'More planks, more nails and a bigger lock.'},
   amu:{quick:'A cord tied in seven knots. Your hands remember things they never learned.',might:'A bone carved with marks nobody can read. It is heavier than it looks.',swift:'A roadrunner feather. Beep beep.',bulwark:'A stone that never moves, no matter how hard you push.',vital:'A red stone that beats like a heart when you hold it to your ear.',midas:'Everything it touches turns a little more valuable.',leech:'A tooth that still wants to bite.',eagle:'A glass eye that sees through dust and dark.',ember:'Warm to the touch, always.',tinker:'A gear from a machine that fixed itself.'}
 };
@@ -516,6 +519,14 @@ const ITEMS={
   lunch:{name:'Lunch box',short:'Lunch',key:'L',price:24000,desc:'One-time use. Whatever is in this lunch box is not food. Open it and the whole road is wiped clean: every zombie, every boss, and the rest of the wave.'},
   hermana:{name:'Hermana Sole',short:'H. Sole',key:'J',price:1500,desc:'One-time use. A nun descends from the sky and vaporizes every zombie on screen with a beam of light. Bosses lose half their health.'}
 };
+const BASE={
+  roof:{name:'Roof turret',desc:'A turret bolted to the Alcampo roof. Shoots the nearest zombie close to the store, flyers included, and never runs out of ammo.',max:3,prices:[900,1600,2600]},
+  zap:{name:'Electric doors',desc:'The sliding doors are wired to the mains. Every zombie that hits them gets a shock and a stun.',max:3,prices:[700,1300,2100]},
+  carts:{name:'Cart launcher',desc:'Every few seconds a shopping cart shoots out of the doors and bowls down the road through the zombies.',max:3,prices:[1100,1900,3000]},
+  cold:{name:'Freezer aisle',desc:'The doors blow cold air from the frozen food aisle. Zombies near the store slow down.',max:3,prices:[800,1400,2200]}
+};
+const BORDER=Object.keys(BASE);
+const BASEV={roofDmg:[0,18,26,36],roofCd:[0,.55,.42,.3],zapDmg:[0,35,60,95],cartCd:[0,8,6.5,5],cartDmg:[0,55,85,120],coldR:[0,90,120,150],coldM:[1,.8,.7,.6]};
 const BUY_LIMIT=4;
 const IKEYS={z:'barricade',x:'spikes',c:'propane',v:'turret'};
 const UPS={
@@ -584,7 +595,8 @@ const AMB={
 
 /* ---------- state ---------- */
 let run,p,night=null,pet=null,sole=null;
-let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[],pigeons=[],trucks=[],pulses=[],waves=[],strikes=[];
+let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[],pigeons=[],trucks=[],pulses=[],waves=[],strikes=[],carts=[];
+const baseFx={roofCd:0,roofAng:Math.PI*.9,roofFlash:0,cartCd:3};
 let truckT=6;
 let mode='title',paused=false,camX=0,shake=0,T=0,banner=null,overT=0,overReason='',lastSummary=null,muzT=0,doorHit=0;
 let flashW=0,boltT=4,lightning=null,thunderT=0,weedT=3,bossRef=null,stockTab='guns',flameS=0,sawS=0;
@@ -597,7 +609,7 @@ let aimMode='mouse',aimX=300,aimY=200;
 function newRun(){
   run={night:1,cash:120,hpMax:100,doorMax:250,door:250,owned:{pistol:true},weapon:'pistol',mags:{pistol:12},mods:{},mmods:{},buys:0,perkPhase:{},
     melee:'bat',meleeOwned:{bat:true},armor:'vest',armorOwned:{vest:true},pet:null,petOwned:{},amus:[],pirStacks:0,pulsarCd:0,
-    inv:{barricade:1,spikes:0,propane:0,turret:0,medkit:1,libro:1,copasa:0,lunch:0,hermana:0},up:{str:0,dmg:0,hp:0,reload:0,door:0},kills:0,heads:0,amb:'night',nextAmb:'night',bosses:0,
+    inv:{barricade:2,spikes:0,propane:0,turret:0,medkit:0,libro:0,copasa:0,lunch:0,hermana:0},base:{roof:0,zap:0,carts:0,cold:0},bossSeen:{},bossNext:0,up:{str:0,dmg:0,hp:0,reload:0,door:0},kills:0,heads:0,amb:'night',nextAmb:'night',bosses:0,
     cheated:DEV.god||DEV.ammo||DEV.onehit};
   structs=[];goos=[];pickups=[];eggs=[];projs=[];pigs=[];pigeons=[];night=null;pet=null;bossRef=null;sole=null;resetPlayer(100);
 }
@@ -819,6 +831,7 @@ LORE2:{
   item:{barricade:'Dos cajas de melocotón en almíbar del almacén. Bien apiladas aguantan una cantidad sorprendente de peso muerto.',spikes:'Se vende como tira de seguridad para la entrada del garaje. Funciona igual de bien con pies que dejaron de sentir dolor hace años.',propane:'Gas de barbacoa del pasillo de jardín. La etiqueta dice que no se acerque al calor. Los zombis no la leyeron.',turret:'Un trípode, un sensor de movimiento y muchísima munición. El encargado la llama la supervisora de noche.',medkit:'Tiritas, gasas, yodo y una piruleta. La piruleta es lo importante.',libro:'El libro de texto de Teresa: tres kilos de deberes y algo que hace tictac. Nadie quiere saber qué hay dentro.',copasa:'Un saco de 25 kilos de pienso COPASA. Los cerdos lo huelen desde la comarca de al lado y llegan con hambre.',lunch:'Alguien la dejó en la nevera del personal con una nota: NO ABRIR. Zumba, está caliente al tacto y la luz de la nevera dejó de funcionar.',hermana:'Una cruz de madera de la capilla de la Hermana Sole, carretera abajo. Levántala y vendrá.'},
   armor:{vest:'Azul, de poliéster, con el logo de Alcampo en la espalda. Huele a almacén.',track:'Comprado en una gasolinera para huir. Ahora es para volver corriendo.',leather:'Cosido a mano por un cazador que vivía en la meseta. Las mangas todavía huelen a hoguera.',bando:'Presillas para cada cartucho y cargador que tengas. Tintinea al andar.',padded:'Protecciones de hockey, un casco de bici y tres rollos de cinta americana.',cashier:'La casaca roja del cajero del mes. Los clientes dan mejores propinas. Los zombis también, no se sabe cómo.',fire:'Del parque de bomberos voluntarios. Un poco chamuscado, pero sigue homologado.',dictator:'Encontrado en una tienda de disfraces que cerró. Las medallas son de plástico, pero la autoridad parece de verdad.',riot:'Excedentes de la policía. Pesada, calurosa y casi nada la atraviesa.'},
   pet:{chicken:'Pone huevos explosivos desde que se comió una bolsa de fertilizante. Nadie pregunta cómo.',dog:'Apareció detrás de los contenedores y nunca se fue. Primero muerde y luego pregunta.',armadillo:'Se hace una bola cuando se asusta. Ya nada le asusta, simplemente le gusta rodar.',rabbit:'Demasiado gordo para saltar, así que rueda. Aun así pega como un saco de patatas.',goat:'America murió una vez y volvió más enfadada. Sus cuernos son lo más duro del desierto.',wolf:'Mitad coyote, mitad lobo, todo dientes.',vulture:'Da vueltas sobre la tienda toda la noche esperando las sobras. Le pagas en sobras.',redeagle:'Nadie ha visto otra águila de este color. Bajó de un atardecer y se quedó.',horse:'Wally llegó de un rancho que ya no es de nadie. No deja que nadie lo monte, pero le da coces a cualquier cosa que se te acerque.',bear:'Un grizzly que aprendió que los empleados del súper comparten el bocadillo.'},
+  base:{roof:'Comprada en una ferretería que cerraba. El encargado sube cada mañana a limpiar el rocío de la mira.',zap:'Un electricista del pueblo las cableó en una tarde y pidió que le pagaran en jamón.',carts:'Cuarenta carritos, el muelle de una puerta de garaje y muchas malas ideas.',cold:'El pasillo de congelados siempre estuvo demasiado frío. Ahora es una ventaja.'},
   up:{str:'Cargar cajas de agua todo el día por fin sirve de algo.',dmg:'Menos temblor de manos, más agujeros en el sitio correcto.',hp:'Una chaqueta más gruesa de la taquilla del personal. Los dientes resbalan.',reload:'Práctica en la sala de descanso con un cargador vacío.',door:'Más tablones, más clavos y un candado más grande.'},
   amu:{quick:'Un cordón con siete nudos. Tus manos recuerdan cosas que nunca aprendieron.',might:'Un hueso tallado con marcas que nadie sabe leer. Pesa más de lo que parece.',swift:'Una pluma de correcaminos. Bip bip.',bulwark:'Una piedra que nunca se mueve, por mucho que empujes.',vital:'Una piedra roja que late como un corazón cuando te la acercas al oído.',midas:'Todo lo que toca vale un poco más.',leech:'Un diente que todavía quiere morder.',eagle:'Un ojo de cristal que ve a través del polvo y la oscuridad.',ember:'Siempre está caliente al tacto.',tinker:'Un engranaje de una máquina que se arreglaba sola.'}
 },
@@ -875,13 +888,19 @@ ZT:{
   chuchi:{title:'El cocinero zombi. Te lanza paella hirviendo y aplasta las cajas con su paellera.'},
   patrick:{title:'El fontanero zombi. Lanza una llave inglesa que vuelve y revienta tuberías para sacar zombis del suelo.'}
 },
+BASE:{
+  roof:{name:'Torreta en el tejado',desc:'Una torreta atornillada al tejado del Alcampo. Dispara al zombi más cercano a la tienda, voladores incluidos, y nunca se queda sin munición.'},
+  zap:{name:'Puertas electrificadas',desc:'Las puertas correderas están enchufadas a la red. Cada zombi que las golpea se lleva una descarga y se queda aturdido.'},
+  carts:{name:'Lanzacarritos',desc:'Cada pocos segundos sale disparado un carrito de la compra por las puertas y arrolla a los zombis carretera abajo.'},
+  cold:{name:'Pasillo de congelados',desc:'Las puertas echan el aire frío del pasillo de congelados. Los zombis que se acercan a la tienda van más lentos.'}
+},
 AMB:{night:{name:'Noche despejada'},day:{name:'Día abrasador'},rain:{name:'Tormenta'},moon:{name:'Luna llena'},sand:{name:'Tormenta de arena'}}
 };
 const ES_HTML={
   eb1:'Alcampo &middot; Sucursal del desierto, Ruta 9',eb2:'Abierto 24 h',eb3:'Se busca encargado de turno',
   lede:'Trabajas en el Alcampo del desierto, en la Ruta 9, y cada turno llegan más muertos arrastrándose desde las dunas. Mantenlos lejos de ti y de las puertas correderas hasta que acabe el turno, y luego gástate las propinas en el almacén en armas, armaduras, mascotas y algunas cosas que nadie debería vender.',
   hShift:'Turno',hRoad:'En la carretera',hTips:'Propinas',hYou:'Tú',hDoors:'Puertas',
-  mHow:'<h2>Cómo funciona un turno</h2><ol class="steps"><li>Antes de que abran las puertas, coloca cajas, tiras de pinchos, bombonas de propano y torretas en la carretera.</li><li>Llegan desde las dunas por la derecha. Mantenlos lejos de ti y de las puertas correderas.</li><li>Si caes o las puertas ceden, la partida se acaba y vuelves a empezar desde el turno 1.</li><li>Cuando acaba el turno vuelves corriendo dentro, cobras las propinas más un extra y repones. Las defensas se quedan donde las dejaste.</li><li>Entre turnos puedes hacer 4 compras. Las mejoras no cuentan, pero cada mejora solo sube un nivel por fase de compra.</li><li>Las armas cuerpo a cuerpo y el arco empiezan muy flojos. La mejora de Fuerza hace que peguen más.</li><li>Cada cuarto turno termina con un jefe.</li></ol>',
+  mHow:'<h2>Cómo funciona un turno</h2><ol class="steps"><li>Antes de que abran las puertas, coloca cajas, tiras de pinchos, bombonas de propano y torretas en la carretera.</li><li>Llegan desde las dunas por la derecha. Mantenlos lejos de ti y de las puertas correderas.</li><li>Si caes o las puertas ceden, la partida se acaba y vuelves a empezar desde el turno 1.</li><li>Cuando acaba el turno vuelves corriendo dentro, cobras las propinas más un extra y repones. Las defensas se quedan donde las dejaste.</li><li>Entre turnos puedes hacer 4 compras. Las mejoras no cuentan, pero cada mejora solo sube un nivel por fase de compra.</li><li>Las armas cuerpo a cuerpo y el arco empiezan muy flojos. La mejora de Fuerza hace que peguen más.</li><li>Cada cinco turnos termina con un jefe. La primera vez que te encuentras a un jefe es más débil, y cada vez que vuelve tiene más vida. Muy avanzada la partida, en un turno de jefe pueden salir dos o tres, uno detrás de otro.</li><li>En la pestaña Base del almacén puedes mejorar la propia tienda: una torreta en el tejado, puertas electrificadas, un lanzacarritos y aire de los congeladores.</li><li>Empiezas solo con tu pistola, el bate y dos cajas.</li></ol>',
   mCtl:'<h2>Controles</h2><dl class="keys"><dt>A D / &larr; &rarr;</dt><dd>Andar</dd><dt>Ratón</dt><dd>Apuntar. Mantén el clic izquierdo para disparar. Apunta alto para la cabeza, bajo para las piernas.</dd><dt>R</dt><dd>Recargar</dd><dt>F / clic derecho</dt><dd>Cuerpo a cuerpo. Mantenlo con la motosierra.</dd><dt>Armas</dt><dd>Llevas una sola arma y un arma cuerpo a cuerpo. Se equipan en el almacén entre turnos.</dd><dt>I</dt><dd>Tus estadísticas: fuerza, velocidad y lo demás</dd><dt>Z X C V</dt><dd>Colocar caja, pinchos, propano, torreta</dd><dt>G</dt><dd>Lanzar el Libro Tere Profe</dd><dt>K</dt><dd>Lanzar un saco de pienso COPASA</dd><dt>L</dt><dd>Abrir la lonchera</dd><dt>J</dt><dd>Llamar a la Hermana Sole</dd><dt>H</dt><dd>Usar un botiquín</dd><dt>Tab / B / P</dt><dd>Empezar turno / almacén / pausa</dd><dt>Móvil o tableta</dt><dd>Aparecen botones en pantalla: flechas para andar, Disparar apunta solo al zombi más cercano, o toca la pantalla para apuntar y disparar. Tus objetos están debajo de las flechas.</dd></dl>',
   mWhere:'<h2>Dónde disparar</h2><ul class="plain"><li><b>Cabeza.</b> Doble de daño. Los cascos y los conos de tráfico bloquean por completo los disparos a la cabeza.</li><li><b>Pecho.</b> Daño normal. El chaleco de los soldados lo reduce un 25%.</li><li><b>Piernas.</b> Daño normal, y se va sumando. Mete en las piernas un tercio de la vida de un zombi y se le rompen. Cae al suelo, se arrastra a un tercio de su velocidad y pierde el casco o el cono. A los jefes no se les puede lisiar.</li></ul>',
   mWeather:'<h2>Tiempo</h2><ul class="plain"><li><b>Noche despejada.</b> Oscuro más allá de las farolas. Tu linterna sigue a donde apuntas.</li><li><b>Día abrasador.</b> Se ve todo. Hay plantas rodadoras.</li><li><b>Tormenta.</b> Oscuro y mojado. El fuego dura la mitad, y caen rayos en la carretera: cuando veas un brillo azul chisporroteando en el suelo, apártate. Los rayos destrozan a los zombis, pero a ti también te hacen daño.</li><li><b>Luna llena.</b> Rara (1 turno de cada 20), desde el turno 3. Te conviertes en hombre lobo: 35% más rápido, doble de daño cuerpo a cuerpo y 20% menos de daño recibido. Una bandada de palomas picotea a los zombis toda la noche.</li><li><b>Tormenta de arena.</b> Solo ves lo que tienes cerca. Todo camina un 15% más lento.</li></ul><p>El almacén muestra la previsión del siguiente turno.</p>',
@@ -960,8 +979,8 @@ const ES={
   'Save code':'Código de guardado','Your run saves itself in this browser at every buy phase and when you leave the page. To carry it to another browser or computer, copy this code and paste it on the title screen there.':'Tu partida se guarda sola en este navegador en cada fase de compra y al salir de la página. Para llevarla a otro navegador u ordenador, copia este código y pégalo allí en la pantalla de inicio.',
   'Copy save code':'Copiar código','No save yet. One is made as soon as you are between shifts.':'Todavía no hay partida guardada. Se crea en cuanto estés entre turnos.',
   /* title, game over */
-  'Language':'Idioma','What\'s new':'Novedades','Nothing new yet.':'Todavía no hay novedades.','Show or hide this section':'Mostrar u ocultar esta sección','Graveyard shift · Alcampo Route 9':'Turno de noche · Alcampo Ruta 9','Saved run: shift {0} · {1} in the drawer.':'Partida guardada: turno {0} · {1} en la caja.','Continue shift {0}':'Seguir en el turno {0}','New run':'Partida nueva',
-  'Hold the supermarket until the shift ends. Every shift brings more of them, and every fourth one brings a boss. One bad shift and you start over.':'Aguanta en el súper hasta que acabe el turno. Cada turno llegan más, y cada cuatro turnos llega un jefe. Un mal turno y vuelves a empezar.',
+  'Language':'Idioma','Base':'Base','not built':'sin construir','{0} damage every {1} s':'{0} de daño cada {1} s','{0} damage and a stun to every zombie that hits the doors':'{0} de daño y aturdimiento a cada zombi que golpea las puertas','a cart every {0} s for {1} damage':'un carrito cada {0} s que hace {1} de daño','zombies within {0} of the doors move at {1}% speed':'los zombis a menos de {0} de las puertas van al {1}% de velocidad','Now: {0}.':'Ahora: {0}.','Next: {0}.':'Siguiente: {0}.','Upgrades for the store itself. Like the other upgrades, each one goes up one level per buy phase and does not use up your purchases.':'Mejoras para la propia tienda. Como las demás mejoras, cada una sube un nivel por fase de compra y no gasta tus compras.','Base upgrade · one level per buy phase':'Mejora de la base · un nivel por fase de compra','Back for round {0}, and tougher.':'Vuelve por {0}.ª vez, y más duro.','What\'s new':'Novedades','Nothing new yet.':'Todavía no hay novedades.','Show or hide this section':'Mostrar u ocultar esta sección','Graveyard shift · Alcampo Route 9':'Turno de noche · Alcampo Ruta 9','Saved run: shift {0} · {1} in the drawer.':'Partida guardada: turno {0} · {1} en la caja.','Continue shift {0}':'Seguir en el turno {0}','New run':'Partida nueva',
+  'Hold the supermarket until the shift ends. Every shift brings more of them, and every fifth one brings a boss. One bad shift and you start over.':'Aguanta en el súper hasta que acabe el turno. Cada turno llegan más, y cada cinco turnos llega un jefe. Un mal turno y vuelves a empezar.',
   'Clock in':'Fichar','Longest run: {0} survived':'Mejor partida: {0} superados','Use the arrows to walk. Hold Fire to shoot the nearest zombie, or touch the screen to aim.':'Usa las flechas para andar. Mantén Disparar para tirar al zombi más cercano, o toca la pantalla para apuntar.',
   'A/D to walk, mouse to aim and shoot, Tab to start the shift.':'A/D para andar, ratón para apuntar y disparar, Tab para empezar el turno.','Load a save code':'Cargar un código de guardado','Paste your save code':'Pega tu código de guardado','Load':'Cargar',
   'Erase the saved run?':'¿Borrar la partida guardada?','That code did not work. Copy the whole code from Your stats and paste it again.':'Ese código no funciona. Copia el código entero desde Tus estadísticas y vuelve a pegarlo.',
@@ -989,7 +1008,7 @@ function langSnap(tgt,shape){const o={};for(const k in shape){const v=shape[k];i
 function langMerge(tgt,src){for(const k in src){const v=src[k];if(v&&typeof v==='object'){if(tgt&&tgt[k]!=null)langMerge(tgt[k],v);}else if(tgt&&k in tgt)tgt[k]=v;}}
 function applyLang(l){
   LANG=l==='es'?'es':'en';
-  const roots={GUNS,MODS,MELEE,MMODS,ARMORS,PETS,LORE,LORE2,GTYPE,AMULETS,ITEMS,UPS,ZT,AMB};
+  const roots={GUNS,MODS,MELEE,MMODS,ARMORS,PETS,LORE,LORE2,GTYPE,AMULETS,ITEMS,UPS,ZT,AMB,BASE};
   if(!EN_DATA){EN_DATA={};for(const k in ES_DATA)EN_DATA[k]=langSnap(roots[k],ES_DATA[k]);}
   const src=LANG==='es'?ES_DATA:EN_DATA;for(const k in src)langMerge(roots[k],src[k]);
   try{document.documentElement.lang=LANG;}catch(e){}
@@ -1302,6 +1321,26 @@ function drawUpIcon(id,x,y){
     case 'door':r(-5,-7,10,13,'#6f4a2c');r(-5,-7,10,1,'#8b603a');r(-4,-3,8,1,'#4a301c');r(-4,1,8,1,'#4a301c');r(2,-1,1,1,'#f5d33a');r(-6,-7,1,13,'#c9ccd4');r(5,-7,1,13,'#c9ccd4');break;
   }
 }
+function drawRoofTurret(X,lv){
+  const bx=X+118,by=111;R0(bx,by+2,12,5,'#4b4a57');R0(bx,by+2,12,1,'#6a6b75');R0(bx+3,by-2,6,5,lv>=3?'#8a2a32':'#59684a');R0(bx+3,by-2,6,1,lv>=3?'#cf4450':'#71825d');
+  G.save();G.translate(bx+6,by);G.rotate(baseFx.roofAng);G.fillStyle='#25252b';G.fillRect(0,-1,10,2);if(lv>=2)G.fillRect(0,1,9,1);G.restore();
+  if(baseFx.roofFlash>0){const mx=bx+6+Math.cos(baseFx.roofAng)*11,my=by+Math.sin(baseFx.roofAng)*11;R0(mx-1,my-1,3,3,'#fff3c4');}
+}
+function drawCart(c,yy){const x=Math.round(c.x-camX),y=yy||GY;
+  R0(x-7,y-11,14,1,'#c9ccd4');R0(x-7,y-11,1,7,'#c9ccd4');R0(x+6,y-11,1,7,'#c9ccd4');R0(x-7,y-5,14,1,'#c9ccd4');
+  for(let i=-4;i<6;i+=3)R0(x+i,y-10,1,5,'#8a8f99');R0(x-7,y-8,14,1,'#8a8f99');
+  R0(x-11,y-14,5,2,'#cf4450');R0(x-8,y-13,1,3,'#9aa0aa');R0(x-6,y-4,12,1,'#6a6b75');
+  const s=Math.floor(c.rot)%2;R0(x-6,y-3,3,3,s?'#2a2a31':'#3a3a44');R0(x+3,y-3,3,3,s?'#3a3a44':'#2a2a31');
+}
+function drawBaseIcon(id,x,y){
+  const r=(lx,ly,w,h,c)=>R0(x+lx,y+ly,w,h,c);
+  switch(id){
+    case 'roof':r(-7,2,14,4,'#d9d0bd');r(-4,-2,8,4,'#59684a');r(-4,-2,8,1,'#71825d');r(3,-2,7,2,'#25252b');r(-6,1,12,1,'#4b4a57');break;
+    case 'zap':r(-6,-6,12,13,'#a9c7d6');r(-6,-6,12,1,'#d8e8ef');r(0,-6,1,13,'#4e4a5f');r(-1,-4,3,2,'#ffe27a');r(-2,-2,3,2,'#ffe27a');r(-1,0,3,2,'#ffe27a');r(-2,2,2,2,'#ffe27a');break;
+    case 'carts':drawCart({x:camX+x,rot:0},y+6);break;
+    case 'cold':r(-1,-6,2,12,'#cfe8ff');r(-6,-1,12,2,'#cfe8ff');r(-4,-4,2,2,'#a9d4f5');r(2,-4,2,2,'#a9d4f5');r(-4,2,2,2,'#a9d4f5');r(2,2,2,2,'#a9d4f5');r(-1,-1,2,2,'#ffffff');break;
+  }
+}
 function drawNun(x,y){
   const R=(lx,ly,w,h,c)=>{G.fillStyle=c;G.fillRect(Math.round(x+lx),Math.round(y+ly),w,h);};
   G.strokeStyle='#ffe27a';G.lineWidth=1;G.beginPath();G.ellipse(Math.round(x)+.5,Math.round(y)-3.5,6,2,0,0,Math.PI*2);G.stroke();
@@ -1592,7 +1631,7 @@ function fire(){
       part(sx,sy-1,-p.face*rnd(20,50),rnd(-90,-50),1.2,id==='nailgun'?'#9aa0aa':'#d2a64a',1,420,{bounce:true});break;}
     case 'arrow':{const boom=tr==='boom';projs.push({kind:'arrow',x:ox,y:oy,vx:Math.cos(ang)*460,vy:Math.sin(ang)*460,g:140,dmg:g.dmg*mult*(AR().bow||1)*strMult(),pierce:boom?0:(msp?3:1),boom,hit:[],t:0});break;}
     case 'goo':projs.push({kind:'goo',x:ox,y:oy,vx:Math.cos(ang)*300,vy:Math.sin(ang)*300-30,g:300,dmg:g.dmg*mult,sticky:tr==='sticky',t:0});break;
-    case 'flame':flameTick(ox,oy,ang,g,mult,msp?5:2.5,tr);break;
+    case 'flame':flameTick(ox,oy,ang,g,mult,msp?4:2,tr);break;
     case 'arc':arcShot(ox,oy,ang,g,mult,tr==='static');break;
     case 'rail':{const angs=tr==='split'?[ang-.09,ang,ang+.09]:[ang],rm=tr==='split'?mult*.45:mult;
       for(const a of angs){const e=hitscan(ox,oy,a,spec,rm,'gun',true);beams.push({x1:ox,y1:oy,x2:e.x,y2:e.y,t:.3});}p.charge=0;break;}
@@ -1835,7 +1874,8 @@ function spawnZombie(type,x,demo){
     case 'patrick':z.skin='#9aa58a';z.shirt='#c8402e';z.pants='#2f4f86';break;
     case 'sheriff':z.skin='#c9c3a8';z.shirt='#7a5232';z.pants='#3a3040';break;
   }
-  if(t.boss&&!demo){bossRef=z;run.bosses++;banner={text:t.name.toUpperCase(),sub:t.title,t:3.4,max:3.4};sfx('roar');shake=4;}
+  if(t.boss&&!demo){if(!run.bossSeen)run.bossSeen={};const k=run.bossSeen[type]||0;run.bossSeen[type]=k+1;z.hp=z.max=t.hp*hs*(k===0?.7:1+.25*(k-1));
+    bossRef=z;run.bosses++;banner={text:t.name.toUpperCase(),sub:k?_t('Back for round {0}, and tougher.',k+1):t.title,t:3.4,max:3.4};sfx('roar');shake=4;}
   zombies.push(z);return z;
 }
 function spawnLarva(x,n){let alive=zombies.filter(q=>q.type==='larva'&&!q.dead).length;for(let i=0;i<n&&alive<18;i++,alive++){const l=spawnZombie('larva',clamp(x+rnd(-6,6),PMIN,WORLD+20));l.kbv=rnd(-60,60);}for(let i=0;i<6;i++)part(x,GY-12,rnd(-50,50),rnd(-80,-20),.6,pick(['#d7c9a0','#a8a07a','#7f9a4a']),2,300,{decal:true});sfx('squelch');}
@@ -1868,7 +1908,7 @@ function aiVoltz(z,dt){
     if(n){flt(z.x,z.y-z.h-10,'IT LIVES!','#9fe8ff');sfx('zap');}}
   if(a.zap<=0&&p.alive&&ad<70){a.zap=2;bolts.push({pts:jag([[cx,cy],[p.x,p.y-12]]),t:.15,c:'#9fe8ff'});hurtPlayer(12*(1+.05*(run.night-1)),z.x);sfx('zap');}
   if(p.alive&&mode==='night'){let dir=0;if(ad<130)dir=-Math.sign(dp);else if(ad>170)dir=Math.sign(dp);z.face=Math.sign(dp)||-1;
-    if(dir){const gz=inGoo(z),nx=z.x+dir*z.speed*(gz?.8:1)*offBoost(z)*dt;if(nx>PMIN+20&&nx<WORLD+40){z.x=nx;z.walkT+=dt*z.speed*.22;}}return true;}
+    if(dir){const gz=inGoo(z),nx=z.x+dir*z.speed*(gz?.8:1)*coldMult(z)*offBoost(z)*dt;if(nx>PMIN+20&&nx<WORLD+40){z.x=nx;z.walkT+=dt*z.speed*.22;}}return true;}
   return false;
 }
 function aiKing(z,dt){
@@ -1907,7 +1947,7 @@ function aiSheriff(z,dt){
     if(p.alive&&ad<160){a.rope={player:true,t:.5};a.lasso=9;sfx('whip');return true;}}
   if(a.shoot<=0&&p.alive&&ad<320){a.aim=.7;a.ax=p.x;a.ay=p.y-12;a.shoot=99;return true;}
   if(p.alive&&mode==='night'){let dir=0;if(ad<110)dir=-Math.sign(dp);else if(ad>210)dir=Math.sign(dp);z.face=Math.sign(dp)||-1;
-    if(dir){const gz=inGoo(z),nx=z.x+dir*z.speed*(gz?.8:1)*offBoost(z)*dt;if(nx>PMIN+20&&nx<WORLD+40){z.x=nx;z.walkT+=dt*z.speed*.22;}}return true;}
+    if(dir){const gz=inGoo(z),nx=z.x+dir*z.speed*(gz?.8:1)*coldMult(z)*offBoost(z)*dt;if(nx>PMIN+20&&nx<WORLD+40){z.x=nx;z.walkT+=dt*z.speed*.22;}}return true;}
   return false;
 }
 const offBoost=z=>z.x>camX+W+40?(z.boss?4:2.5):1;
@@ -1921,7 +1961,7 @@ function vaultAI(z,dt){
   for(const s of structs){if(s.kind!=='barricade'||s.dead)continue;const d=z.x-s.x;if(d>0&&d<s.w/2+z.w/2+12&&(obs==null||s.x>obs))obs=s.x;}
   if(obs!=null){const land=Math.max(PMIN-26,obs-34);z.vault={t:0,dur:.75,x0:z.x,x1:land,px:(z.x+land)/2};flt(z.x,z.y-z.h-6,'HOP!','#e8c25a');sfx('whip');return true;}
   if(z.x-z.w/2<=DOOR_X+1+z.gap){z.pole=false;z.speed=z.walkSpeed;z.doorOnly=true;return false;}
-  let sp=z.speed*(z.slow?.5:1)*(z.volt>0?1.6:1)*(run.amb==='sand'?.85:1)*offBoost(z);if(inGoo(z))sp*=.3;
+  let sp=z.speed*(z.slow?.5:1)*(z.volt>0?1.6:1)*(run.amb==='sand'?.85:1)*coldMult(z)*offBoost(z);if(inGoo(z))sp*=.3;
   z.x-=sp*dt;z.walkT+=dt*sp*.22;z.slow=false;return true;
 }
 function gunnerAI(z,dt){
@@ -1950,7 +1990,7 @@ function updateSole(dt){
   if(sole.t>2.8)sole=null;
 }
 function bossKeepAway(z,dt,near,far){const dp=p.x-z.x,ad=Math.abs(dp);let dir=0;if(ad<near)dir=-Math.sign(dp);else if(ad>far)dir=Math.sign(dp);z.face=Math.sign(dp)||-1;
-  if(dir){const gz=inGoo(z),nx=z.x+dir*z.speed*(gz?.8:1)*offBoost(z)*dt;if(nx>PMIN+20&&nx<WORLD+40){z.x=nx;z.walkT+=dt*z.speed*.22;}}return true;}
+  if(dir){const gz=inGoo(z),nx=z.x+dir*z.speed*(gz?.8:1)*coldMult(z)*offBoost(z)*dt;if(nx>PMIN+20&&nx<WORLD+40){z.x=nx;z.walkT+=dt*z.speed*.22;}}return true;}
 const bossScale=()=>1+.05*(run.night-1);
 function aiTeresa(z,dt){
   const a=z.ab,dp=p.x-z.x,ad=Math.abs(dp);a.chalk-=dt;a.bell-=dt;
@@ -2030,10 +2070,10 @@ function updateZombies(dt){
       if(target!=='hold'){z.atkCd-=dt;
         if(z.atkCd<=0){z.atkCd=z.rate*(z.volt>0?.7:1);z.atk=.18;const dm=z.dmg*(z.volt>0?1.5:1);
           if(target===p)hurtPlayer(dm,z.x);
-          else if(target==='door')hurtDoor(dm);
+          else if(target==='door'){hurtDoor(dm);if(run.base&&run.base.zap)doorZap(z);}
           else{target.hp-=dm*(z.type==='brute'||z.type==='butcher'?3:z.type==='fireman'?2:1)*guardMult();target.hit=.12;sfx('hit');if(target.hp<=0)breakStruct(target);}}}
     }else{
-      let sp=z.speed*(z.slow?.5:1)*(z.volt>0?1.6:1)*(run.amb==='sand'?.85:1)*offBoost(z);
+      let sp=z.speed*(z.slow?.5:1)*(z.volt>0?1.6:1)*(run.amb==='sand'?.85:1)*coldMult(z)*offBoost(z);
       if(gz)sp*=z.boss?.8:.3;
       z.x+=dir*sp*dt;z.walkT+=dt*sp*.22;
     }
@@ -2098,20 +2138,21 @@ function burstStorm(x){for(let i=0;i<12;i++)part(x,GY-rnd(0,20),rnd(-80,80),rnd(
 
 /* ---------- shifts ---------- */
 function pickAmb(n){if(n<=1)return 'night';if(n>=3&&Math.random()<.05)return 'moon';const pool=['night','night','day','day','rain','sand'];let a=pick(pool);if(a===run.amb&&Math.random()<.5)a=pick(pool);return a;}
+function bossPlan(n){if(n%5)return [];const c=n>=60?3:n>=30?2:1,o=[];for(let i=0;i<c;i++)o.push(BOSS_ORDER[((run.bossNext||0)+i)%BOSS_ORDER.length]);return o;}
 function buildQueue(n){
   const total=Math.round(14+n*7.5+n*n*.5);
   const w={walker:10,vaulter:n>=3?1+n*.35:0,fireman:n>=4?.8+n*.25:0,soldier:n>=5?1+n*.3:0,gunner:n>=7?.3+n*.04:0,runner:n>=2?2+n*.7:0,hardhat:n>=3?1.5+n*.5:0,bloater:n>=4?1+n*.35:0,digger:n>=4?1+n*.3:0,jetpack:n>=5?1+n*.25:0,brute:n>=6?.2+n*.06:0};
   const sum=Object.values(w).reduce((a,b)=>a+b,0),q=[];
   for(let i=0;i<total;i++){let r=Math.random()*sum;for(const k in w){r-=w[k];if(r<=0){q.push(k);break;}}}
   if(n===2)q[3]='runner';if(n===3)q[4]='hardhat';if(n===4){q[5]='bloater';q[7]='digger';}if(n===5){q[6]='jetpack';q[8]='soldier';}if(n===3)q[6]='vaulter';if(n===4)q[9]='fireman';if(n===7)q[5]='gunner';
-  if(n%4===0)q.push(BOSS_ORDER[(n/4-1)%BOSS_ORDER.length]);
+  const bp=bossPlan(n);q.push(...bp);run.bossNext=(run.bossNext||0)+bp.length;
   return q;
 }
 function startNight(){
   if(mode!=='prep')return;
   const q=buildQueue(run.night),am=AMB[run.amb];
   night={queue:q,killed:0,spawnT:1.2,heads:0,earned:0};
-  mode='night';paused=false;run.pirStacks=0;run.expired=null;
+  mode='night';paused=false;run.pirStacks=0;run.expired=null;baseFx.cartCd=3;baseFx.roofCd=1;carts=[];
   if(Math.random()<.15)dropAmulet(rnd(420,WORLD-60));
   banner={text:_t('SHIFT {0}',run.night),sub:_t('{0} · {1} · Hold the store until {2}',am.name,fmtT(am.start),am.end),t:2.6,max:2.6};
   boltT=rnd(3,6);sfx('start');renderTray();hideOverlay();
@@ -2120,7 +2161,7 @@ function startNight(){
 function spawnTick(dt){
   night.spawnT-=dt;
   if(night.queue.length&&night.spawnT<=0){
-    if(ZT[night.queue[0]].boss){spawnZombie(night.queue.shift());night.spawnT=2;}
+    if(ZT[night.queue[0]].boss){if(zombies.some(z=>z.boss&&!z.dead&&!z.demo))night.spawnT=2.5;else{spawnZombie(night.queue.shift());night.spawnT=2;}}
     else{const grp=Math.random()<Math.min(.5,.1+run.night*.04)?1+((Math.random()*3)|0):1;
       for(let i=0;i<grp&&night.queue.length&&!ZT[night.queue[0]].boss;i++)spawnZombie(night.queue.shift());
       night.spawnT=rnd(.7,1.3)*Math.max(.45,2.2-run.night*.13)*grp;}
@@ -2134,7 +2175,7 @@ function dawn(){
   if(!run.cheated){best=Math.max(best,run.night);store.set(BEST_KEY,best);}
   for(const s of structs)if(s.kind==='turret')s.ammo=s.ammoMax=Math.round(160*(1+amu('tinker')));
   run.nextAmb=pickAmb(run.night+1);
-  projs=[];pigeons=[];pigs=[];strikes=[];bossRef=null;p.pull=null;p.root=0;p.reloadT=0;trig.mouse=trig.auto=false;
+  projs=[];pigeons=[];pigs=[];strikes=[];carts=[];bossRef=null;p.pull=null;p.root=0;p.reloadT=0;trig.mouse=trig.auto=false;
   banner={text:AMB[run.amb].end,sub:_t('Shift {0} survived. Heading back inside.',run.night),t:2.4,max:2.4,dawnT:2.4};
   sfx('dawn');renderTray();
 }
@@ -2218,7 +2259,7 @@ function update(dt){
   if(mode==='title')for(const z of zombies)z.walkT+=dt*.8;
   if(mode==='prep'||mode==='night'||mode==='over')updatePlayer(dt);
   if(mode==='dawn')updateDawn(dt);
-  if(mode==='night'||mode==='over'){updateZombies(dt);updateStructs(dt);updateProjs(dt);updateSole(dt);updatePigs(dt);updatePigeons(dt);if(run.pulsarCd>0)run.pulsarCd-=dt;}
+  if(mode==='night'||mode==='over'){updateZombies(dt);updateStructs(dt);updateProjs(dt);updateSole(dt);updatePigs(dt);updatePigeons(dt);updateBase(dt);if(run.pulsarCd>0)run.pulsarCd-=dt;}
   updateTrucks(dt);
   if(mode==='prep'||mode==='night'||mode==='dawn'){updatePet(dt);updateEggs(dt);updatePickups(dt);}
   if(mode==='night')spawnTick(dt);
@@ -2228,6 +2269,24 @@ function update(dt){
   const tc=clamp(p.x-W/2+p.face*50,0,WORLD-W);camX+=(tc-camX)*Math.min(1,dt*4);
 }
 
+/* ---------- base upgrades ---------- */
+function coldMult(z){const L=run.base&&run.base.cold;if(!L||z.x-DOOR_X>BASEV.coldR[L])return 1;const m=BASEV.coldM[L];return z.boss?1-(1-m)*.5:m;}
+function doorZap(z){const L=run.base.zap;bolts.push({pts:jag([[DOOR_X+2,GY-34],[z.x,z.y-z.h*.6]]),t:.12,c:'#9fe8ff'});damage(z,BASEV.zapDmg[L]*(1+.05*(run.night-1)),false,1,140,'turret',{stun:.5});sfx('zap');}
+function updateBase(dt){
+  const B=run.base||{},fight=mode==='night',bs=1+.05*(run.night-1);
+  if(baseFx.roofFlash>0)baseFx.roofFlash-=dt;
+  if(B.roof){baseFx.roofCd-=dt;const ox=124,oy=111;let bz=null,bd=1e9;
+    for(const z of zombies){if(!live(z)||z.x<DOOR_X-10||z.x>DOOR_X+250)continue;const d=z.x-DOOR_X;if(d<bd){bd=d;bz=z;}}
+    if(bz){const ta=Math.atan2((bz.y-bz.h*.6)-oy,bz.x-ox);baseFx.roofAng+=(ta-baseFx.roofAng)*Math.min(1,dt*10);
+      if(fight&&baseFx.roofCd<=0){baseFx.roofCd=BASEV.roofCd[B.roof];baseFx.roofFlash=.05;hitscan(ox+Math.cos(baseFx.roofAng)*9,oy+Math.sin(baseFx.roofAng)*9,baseFx.roofAng+rnd(-.02,.02),{dmg:BASEV.roofDmg[B.roof]*bs,pierce:0,range:320,kb:12,tracer:'#ffe7a8'},1,'turret');sfx('turret');}}}
+  if(B.carts&&fight){baseFx.cartCd-=dt;if(baseFx.cartCd<=0&&zombies.some(z=>live(z)&&z.x-DOOR_X<340&&z.y>GY-20)){baseFx.cartCd=BASEV.cartCd[B.carts];carts.push({x:DOOR_X+4,hit:[],dmg:BASEV.cartDmg[B.carts]*bs,rot:0});sfx('swing');}}
+  for(const c of carts){c.x+=240*dt;c.rot+=dt*20;
+    for(const z of zombies){if(!live(z)||c.hit.includes(z)||z.y<GY-20)continue;if(Math.abs(z.x-c.x)<z.w/2+7){c.hit.push(z);damage(z,c.dmg,false,1,240,'turret');sfx('thud');for(let i=0;i<4;i++)part(c.x+6,GY-8,rnd(-30,60),rnd(-80,-20),.4,pick(['#c9ccd4','#cf4450']),1,300);}}
+    if(c.x>DOOR_X+340||c.x>WORLD)c.dead=true;}
+  carts=carts.filter(c=>!c.dead);
+  if(B.cold&&(mode==='night'||mode==='prep')&&Math.random()<dt*(6+4*B.cold))part(DOOR_X+rnd(0,6),GY-rnd(3,44),rnd(15,45)*(1+.3*B.cold),rnd(-6,6),rnd(.9,1.5),pick(['#cfe8ff','#e8f6ff','#a9d4f5']),1,-4);
+  if(B.zap&&Math.random()<dt*(1.2*B.zap))for(let i=0;i<3;i++)part(DOOR_X+rnd(-1,2),GY-rnd(4,46),rnd(-20,20),rnd(-20,20),.18,pick(['#9fe8ff','#ffffff']),1,0);
+}
 function panOut(){return projs.some(q=>q.kind==='pan'&&!q.dead);}
 /* ---------- render ---------- */
 function drawLighting(sx,sy,am){
@@ -2248,6 +2307,7 @@ function drawLighting(sx,sy,am){
   if(muzT>0)hole(p.x-camX+Math.cos(p.ang)*14,p.y-13+Math.sin(p.ang)*14,46,.95);
   for(const q of parts)if(q.flame&&Math.random()<.25)hole(q.x-camX,q.y,12,.5);
   for(const s of structs)if(s.kind==='turret'&&s.flash>0)hole(s.x-camX+10,GY-9,28,.8);
+  if(baseFx.roofFlash>0)hole(130-camX,111,30,.8);
   for(const b of booms)hole(b.x-camX,b.y,b.r*2.4*(1-b.t/b.max)+10,.95);
   for(const b of bolts){const m=b.pts[b.pts.length>>1];hole(m[0]-camX,m[1],40,.8);}
   for(const b of beams)hole((b.x1+b.x2)/2-camX,(b.y1+b.y2)/2,120,.8*b.t/.3);
@@ -2276,6 +2336,8 @@ function drawWorld(){
   G.globalAlpha=1;
   for(const g of goos)drawGoo(g);
   drawStore();
+  if(run.base&&run.base.roof)drawRoofTurret(-Math.round(camX),run.base.roof);
+  if(run.base&&run.base.cold){const x=Math.round(DOOR_X-camX);G.globalAlpha=.35;R0(x,GY,BASEV.coldR[run.base.cold]*.6,2,'#cfe8ff');G.globalAlpha=1;}
   for(const s of structs)drawStruct(s,s.x-camX,GY,false);
   for(const e of eggs){const x=Math.round(e.x-camX);R0(x-1,GY-4,3,4,'#f3efe4');R0(x,GY-3,1,1,'#c9b08a');if(e.arm<=0&&(T*3%1)<.5)R0(x,GY-5,1,1,'#ff5a4a');}
   for(const pk of pickups)drawAmulet(Math.round(pk.x-camX),Math.round(GY-4-Math.sin(T*3+pk.t)*2),pk.id);
@@ -2298,6 +2360,7 @@ function drawWorld(){
     G.globalAlpha=1;G.lineWidth=1;}
   for(const s of strikes){const k=1-s.t/s.max,x=s.x-camX,fl=(T*(10+20*k)%2)<1;G.globalAlpha=(fl?.55:.3)+.4*k;G.strokeStyle=fl?'#e8fbff':'#9fe8ff';G.lineWidth=1;G.beginPath();G.ellipse(x,GY-1,18,3.5,0,0,Math.PI*2);G.stroke();
     G.globalAlpha=.25+.35*k;G.fillStyle='#9fe8ff';G.beginPath();G.ellipse(x,GY-1,18*k,3.5*k,0,0,Math.PI*2);G.fill();G.globalAlpha=1;}
+  for(const c of carts)drawCart(c);
   for(const pg of pigs)drawPig(pg);
   for(const b of pigeons)drawPigeon(b);
   drawPet();
@@ -2532,7 +2595,9 @@ tray.addEventListener('click',e=>{
 });
 
 /* ---------- stockroom ---------- */
-const TABS=[['guns','Guns'],['melee','Melee'],['armor','Armor'],['pets','Pets'],['supplies','Supplies'],['ups','Upgrades']];
+const TABS=[['guns','Guns'],['melee','Melee'],['armor','Armor'],['pets','Pets'],['supplies','Supplies'],['ups','Upgrades'],['base','Base']];
+function baseFx1(id,L){const bs=1+.05*(run.night-1);if(!L)return _t('not built');
+  return id==='roof'?_t('{0} damage every {1} s',fx1(BASEV.roofDmg[L]*bs),fx1(BASEV.roofCd[L])):id==='zap'?_t('{0} damage and a stun to every zombie that hits the doors',fx1(BASEV.zapDmg[L]*bs)):id==='carts'?_t('a cart every {0} s for {1} damage',fx1(BASEV.cartCd[L]),fx1(BASEV.cartDmg[L]*bs)):_t('zombies within {0} of the doors move at {1}% speed',BASEV.coldR[L],Math.round(BASEV.coldM[L]*100));}
 function tline(l,r,cls){return '<div class="tline'+(cls?' '+cls:'')+'"><span class="nm">'+l+'</span><span class="dots"></span><span>'+r+'</span></div>';}
 function row(name,price,desc,btn){return '<li class="row">'+tline(name,price)+'<p class="ds">'+desc+'</p>'+btn+'</li>';}
 const wn=(k,id,name)=>'<button class="wname" data-info="'+k+':'+id+'" title="'+_t('See details')+'">'+name+'</button>';
@@ -2548,7 +2613,7 @@ function renderStock(){
   else h+='<div class="tally">'+tline(_t('Starting float'),money(c),'total')+'</div>';
   if(run.cheated)h+='<p class="note">'+_t('You used the dev panel this run, so it will not count toward your best.')+'</p>';
   if(run.expired&&run.expired.length)h+='<p class="note">'+_t('Crumbled to dust after {0} shifts: {1}.',AMU_LIFE,run.expired.map(k=>AMULETS[k]?AMULETS[k].name:k).join(', '))+'</p>';
-  const na=AMB[run.nextAmb];h+='<p class="forecast">'+_t('Forecast for shift {0}: {1} · {2} to {3}',run.night,na.name,fmtT(na.start),na.end)+(run.night%4===0?' · '+_t('BOSS TONIGHT: {0}',ZT[BOSS_ORDER[(run.night/4-1)%BOSS_ORDER.length]].name):'')+'</p>';
+  const na=AMB[run.nextAmb],bp=bossPlan(run.night);h+='<p class="forecast">'+_t('Forecast for shift {0}: {1} · {2} to {3}',run.night,na.name,fmtT(na.start),na.end)+(bp.length?' · '+_t('BOSS TONIGHT: {0}',bp.map(k=>ZT[k].name).join(', ')):'')+'</p>';
   h+='<p class="forecast'+(full?' full':'')+'">'+_t('Purchases this buy phase: {0} of {1}',run.buys,BUY_LIMIT)+(full?_t('. Come back after the next shift.'):'.')+' '+_t('Upgrades don\'t count, but each one only goes up one level per buy phase.')+'</p>';
   h+='<div class="tabs" role="tablist">'+TABS.map(([k,l])=>'<button class="tab" role="tab" data-tab="'+k+'" aria-selected="'+(stockTab===k)+'">'+_t(l)+'</button>').join('')+'</div>';
   let body='';
@@ -2575,6 +2640,9 @@ function renderStock(){
     const ag=amuGroups();
     body+='<div class="modgun"><h4>'+_t('Amulets you carry')+'</h4>'+(ag.length?'<ul class="rows">'+ag.map(g=>'<li class="row">'+tline(wn('amu',g.id,AMULETS[g.id].name),'&times;'+g.n)+'<p class="ds">'+AMULETS[g.id].desc+(g.n>1?' '+_t('each'):'')+' · '+g.all.slice().sort((a,b)=>a-b).map(leftS).join(', ')+'</p></li>').join('')+'</ul>':'<p class="note">'+_t('Amulets are rare. Sometimes one glints on the road, kills almost never drop one, and every boss drops one. Walk over it to pick it up.')+'</p>')+
       '<p class="note">'+_t('Each amulet lasts {0} shifts, counting the one you find it in, then crumbles. Two of the same kind stack.',AMU_LIFE)+'</p></div>';
+  }else if(stockTab==='base'){
+    body+='<ul class="rows">'+BORDER.map(id=>{const B=BASE[id],lv=run.base[id]||0,maxed=lv>=B.max,done=!!run.perkPhase['b_'+id],cost=maxed?0:B.prices[lv];
+      return row(wn('base',id,B.name)+' <small>'+lv+'/'+B.max+'</small>',maxed?_t('max'):money(cost),B.desc+' '+_t('Now: {0}.',baseFx1(id,lv))+(maxed?'':' '+_t('Next: {0}.',baseFx1(id,lv+1))),bbtn('base:'+id,_t(maxed?'Max':done?'Bought':'Buy'),maxed||done||c<cost));}).join('')+'</ul><p class="note">'+_t('Upgrades for the store itself. Like the other upgrades, each one goes up one level per buy phase and does not use up your purchases.')+'</p>';
   }
   h+=body;
   h+='<div class="rfoot"><span class="thanks">'+_t('THANK YOU, COME AGAIN.')+'</span><span style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn small" data-buy="out">'+_t('Back outside to place')+'</button><button class="btn go" data-buy="start">'+_t('Start shift {0}',run.night)+'</button></span></div>';
@@ -2597,9 +2665,10 @@ function doBuy(data){
   const limited=['gun','mod','mmod','item','svc','tr'].includes(kind)||(kind==='melee'&&!run.meleeOwned[id])||(kind==='armor'&&!run.armorOwned[id])||(kind==='pet'&&!run.petOwned[id]);
   if(limited&&run.buys>=BUY_LIMIT){sfx('deny');return false;}
   if(kind==='up'&&run.perkPhase[id]){sfx('deny');return false;}
+  if(kind==='base'&&run.perkPhase['b_'+id]){sfx('deny');return false;}
   if((kind==='mod'||kind==='tr'||kind==='tron')&&!run.owned[id]){sfx('deny');return false;}
   if(kind==='mmod'&&!run.meleeOwned[id]){sfx('deny');return false;}
-  const pay=n=>{if(run.cash<n)return false;run.cash-=n;sfx('cash');if(limited)run.buys++;if(kind==='up')run.perkPhase[id]=true;return true;};
+  const pay=n=>{if(run.cash<n)return false;run.cash-=n;sfx('cash');if(limited)run.buys++;if(kind==='up')run.perkPhase[id]=true;if(kind==='base')run.perkPhase['b_'+id]=true;return true;};
   switch(kind){
     case 'equip':run.weapon=id;break;
     case 'gun':if(pay(GUNS[id].price)){run.owned[id]=true;run.mags[id]=magOf(id);run.weapon=id;}break;
@@ -2613,6 +2682,7 @@ function doBuy(data){
     case 'petoff':run.pet=null;break;
     case 'item':if(pay(ITEMS[id].price))run.inv[id]++;break;
     case 'svc':if(id==='heal'&&p.hp<run.hpMax&&pay(80))p.hp=run.hpMax;if(id==='door'&&run.door<run.doorMax&&pay(90))run.door=Math.min(run.doorMax,run.door+100);break;
+    case 'base':{const B=BASE[id],lv=run.base[id]||0;if(lv<B.max&&pay(B.prices[lv]))run.base[id]=lv+1;break;}
     case 'up':{const u=UPS[id],lv=run.up[id]||0,cost=u.base*(lv+1);if(lv<u.max&&pay(cost)){run.up[id]=lv+1;if(id==='hp'){run.hpMax+=25;p.hp+=25;}if(id==='door'){run.doorMax+=100;run.door+=100;}}break;}
   }
   return true;
@@ -2737,6 +2807,10 @@ function showInfo(kind,id,from){
     const next={str:Math.round((.3+.17*(lv+1))*100)+'%',dmg:'+'+12*(lv+1)+'%',hp:_t('{0} max health',run.hpMax+25),reload:Math.round(Math.pow(.85,lv+1)*100)+'%',door:String(run.doorMax+100)}[id];
     S('Level',_t('{0} of {1}',lv,u.max));S('Now',now);S('Next level',maxed?_t('maxed'):next+' · '+money(u.base*(lv+1)));S('This buy phase',_t(run.perkPhase[id]?'already bought':'available'));
     draw=()=>drawUpIcon(id,15,8);
+  }else if(kind==='base'){
+    const B=BASE[id],lv=run.base[id]||0;name=B.name;lore=LORE2.base[id];desc=B.desc;tag=_t('Base upgrade · one level per buy phase');cw=30;ch=15;
+    S('Level',_t('{0} of {1}',lv,B.max));S('Now',baseFx1(id,lv));S('Next level',lv>=B.max?_t('maxed'):baseFx1(id,lv+1)+' · '+money(B.prices[lv]));S('This buy phase',_t(run.perkPhase['b_'+id]?'already bought':'available'));
+    draw=()=>drawBaseIcon(id,15,8);
   }else if(kind==='amu'){
     const A=AMULETS[id],g=amuGroups().find(q=>q.id===id);name=A.name;lore=LORE2.amu[id];desc=A.desc+(g&&g.n>1?' '+_t('each')+'.':'.');tag=_t('Amulet · lasts {0} shifts',AMU_LIFE);cw=30;ch=15;
     S('Effect',_t('{0} per amulet',A.desc));S('You carry',g?String(g.n):_t('none'));if(g)S('Crumbles',g.all.slice().sort((a,b)=>a-b).map(leftS).join(', '));
@@ -2806,6 +2880,7 @@ function normalizeRun(r){
   r.meleeOwned=r.meleeOwned||{};r.meleeOwned.bat=true;r.armorOwned=r.armorOwned||{};r.armorOwned.vest=true;r.petOwned=r.petOwned||{};
   if(!MELEE[r.melee]||!r.meleeOwned[r.melee])r.melee='bat';if(!ARMORS[r.armor]||!r.armorOwned[r.armor])r.armor='vest';if(r.pet&&!PETS[r.pet])r.pet=null;
   if(!GUNS[r.weapon]||!r.owned[r.weapon])r.weapon='pistol';if(!AMB[r.amb])r.amb='night';if(!AMB[r.nextAmb])r.nextAmb=r.amb;
+  r.base=Object.assign({roof:0,zap:0,carts:0,cold:0},r.base||{});r.bossSeen=r.bossSeen||{};if(r.bossNext==null)r.bossNext=Math.floor(Math.max(0,r.night-1)/4);
   r.buys=r.buys||0;r.perkPhase=r.perkPhase||{};r.kills=r.kills||0;r.heads=r.heads||0;r.bosses=r.bosses||0;delete r.golden;
   return r;
 }
@@ -2845,7 +2920,7 @@ function titleCard(){
   const sv=loadSave();
   showOverlay('<div class="card"><p class="k">'+_t('Graveyard shift · Alcampo Route 9')+'</p><h2>Graveyard Shift</h2>'+
     (sv?'<p>'+_t('Saved run: shift {0} · {1} in the drawer.',sv.run.night,money(sv.run.cash))+'</p><div class="btns"><button class="btn go" id="btnCont">'+_t('Continue shift {0}',sv.run.night)+'</button><button class="btn" id="btnStart">'+_t('New run')+'</button></div>'
-       :'<p>'+_t('Hold the supermarket until the shift ends. Every shift brings more of them, and every fourth one brings a boss. One bad shift and you start over.')+'</p><div class="btns"><button class="btn go" id="btnStart">'+_t('Clock in')+'</button></div>')+
+       :'<p>'+_t('Hold the supermarket until the shift ends. Every shift brings more of them, and every fifth one brings a boss. One bad shift and you start over.')+'</p><div class="btns"><button class="btn go" id="btnStart">'+_t('Clock in')+'</button></div>')+
     (best?'<p class="muted">'+_t('Longest run: {0} survived',pl(best,'shift','shifts'))+'</p>':'<p class="muted">'+_t(touchOn?'Use the arrows to walk. Hold Fire to shoot the nearest zombie, or touch the screen to aim.':'A/D to walk, mouse to aim and shoot, Tab to start the shift.')+'</p>')+
     '<div class="langrow">'+langBtns()+'<button class="btn small" id="btnNews">'+_t('What\'s new')+'</button>'+'</div>'+
     '<details><summary>'+_t('Load a save code')+'</summary><div class="coderow"><input id="codeIn" type="text" placeholder="'+_t('Paste your save code')+'" aria-label="'+_t('Save code')+'" autocomplete="off"><button class="btn small" id="codeLoad">'+_t('Load')+'</button></div><p class="muted" id="codeMsg" role="status"></p></details></div>');
@@ -2945,11 +3020,13 @@ function showNews(from){
   openCard('<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+_t('What\'s new')+'</h3>'+closeB()+'</div>'+body+'</div>');
   store.set('newsSeen',newsSig());
 }
+function fetchNews(cb){
+  const get=f=>fetch(f,{cache:'no-store'}).then(r=>r.ok?r.text():'').catch(()=>'');
+  const main=LANG==='en'?'novedades-en.txt':'novedades.txt',other=LANG==='en'?'novedades.txt':'novedades-en.txt';
+  try{get(main).then(t=>{const d=parseNews(t);if(d.length)return d;return get(other).then(parseNews);}).then(d=>{newsData=d||[];if(cb)cb();});}catch(e){}
+}
 function loadNews(){
-  try{fetch('novedades.txt',{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
-    newsData=parseNews(t);if(!newsData.length)return;
-    if(mode==='title'){titleCard();if(winfo.hidden)showNews();}
-  }).catch(()=>{});}catch(e){}
+  fetchNews(()=>{if(!newsData.length)return;if(mode==='title'){titleCard();if(winfo.hidden)showNews();}});
 }
 
 /* ---------- collapsible manual ---------- */
@@ -2965,7 +3042,7 @@ function decorateManual(){
 /* ---------- language ---------- */
 function setLang(l){
   if(l!=='es')l='en';
-  store.set('lang2',l);applyLang(l);decorateManual();
+  store.set('lang2',l);applyLang(l);decorateManual();fetchNews();
   for(const k in hudCache)delete hudCache[k];
   buildPads();renderTray();if(mode==='shop')renderStock();if(!winfo.hidden)hideInfo();
   if(mode==='title')titleCard();else if(mode==='over'&&!ov.hidden)showGameOver();
@@ -3015,7 +3092,7 @@ function devAct(a,v){
     case 'melees':MORDER.forEach(id=>run.meleeOwned[id]=true);devMsg=_t('All melee weapons in the stockroom. Equip one there.');break;
     case 'armors':AORDER.forEach(id=>run.armorOwned[id]=true);devMsg=_t('All armor in the stockroom. Wear one there.');break;
     case 'pets':PORDER.forEach(id=>run.petOwned[id]=true);devMsg=_t('All pets adopted. Pick one in the stockroom.');break;
-    case 'ups':for(const k in UPS)while(run.up[k]<UPS[k].max){run.up[k]++;if(k==='hp'){run.hpMax+=25;p.hp+=25;}if(k==='door'){run.doorMax+=100;run.door+=100;}}devMsg=_t('All upgrades maxed.');break;
+    case 'ups':for(const k in UPS)while(run.up[k]<UPS[k].max){run.up[k]++;if(k==='hp'){run.hpMax+=25;p.hp+=25;}if(k==='door'){run.doorMax+=100;run.door+=100;}}for(const k in BASE)run.base[k]=BASE[k].max;devMsg=_t('All upgrades maxed.');break;
     case 'limit':run.buys=0;run.perkPhase={};devMsg=_t('Buy limit reset for this phase.');break;
     case 'item':run.inv[v]+=5;devMsg=_t('+5 {0}.',ITEMS[v].name);break;
     case 'items':for(const k in ITEMS)run.inv[k]+=5;devMsg=_t('+5 of everything.');break;
@@ -3053,7 +3130,7 @@ function buildGuide(){
     const info=key==='cone'?{name:_t('Conehead'),hp:t.hp,pace:ZT.walker.pace,night:3,note:_t('A hardhat that grabbed a traffic cone off the lot. The cone blocks every headshot, just like a helmet. Break its legs and the cone falls off.')}:t;
     const armor=key==='cone'?' · '+_t('cone'):(id==='hardhat'||id==='soldier'||id==='gunner')?' · '+_t('helmet'):'';
     const d=document.createElement('div');d.className='zcard'+(boss?' boss':'');d.appendChild(c);
-    const st=boss?_t('HP {0} · first on shift {1}',t.hp,4*(i+1)):_t('HP {0}',info.hp)+armor+' · '+info.pace+' · '+_t('shift {0}+',info.night);
+    const st=boss?_t('HP {0} · first on shift {1}',Math.round(t.hp*(1+.1*(5*(i+1)-1))*.7),5*(i+1)):_t('HP {0}',info.hp)+armor+' · '+info.pace+' · '+_t('shift {0}+',info.night);
     d.insertAdjacentHTML('beforeend','<h3>'+info.name+'</h3><span class="st">'+st+'</span><p>'+(boss?t.title:info.note)+'</p>');
     grid.appendChild(d);
   };
