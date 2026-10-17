@@ -180,6 +180,9 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
 .lang{display:inline-flex;gap:0;border:1px solid var(--line);border-radius:2px;overflow:hidden;margin-left:auto}
 .lang button{font-family:var(--display);font-size:11px;letter-spacing:.06em;padding:3px 8px;background:transparent;border:0;color:var(--dim);cursor:pointer}
 .lang button[aria-pressed="true"]{background:var(--sodium);color:#2a1606}
+.newsbtn{margin-left:auto;font-family:var(--display);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;background:transparent;border:1px solid var(--sodium);color:var(--sodium);border-radius:2px;cursor:pointer}
+.newsbtn:hover{background:var(--sodium);color:#2a1606}
+.newsbtn+.lang{margin-left:0}
 .card .langrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .card .langrow .lang{margin-left:0}
 .mtoggle{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px}
@@ -192,6 +195,7 @@ ol.steps,ul.plain{margin:0;padding-left:1.3em;display:grid;gap:6px}
 .news h4{font-size:14px}
 .news p{margin:0}
 .news ul{margin:0}
+.news li.sub{margin-left:1.3em;list-style:circle}
 .news.old{border-top:2px dashed rgba(42,36,51,.35);padding-top:12px;color:var(--paper-dim)}
 .card .langrow .lang button{font-size:12px;padding:5px 10px}
 .stage{position:relative}
@@ -239,7 +243,7 @@ body.touch button{touch-action:manipulation}
 <body>
 <main class="wrap">
   <header class="mast">
-    <div class="eyebrow"><span data-i18n="eb1">Alcampo &middot; Route 9 desert branch</span><span class="neon" id="neon" data-i18n="eb2">Open 24 hrs</span><span data-i18n="eb3">Shift manager wanted</span><span class="lang" role="group" aria-label="Language / Idioma"><button data-lang="en" aria-pressed="true">EN</button><button data-lang="es" aria-pressed="false">ES</button></span></div>
+    <div class="eyebrow"><span data-i18n="eb1">Alcampo &middot; Route 9 desert branch</span><span class="neon" id="neon" data-i18n="eb2">Open 24 hrs</span><span data-i18n="eb3">Shift manager wanted</span><button class="newsbtn" type="button" data-news data-i18n="news">What&#39;s new</button><span class="lang" role="group" aria-label="Language / Idioma"><button data-lang="en" aria-pressed="true">EN</button><button data-lang="es" aria-pressed="false">ES</button></span></div>
     <h1>Graveyard Shift</h1>
     <p class="lede" data-i18n="lede">You work at the Alcampo out on desert Route 9, and every shift more of the dead come shuffling in off the dunes. Keep them away from you and the sliding doors until the shift ends, then spend your tips in the stockroom on guns, armor, pets and a few things nobody should sell.</p>
   </header>
@@ -879,7 +883,7 @@ const ES_HTML={
   mCtl:'<h2>Controles</h2><dl class="keys"><dt>A D / &larr; &rarr;</dt><dd>Andar</dd><dt>Ratón</dt><dd>Apuntar. Mantén el clic izquierdo para disparar. Apunta alto para la cabeza, bajo para las piernas.</dd><dt>R</dt><dd>Recargar</dd><dt>F / clic derecho</dt><dd>Cuerpo a cuerpo. Mantenlo con la motosierra.</dd><dt>1&ndash;0 / Q E / rueda</dt><dd>Cambiar de arma</dd><dt>I</dt><dd>Tus estadísticas: fuerza, velocidad y lo demás</dd><dt>Z X C V</dt><dd>Colocar caja, pinchos, propano, torreta</dd><dt>G</dt><dd>Lanzar el Libro Tere Profe</dd><dt>K</dt><dd>Lanzar un saco de pienso COPASA</dd><dt>L</dt><dd>Abrir la lonchera</dd><dt>J</dt><dd>Llamar a la Hermana Sole</dd><dt>H</dt><dd>Usar un botiquín</dd><dt>Tab / B / P</dt><dd>Empezar turno / almacén / pausa</dd><dt>Móvil o tableta</dt><dd>Aparecen botones en pantalla: flechas para andar, Disparar apunta solo al zombi más cercano, o toca la pantalla para apuntar y disparar. Tus objetos están debajo de las flechas.</dd></dl>',
   mWhere:'<h2>Dónde disparar</h2><ul class="plain"><li><b>Cabeza.</b> Doble de daño. Los cascos y los conos de tráfico bloquean por completo los disparos a la cabeza.</li><li><b>Pecho.</b> Daño normal. El chaleco de los soldados lo reduce un 25%.</li><li><b>Piernas.</b> Daño normal, y se va sumando. Mete en las piernas un tercio de la vida de un zombi y se le rompen. Cae al suelo, se arrastra a un tercio de su velocidad y pierde el casco o el cono. A los jefes no se les puede lisiar.</li></ul>',
   mWeather:'<h2>Tiempo</h2><ul class="plain"><li><b>Noche despejada.</b> Oscuro más allá de las farolas. Tu linterna sigue a donde apuntas.</li><li><b>Día abrasador.</b> Se ve todo. Hay plantas rodadoras.</li><li><b>Tormenta.</b> Oscuro y mojado. El fuego dura la mitad, y a veces un rayo cae sobre uno de ellos.</li><li><b>Luna llena.</b> Rara (1 turno de cada 20), desde el turno 3. Te conviertes en hombre lobo: 35% más rápido, doble de daño cuerpo a cuerpo y 20% menos de daño recibido. Una bandada de palomas picotea a los zombis toda la noche.</li><li><b>Tormenta de arena.</b> Solo ves lo que tienes cerca. Todo camina un 15% más lento.</li></ul><p>El almacén muestra la previsión del siguiente turno.</p>',
-  mField:'Guía de campo',mBoss:'Jefes',
+  news:'Novedades',mField:'Guía de campo',mBoss:'Jefes',
   credit:'Un homenaje original de fan a <a href="https://apps.apple.com/us/app/they-are-coming-zombie-defense/id1576645378" target="_blank" rel="noopener">They Are Coming: Zombie Defense</a> de OnHit Developments, un juego de supervivencia de desplazamiento lateral en el que defiendes un orfanato de oleadas diarias de zombis y compras armas, barricadas y trampas entre días. La ambientación, el arte y el código de aquí son nuevos.'
 };
 const ES={
@@ -954,7 +958,7 @@ const ES={
   'Save code':'Código de guardado','Your run saves itself in this browser at every buy phase and when you leave the page. To carry it to another browser or computer, copy this code and paste it on the title screen there.':'Tu partida se guarda sola en este navegador en cada fase de compra y al salir de la página. Para llevarla a otro navegador u ordenador, copia este código y pégalo allí en la pantalla de inicio.',
   'Copy save code':'Copiar código','No save yet. One is made as soon as you are between shifts.':'Todavía no hay partida guardada. Se crea en cuanto estés entre turnos.',
   /* title, game over */
-  'Language':'Idioma','What\'s new':'Novedades','Show or hide this section':'Mostrar u ocultar esta sección','Graveyard shift · Alcampo Route 9':'Turno de noche · Alcampo Ruta 9','Saved run: shift {0} · {1} in the drawer.':'Partida guardada: turno {0} · {1} en la caja.','Continue shift {0}':'Seguir en el turno {0}','New run':'Partida nueva',
+  'Language':'Idioma','What\'s new':'Novedades','Nothing new yet.':'Todavía no hay novedades.','Show or hide this section':'Mostrar u ocultar esta sección','Graveyard shift · Alcampo Route 9':'Turno de noche · Alcampo Ruta 9','Saved run: shift {0} · {1} in the drawer.':'Partida guardada: turno {0} · {1} en la caja.','Continue shift {0}':'Seguir en el turno {0}','New run':'Partida nueva',
   'Hold the supermarket until the shift ends. Every shift brings more of them, and every fourth one brings a boss. One bad shift and you start over.':'Aguanta en el súper hasta que acabe el turno. Cada turno llegan más, y cada cuatro turnos llega un jefe. Un mal turno y vuelves a empezar.',
   'Clock in':'Fichar','Longest run: {0} survived':'Mejor partida: {0} superados','Use the arrows to walk. Hold Fire to shoot the nearest zombie, or touch the screen to aim.':'Usa las flechas para andar. Mantén Disparar para tirar al zombi más cercano, o toca la pantalla para apuntar.',
   'A/D to walk, mouse to aim and shoot, Tab to start the shift.':'A/D para andar, ratón para apuntar y disparar, Tab para empezar el turno.','Load a save code':'Cargar un código de guardado','Paste your save code':'Pega tu código de guardado','Load':'Cargar',
@@ -2815,7 +2819,7 @@ function titleCard(){
     (sv?'<p>'+_t('Saved run: shift {0} · {1} in the drawer.',sv.run.night,money(sv.run.cash))+'</p><div class="btns"><button class="btn go" id="btnCont">'+_t('Continue shift {0}',sv.run.night)+'</button><button class="btn" id="btnStart">'+_t('New run')+'</button></div>'
        :'<p>'+_t('Hold the supermarket until the shift ends. Every shift brings more of them, and every fourth one brings a boss. One bad shift and you start over.')+'</p><div class="btns"><button class="btn go" id="btnStart">'+_t('Clock in')+'</button></div>')+
     (best?'<p class="muted">'+_t('Longest run: {0} survived',pl(best,'shift','shifts'))+'</p>':'<p class="muted">'+_t(touchOn?'Use the arrows to walk. Hold Fire to shoot the nearest zombie, or touch the screen to aim.':'A/D to walk, mouse to aim and shoot, Tab to start the shift.')+'</p>')+
-    '<div class="langrow">'+langBtns()+(newsData.length?'<button class="btn small" id="btnNews">'+_t('What\'s new')+'</button>':'')+'</div>'+
+    '<div class="langrow">'+langBtns()+'<button class="btn small" id="btnNews">'+_t('What\'s new')+'</button>'+'</div>'+
     '<details><summary>'+_t('Load a save code')+'</summary><div class="coderow"><input id="codeIn" type="text" placeholder="'+_t('Paste your save code')+'" aria-label="'+_t('Save code')+'" autocomplete="off"><button class="btn small" id="codeLoad">'+_t('Load')+'</button></div><p class="muted" id="codeMsg" role="status"></p></details></div>');
   let armed=false;
   $('#btnStart').addEventListener('click',e=>{if(sv&&!armed){armed=true;e.currentTarget.textContent=_t('Erase the saved run?');return;}clearSave();clockIn();});
@@ -2894,20 +2898,23 @@ let newsData=[];
 const escH=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function parseNews(txt){
   const out=[];let cur=null;
+  const fmt=x=>escH(x).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
   for(const raw of String(txt||'').split(/\r?\n/)){
     const l=raw.trim();if(!l||l.startsWith('//'))continue;
-    if(l.startsWith('## ')){cur={title:l.slice(3).trim(),lines:[]};out.push(cur);continue;}
+    if(/^##/.test(l)){cur={title:l.replace(/^#+\s*/,''),lines:[]};out.push(cur);continue;}
     if(!cur){cur={title:'',lines:[]};out.push(cur);}
-    const bullet=/^[-*•]\s+/.test(l);cur.lines.push({bullet,text:escH(l.replace(/^[-*•]\s+/,'')).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')});
+    const bullet=/^(•|-(?!\d)|\*(?!\*))/.test(l),ind=raw.replace(/\t/g,'    ').match(/^\s*/)[0].length;
+    cur.lines.push({bullet,ind,text:fmt(bullet?l.replace(/^(•|-|\*)\s*/,''):l)});
   }
+  for(const e of out){const b=e.lines.filter(x=>x.bullet);const base=b.length?Math.min(...b.map(x=>x.ind)):0;for(const x of e.lines)x.sub=x.bullet&&x.ind>base;}
   return out.filter(e=>e.title||e.lines.length);
 }
 const newsSig=()=>newsData.length?JSON.stringify(newsData[0]).length+':'+newsData[0].title:'';
 function showNews(from){
-  if(!newsData.length)return;
   infoFrom=from||null;modsOpen=null;sheetResume=false;
+  if(!newsData.length){openCard('<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+_t('What\'s new')+'</h3>'+closeB()+'</div><p class="note">'+_t('Nothing new yet.')+'</p></div>');return;}
   const body=newsData.map((e,i)=>{let h='',list=false;
-    for(const ln of e.lines){if(ln.bullet&&!list){h+='<ul class="plain">';list=true;}if(!ln.bullet&&list){h+='</ul>';list=false;}h+=ln.bullet?'<li>'+ln.text+'</li>':'<p>'+ln.text+'</p>';}
+    for(const ln of e.lines){if(ln.bullet&&!list){h+='<ul class="plain">';list=true;}if(!ln.bullet&&list){h+='</ul>';list=false;}h+=ln.bullet?'<li'+(ln.sub?' class="sub"':'')+'>'+ln.text+'</li>':'<p>'+ln.text+'</p>';}
     if(list)h+='</ul>';
     return '<section class="news'+(i?' old':'')+'">'+(e.title?'<h4>'+escH(e.title)+'</h4>':'')+h+'</section>';}).join('');
   openCard('<div class="wcard" role="dialog" aria-modal="true" aria-labelledby="wiT"><div class="whead"><h3 id="wiT">'+_t('What\'s new')+'</h3>'+closeB()+'</div>'+body+'</div>');
@@ -2940,6 +2947,7 @@ function setLang(l){
   if(!devEl.hidden)renderDev();buildGuide();
   for(const b of document.querySelectorAll('[data-lang]'))b.setAttribute('aria-pressed',String(b.dataset.lang===LANG));
 }
+document.addEventListener('click',e=>{const n=e.target.closest('[data-news]');if(n){ac();showNews(n);}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(!b)return;ac();setLang(b.dataset.lang);});
 
 /* ---------- dev panel (secret) ---------- */
