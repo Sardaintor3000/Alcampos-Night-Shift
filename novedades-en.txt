@@ -12,7 +12,7 @@
         *Much pricier lunch box ($24,000)
         *The sledgehammer now sends out a shockwave
         *Thunderstorms drop lightning that can hit you or the zombies (move away when you see the blue glow on the ground)
-        *Minigun slightly weaker
+        *Minigun slightly stronger
         *You start with just your pistol, the bat and 2 crates (no book or first-aid kit)
         *Bosses come every 5 shifts: weaker the first time you meet them, tougher every time they come back
         *Deep into a run, 2 or 3 bosses can show up in the same shift, one after another
