@@ -23,3 +23,4 @@
         *Los pinchos y las torretas tienen barra de vida, y los zombis se paran a destrozar las torretas
         *Hermana Sole más débil: quita la mitad de la vida a los zombis y un 7,5% a los jefes, pero cuesta menos ($1,300)
         *Nuevos tiempos: luna roja (zombis más rápidos pero el doble de propinas), ola de calor, lluvia de meteoritos y nieve en el desierto
+        *Máximo de 3 torretas a la vez en la carretera

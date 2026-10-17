@@ -531,7 +531,7 @@ const BASE={
 };
 const BORDER=Object.keys(BASE);
 const BASEV={roofDmg:[0,18,26,36],roofCd:[0,.55,.42,.3],zapDmg:[0,35,60,95],cartCd:[0,8,6.5,5],cartDmg:[0,55,85,120],coldR:[0,90,120,150],coldM:[1,.8,.7,.6]};
-const BUY_LIMIT=4;
+const BUY_LIMIT=4,TURRET_MAX=3;
 const IKEYS={z:'barricade',x:'spikes',c:'propane',v:'turret'};
 const UPS={
   str:{name:'Strength',desc:'Melee weapons and the bow start at 30% damage. Each level adds 17% of their full damage, up to 200%.',base:220,max:10},
@@ -921,7 +921,7 @@ const ES={
   /* canvas and floaters */
   'NONE LEFT':'NO QUEDA','NO ROOM':'NO HAY SITIO','FULL HEALTH':'VIDA AL MÁXIMO','WAIT FOR THE SHIFT':'ESPERA AL TURNO','NO SACKS LEFT':'NO QUEDAN SACOS','COPASA!':'¡COPASA!',
   'LUNCH BREAK!':'¡HORA DE COMER!','NO BOOKS LEFT':'NO QUEDAN LIBROS','LIBRO TERE PROFE!':'¡LIBRO TERE PROFE!','CONE OFF':'FUERA CONO','HELMET OFF':'FUERA CASCO','LEGS BROKEN':'PIERNAS ROTAS',
-  'VOID':'VACÍO','LIGHT HOLE -10%':'AGUJERO DE LUZ -10%','BLOCKED':'BLOQUEADO','ZAPPED!':'¡CALAMBRAZO!','SLIP!':'¡RESBALÓN!','RED MOON':'LUNA ROJA','They are faster and angrier tonight, but every kill pays double tips.':'Esta noche son más rápidos y más rabiosos, pero cada muerte paga el doble de propinas.','HEATWAVE':'OLA DE CALOR','Fire burns hotter and longer, zombies drag their feet, and your sweaty hands reload slower.':'El fuego quema más y dura más, los zombis arrastran los pies y con las manos sudadas recargas más lento.','METEOR SHOWER':'LLUVIA DE METEORITOS','Watch the sky. When a fiery streak points at the road, get out of the way.':'Mira al cielo. Cuando una estela de fuego apunte a la carretera, apártate.','SNOW IN THE DESERT':'NIEVE EN EL DESIERTO','Everyone is slower on the ice, zombies slip, and fire goes out fast.':'Sobre el hielo todo el mundo va más lento, los zombis resbalan y el fuego se apaga enseguida.','PIR +{0}% FIRE RATE':'PIR +{0}% CADENCIA','HEADSHOT':'A LA CABEZA','BOSS DOWN':'JEFE ABATIDO',
+  'VOID':'VACÍO','LIGHT HOLE -10%':'AGUJERO DE LUZ -10%','BLOCKED':'BLOQUEADO','ZAPPED!':'¡CALAMBRAZO!','SLIP!':'¡RESBALÓN!','TURRET LIMIT: {0}':'LÍMITE DE TORRETAS: {0}','Limit':'Límite','{0} on the road at once':'{0} a la vez en la carretera','RED MOON':'LUNA ROJA','They are faster and angrier tonight, but every kill pays double tips.':'Esta noche son más rápidos y más rabiosos, pero cada muerte paga el doble de propinas.','HEATWAVE':'OLA DE CALOR','Fire burns hotter and longer, zombies drag their feet, and your sweaty hands reload slower.':'El fuego quema más y dura más, los zombis arrastran los pies y con las manos sudadas recargas más lento.','METEOR SHOWER':'LLUVIA DE METEORITOS','Watch the sky. When a fiery streak points at the road, get out of the way.':'Mira al cielo. Cuando una estela de fuego apunte a la carretera, apártate.','SNOW IN THE DESERT':'NIEVE EN EL DESIERTO','Everyone is slower on the ice, zombies slip, and fire goes out fast.':'Sobre el hielo todo el mundo va más lento, los zombis resbalan y el fuego se apaga enseguida.','PIR +{0}% FIRE RATE':'PIR +{0}% CADENCIA','HEADSHOT':'A LA CABEZA','BOSS DOWN':'JEFE ABATIDO',
   '{0} is finished. +{1}':'{0}, fuera de combate. +{1}','SILENCE IN CLASS!':'¡SILENCIO EN CLASE!','STACKS LOST':'ACUMULACIÓN PERDIDA','ENRAGED':'FURIOSA','OVERCHARGE':'SOBRECARGA',
   'IT LIVES!':'¡ESTÁ VIVO!','CATCH!':'¡AHÍ VA!','RISE, SUBJECTS!':'¡ALZAOS, SÚBDITOS!','YOINK':'¡MÍO!','LASSOED':'ATRAPADO','HOP!':'¡HOP!','May the light take you.':'Que la luz os lleve.',
   'CLASS IS IN SESSION':'EMPIEZA LA CLASE','DINNER IS SERVED':'LA CENA ESTÁ SERVIDA','PIPE BURST!':'¡REVIENTA LA TUBERÍA!','SHIFT {0}':'TURNO {0}',
@@ -1412,6 +1412,7 @@ function placeItem(kind){
   if(kind==='copasa')return throwSack();
   if(kind==='lunch')return useLunch();
   if(run.inv[kind]<=0){flt(p.x,p.y-30,'NONE LEFT','#a39cb8');sfx('deny');return;}
+  if(kind==='turret'&&structs.filter(s=>s.kind==='turret'&&!s.dead).length>=TURRET_MAX){flt(p.x,p.y-30,_t('TURRET LIMIT: {0}',TURRET_MAX),'#a39cb8');sfx('deny');return;}
   const x=Math.round(clamp(p.x+p.face*16,PMIN+6,WORLD-10));
   if(kind!=='spikes'&&structs.some(s=>s.kind!=='spikes'&&Math.abs(s.x-x)<12)){flt(x,GY-28,'NO ROOM','#a39cb8');sfx('deny');return;}
   addStruct(kind,x);run.inv[kind]--;sfx('place');saveGame();
@@ -2817,7 +2818,7 @@ function showInfo(kind,id,from){
     const IS={barricade:[['Health',_t('140 per stack')],['How to use',_t(touchOn?'tap it to drop it where you stand':'press Z to drop it where you stand')]],
       spikes:[['Damage',_t('50 a second to anything on it')],['Health',_t('wears down while they walk over it, about 6 seconds of traffic')],['Effect',_t('slows them down')]],
       propane:[['Blast',_t('280 damage, radius 46')],['Careful',_t('also hurts you and your crates')]],
-      turret:[['Damage per shot',fx1(16*(1+.5*amu('tinker')))],['Shots per second','3.8'],['Ammo',_t('{0}, refilled every shift',Math.round(120*(1+amu('tinker'))))],['Health',_t('120, zombies stop to smash it')],['Range',_t('250, down the road')]],
+      turret:[['Damage per shot',fx1(16*(1+.5*amu('tinker')))],['Shots per second','3.8'],['Ammo',_t('{0}, refilled every shift',Math.round(120*(1+amu('tinker'))))],['Health',_t('120, zombies stop to smash it')],['Limit',_t('{0} on the road at once',TURRET_MAX)],['Range',_t('250, down the road')]],
       medkit:[['Heals',_t('50 health')],['How to use',_t(touchOn?'tap it any time':'press H any time')]],
       libro:[['Blast',_t('600 damage, radius 74')],['How to use',_t(touchOn?'tap it to throw it at the nearest zombie':'press G to throw it where you aim')]],
       copasa:[['Pigs',_t('4, for 7 seconds')],['Damage per ram',fx1(12*nightScale()*petMult())],['How to use',_t(touchOn?'tap it to throw the sack':'press K to throw the sack')]],
