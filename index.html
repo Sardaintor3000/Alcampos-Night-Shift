@@ -317,7 +317,7 @@ body.touch button{touch-action:manipulation}
       <ul class="plain">
         <li><b>Clear night.</b> Dark past the lamps. Your flashlight follows your aim.</li>
         <li><b>Scorching day.</b> Full visibility. Tumbleweeds.</li>
-        <li><b>Thunderstorm.</b> Dark and wet. Fire burns half as long, and lightning sometimes strikes one of them.</li>
+        <li><b>Thunderstorm.</b> Dark and wet. Fire burns half as long, and lightning strikes the road: when you see a blue glow crackling on the ground, get out of the way. It wrecks zombies, but it hurts you too.</li>
         <li><b>Full moon.</b> Rare (1 shift in 20), from shift 3. You turn into a werewolf: 35% faster, double melee damage, 20% less damage taken. A flock of pigeons pecks at the zombies all night.</li>
         <li><b>Sandstorm.</b> You only see what is near you. Everything walks 15% slower.</li>
       </ul>
@@ -375,7 +375,7 @@ const GUNS={
   goo:{type:'goo',name:'Xeno gloop launcher',short:'Gloop',dmg:20,rate:.9,mag:3,reload:2.6,spread:0,range:300,pierce:0,kb:0,price:2400,shake:1,len:12,snd:'goo',desc:'Alien tech. Lobs walls of mucus that last 12 seconds. Zombies wade through at 30% speed, bosses at 80%.'},
   flamer:{type:'flame',name:'Flamethrower',short:'Flamer',dmg:7,rate:.05,mag:120,reload:3.2,spread:.25,range:95,pierce:0,kb:6,price:2900,shake:.2,len:13,snd:'flame',desc:'Short range. Sets everything in the cone on fire.'},
   arc:{type:'arc',name:'Arc caster',short:'Arc',dmg:45,rate:.5,mag:8,reload:2.4,spread:0,range:260,pierce:0,kb:20,price:3600,shake:1,len:12,chains:4,snd:'zap',desc:'Lightning that jumps to four more of them and stuns each one.'},
-  minigun:{type:'hit',name:'Minigun',short:'Minigun',dmg:13,rate:.045,mag:200,reload:5.2,spread:.09,pellets:1,range:400,pierce:0,kb:24,price:4500,shake:.8,spin:.45,len:15,snd:'minigun',desc:'Spins up for half a second, then never stops.'},
+  minigun:{type:'hit',name:'Minigun',short:'Minigun',dmg:12,rate:.048,mag:200,reload:5.2,spread:.09,pellets:1,range:400,pierce:0,kb:24,price:4500,shake:.8,spin:.45,len:15,snd:'minigun',desc:'Spins up for half a second, then never stops.'},
   rail:{type:'rail',name:'Rail driver',short:'Rail',dmg:260,rate:1.3,mag:3,reload:3.4,spread:0,range:700,pierce:99,kb:160,price:6500,shake:4,len:17,charge:.55,snd:'rail',desc:'Hold to charge for half a second. The beam goes through everything on the road.'}
 };
 const ORDER=['pistol','nailgun','shotgun','bow','hunter','blunder','rifle','pir','goo','flamer','arc','minigun','rail'];
@@ -513,7 +513,7 @@ const ITEMS={
   medkit:{name:'First-aid kit',short:'First aid',key:'H',price:60,desc:'Heals 50 when you use it.'},
   libro:{name:'Libro Tere Profe',short:'Libro',key:'G',price:350,desc:'One-time throw. The textbook explodes on impact and flattens everything nearby.'},
   copasa:{name:'COPASA pig feed',short:'COPASA',key:'K',price:1400,desc:'One-time throw. The feed sack bursts where it lands and four pigs charge out to ram the zombies for 7 seconds.'},
-  lunch:{name:'Lunch box',short:'Lunch',key:'L',price:12000,desc:'One-time use. Whatever is in this lunch box is not food. Open it and the whole road is wiped clean: every zombie, every boss, and the rest of the wave.'},
+  lunch:{name:'Lunch box',short:'Lunch',key:'L',price:24000,desc:'One-time use. Whatever is in this lunch box is not food. Open it and the whole road is wiped clean: every zombie, every boss, and the rest of the wave.'},
   hermana:{name:'Hermana Sole',short:'H. Sole',key:'J',price:1500,desc:'One-time use. A nun descends from the sky and vaporizes every zombie on screen with a beam of light. Bosses lose half their health.'}
 };
 const BUY_LIMIT=4;
@@ -584,7 +584,7 @@ const AMB={
 
 /* ---------- state ---------- */
 let run,p,night=null,pet=null,sole=null;
-let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[],pigeons=[],trucks=[],pulses=[],waves=[];
+let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[],pigeons=[],trucks=[],pulses=[],waves=[],strikes=[];
 let truckT=6;
 let mode='title',paused=false,camX=0,shake=0,T=0,banner=null,overT=0,overReason='',lastSummary=null,muzT=0,doorHit=0;
 let flashW=0,boltT=4,lightning=null,thunderT=0,weedT=3,bossRef=null,stockTab='guns',flameS=0,sawS=0;
@@ -688,6 +688,7 @@ const SFX={
   coo(){tone(430,380,.14,.04,'sine');},
   howl(){tone(320,620,.5,.1,'sawtooth');tone(620,360,.9,.09,'sawtooth',.5);},
   nuke(){noise(2.6,120,.4,.9,'lowpass');tone(70,20,2.2,.45,'sine');},
+  crackle(){noise(.3,4200,2,.05,'highpass');},
   quake(){tone(85,28,.45,.32,'sine');noise(.35,260,.6,.22,'lowpass');},
   pulse(){tone(1800,300,.12,.06,'sine');noise(.08,5000,2,.05,'highpass');},
   oink(){tone(520,300,.12,.07,'square');tone(460,260,.1,.06,'square',.1);},
@@ -883,7 +884,7 @@ const ES_HTML={
   mHow:'<h2>Cómo funciona un turno</h2><ol class="steps"><li>Antes de que abran las puertas, coloca cajas, tiras de pinchos, bombonas de propano y torretas en la carretera.</li><li>Llegan desde las dunas por la derecha. Mantenlos lejos de ti y de las puertas correderas.</li><li>Si caes o las puertas ceden, la partida se acaba y vuelves a empezar desde el turno 1.</li><li>Cuando acaba el turno vuelves corriendo dentro, cobras las propinas más un extra y repones. Las defensas se quedan donde las dejaste.</li><li>Entre turnos puedes hacer 4 compras. Las mejoras no cuentan, pero cada mejora solo sube un nivel por fase de compra.</li><li>Las armas cuerpo a cuerpo y el arco empiezan muy flojos. La mejora de Fuerza hace que peguen más.</li><li>Cada cuarto turno termina con un jefe.</li></ol>',
   mCtl:'<h2>Controles</h2><dl class="keys"><dt>A D / &larr; &rarr;</dt><dd>Andar</dd><dt>Ratón</dt><dd>Apuntar. Mantén el clic izquierdo para disparar. Apunta alto para la cabeza, bajo para las piernas.</dd><dt>R</dt><dd>Recargar</dd><dt>F / clic derecho</dt><dd>Cuerpo a cuerpo. Mantenlo con la motosierra.</dd><dt>Armas</dt><dd>Llevas una sola arma y un arma cuerpo a cuerpo. Se equipan en el almacén entre turnos.</dd><dt>I</dt><dd>Tus estadísticas: fuerza, velocidad y lo demás</dd><dt>Z X C V</dt><dd>Colocar caja, pinchos, propano, torreta</dd><dt>G</dt><dd>Lanzar el Libro Tere Profe</dd><dt>K</dt><dd>Lanzar un saco de pienso COPASA</dd><dt>L</dt><dd>Abrir la lonchera</dd><dt>J</dt><dd>Llamar a la Hermana Sole</dd><dt>H</dt><dd>Usar un botiquín</dd><dt>Tab / B / P</dt><dd>Empezar turno / almacén / pausa</dd><dt>Móvil o tableta</dt><dd>Aparecen botones en pantalla: flechas para andar, Disparar apunta solo al zombi más cercano, o toca la pantalla para apuntar y disparar. Tus objetos están debajo de las flechas.</dd></dl>',
   mWhere:'<h2>Dónde disparar</h2><ul class="plain"><li><b>Cabeza.</b> Doble de daño. Los cascos y los conos de tráfico bloquean por completo los disparos a la cabeza.</li><li><b>Pecho.</b> Daño normal. El chaleco de los soldados lo reduce un 25%.</li><li><b>Piernas.</b> Daño normal, y se va sumando. Mete en las piernas un tercio de la vida de un zombi y se le rompen. Cae al suelo, se arrastra a un tercio de su velocidad y pierde el casco o el cono. A los jefes no se les puede lisiar.</li></ul>',
-  mWeather:'<h2>Tiempo</h2><ul class="plain"><li><b>Noche despejada.</b> Oscuro más allá de las farolas. Tu linterna sigue a donde apuntas.</li><li><b>Día abrasador.</b> Se ve todo. Hay plantas rodadoras.</li><li><b>Tormenta.</b> Oscuro y mojado. El fuego dura la mitad, y a veces un rayo cae sobre uno de ellos.</li><li><b>Luna llena.</b> Rara (1 turno de cada 20), desde el turno 3. Te conviertes en hombre lobo: 35% más rápido, doble de daño cuerpo a cuerpo y 20% menos de daño recibido. Una bandada de palomas picotea a los zombis toda la noche.</li><li><b>Tormenta de arena.</b> Solo ves lo que tienes cerca. Todo camina un 15% más lento.</li></ul><p>El almacén muestra la previsión del siguiente turno.</p>',
+  mWeather:'<h2>Tiempo</h2><ul class="plain"><li><b>Noche despejada.</b> Oscuro más allá de las farolas. Tu linterna sigue a donde apuntas.</li><li><b>Día abrasador.</b> Se ve todo. Hay plantas rodadoras.</li><li><b>Tormenta.</b> Oscuro y mojado. El fuego dura la mitad, y caen rayos en la carretera: cuando veas un brillo azul chisporroteando en el suelo, apártate. Los rayos destrozan a los zombis, pero a ti también te hacen daño.</li><li><b>Luna llena.</b> Rara (1 turno de cada 20), desde el turno 3. Te conviertes en hombre lobo: 35% más rápido, doble de daño cuerpo a cuerpo y 20% menos de daño recibido. Una bandada de palomas picotea a los zombis toda la noche.</li><li><b>Tormenta de arena.</b> Solo ves lo que tienes cerca. Todo camina un 15% más lento.</li></ul><p>El almacén muestra la previsión del siguiente turno.</p>',
   news:'Novedades',mField:'Guía de campo',mBoss:'Jefes',
   credit:'Un homenaje original de fan a <a href="https://apps.apple.com/us/app/they-are-coming-zombie-defense/id1576645378" target="_blank" rel="noopener">They Are Coming: Zombie Defense</a> de OnHit Developments, un juego de supervivencia de desplazamiento lateral en el que defiendes un orfanato de oleadas diarias de zombis y compras armas, barricadas y trampas entre días. La ambientación, el arte y el código de aquí son nuevos.'
 };
@@ -891,7 +892,7 @@ const ES={
   /* canvas and floaters */
   'NONE LEFT':'NO QUEDA','NO ROOM':'NO HAY SITIO','FULL HEALTH':'VIDA AL MÁXIMO','WAIT FOR THE SHIFT':'ESPERA AL TURNO','NO SACKS LEFT':'NO QUEDAN SACOS','COPASA!':'¡COPASA!',
   'LUNCH BREAK!':'¡HORA DE COMER!','NO BOOKS LEFT':'NO QUEDAN LIBROS','LIBRO TERE PROFE!':'¡LIBRO TERE PROFE!','CONE OFF':'FUERA CONO','HELMET OFF':'FUERA CASCO','LEGS BROKEN':'PIERNAS ROTAS',
-  'VOID':'VACÍO','LIGHT HOLE -10%':'AGUJERO DE LUZ -10%','BLOCKED':'BLOQUEADO','PIR +{0}% FIRE RATE':'PIR +{0}% CADENCIA','HEADSHOT':'A LA CABEZA','BOSS DOWN':'JEFE ABATIDO',
+  'VOID':'VACÍO','LIGHT HOLE -10%':'AGUJERO DE LUZ -10%','BLOCKED':'BLOQUEADO','ZAPPED!':'¡CALAMBRAZO!','PIR +{0}% FIRE RATE':'PIR +{0}% CADENCIA','HEADSHOT':'A LA CABEZA','BOSS DOWN':'JEFE ABATIDO',
   '{0} is finished. +{1}':'{0}, fuera de combate. +{1}','SILENCE IN CLASS!':'¡SILENCIO EN CLASE!','STACKS LOST':'ACUMULACIÓN PERDIDA','ENRAGED':'FURIOSA','OVERCHARGE':'SOBRECARGA',
   'IT LIVES!':'¡ESTÁ VIVO!','CATCH!':'¡AHÍ VA!','RISE, SUBJECTS!':'¡ALZAOS, SÚBDITOS!','YOINK':'¡MÍO!','LASSOED':'ATRAPADO','HOP!':'¡HOP!','May the light take you.':'Que la luz os lleve.',
   'CLASS IS IN SESSION':'EMPIEZA LA CLASE','DINNER IS SERVED':'LA CENA ESTÁ SERVIDA','PIPE BURST!':'¡REVIENTA LA TUBERÍA!','SHIFT {0}':'TURNO {0}',
@@ -2070,15 +2071,28 @@ function updateAmbient(dt){
   if(am.rain){
     for(const d of rainD){d.y+=380*d.s*dt;d.x-=90*d.s*dt;if(d.y>GY+rnd(0,40)){if(Math.random()<.15)part(d.x+camX,GY-1,rnd(-15,15),rnd(-40,-15),.2,'#9aa6c4',1,300);d.y=rnd(-20,0);d.x=rnd(0,W+60);}if(d.x<-10)d.x+=W+60;}
     boltT-=dt;
-    if(boltT<=0){boltT=rnd(5,11);let x=camX+rnd(40,W-40);
-      if(mode==='night'&&Math.random()<.6){const c=zombies.filter(q=>live(q));if(c.length){const z=pick(c);x=z.x;damage(z,150,false,1,80,'storm');burstStorm(x);}}
-      const pts=[[x+rnd(-30,30),0]];let y=0;while(y<GY){y+=rnd(14,28);pts.push([pts[pts.length-1][0]+rnd(-12,12),Math.min(GY,y)]);}
-      lightning={pts,t:.18};flashW=.55;thunderT=rnd(.2,1);}
+    if(boltT<=0){
+      if(mode==='night'){boltT=rnd(3,7);
+        const c=zombies.filter(q=>live(q)&&q.x>camX-10&&q.x<camX+W+10);let x;
+        if(p.alive&&(Math.random()<.3||!c.length))x=clamp(p.x+rnd(-26,26),PMIN,WORLD-8);else x=pick(c).x;
+        strikes.push({x,t:.9,max:.9});sfx('crackle');}
+      else{boltT=rnd(5,11);skyBolt(camX+rnd(40,W-40),false);flashW=.55;thunderT=rnd(.2,1);}}
+    for(const s of strikes){s.t-=dt;if(Math.random()<dt*25)part(s.x+rnd(-14,14),GY-1,rnd(-10,10),rnd(-60,-20),.25,pick(['#9fe8ff','#e8fbff']),1,0);if(s.t<=0){s.done=true;strikeAt(s.x);}}
+    strikes=strikes.filter(s=>!s.done);
   }
   if(am.sandstorm)for(const d of sandD){d.x-=260*d.s*dt;if(d.x<-20){d.x=W+rnd(0,40);d.y=rnd(60,H);}}
   if(am.weeds&&(mode==='night'||mode==='prep'||mode==='title')){weedT-=dt;if(weedT<=0){weedT=rnd(4,9);weeds.push({x:camX+W+20,y:GY-6,vx:-rnd(60,110)*(am.sandstorm?1.6:1),vy:0,r:rnd(4,7),rot:0});}}
   for(const w of weeds){w.x+=w.vx*dt;w.vy+=300*dt;w.y+=w.vy*dt;w.rot+=w.vx*dt/w.r;if(w.y>GY-w.r){w.y=GY-w.r;w.vy=-rnd(40,110);}}
   weeds=weeds.filter(w=>w.x>camX-30);
+}
+function skyBolt(x,exact){const pts=[[x+rnd(-30,30),0]];let y=0;while(y<GY){y+=rnd(14,28);pts.push([pts[pts.length-1][0]+rnd(-12,12),Math.min(GY,y)]);}if(exact)pts[pts.length-1]=[x,GY];lightning={pts,t:.2};}
+function strikeAt(x){
+  skyBolt(x,true);flashW=.7;thunderT=.05;shake=Math.max(shake,5);burstStorm(x);
+  for(let i=0;i<5;i++)decals.push({x:x-6+i*3,y:GY+((Math.random()*3)|0),w:3,c:'#17141f',t:8});
+  if(mode!=='night')return;
+  for(const z of zombies){if(!live(z))continue;if(Math.abs(z.x-x)<22+z.w/2)damage(z,160*nightScale()*(z.boss?.5:1),false,Math.sign(z.x-x)||1,120,'storm',{stun:.6});}
+  if(p.alive&&Math.abs(p.x-x)<18){hurtPlayer(25,x);p.root=Math.max(p.root,.35);flt(p.x,p.y-34,'ZAPPED!','#9fe8ff');}
+  for(const s of structs)if(s.kind==='barricade'&&!s.dead&&Math.abs(s.x-x)<20){s.hp-=40*guardMult();s.hit=.2;if(s.hp<=0)breakStruct(s);}
 }
 function burstStorm(x){for(let i=0;i<12;i++)part(x,GY-rnd(0,20),rnd(-80,80),rnd(-140,-30),.5,pick(['#e8fbff','#9fe8ff','#ffffff']),1,300);}
 
@@ -2120,7 +2134,7 @@ function dawn(){
   if(!run.cheated){best=Math.max(best,run.night);store.set(BEST_KEY,best);}
   for(const s of structs)if(s.kind==='turret')s.ammo=s.ammoMax=Math.round(160*(1+amu('tinker')));
   run.nextAmb=pickAmb(run.night+1);
-  projs=[];pigeons=[];pigs=[];bossRef=null;p.pull=null;p.root=0;p.reloadT=0;trig.mouse=trig.auto=false;
+  projs=[];pigeons=[];pigs=[];strikes=[];bossRef=null;p.pull=null;p.root=0;p.reloadT=0;trig.mouse=trig.auto=false;
   banner={text:AMB[run.amb].end,sub:_t('Shift {0} survived. Heading back inside.',run.night),t:2.4,max:2.4,dawnT:2.4};
   sfx('dawn');renderTray();
 }
@@ -2238,6 +2252,7 @@ function drawLighting(sx,sy,am){
   for(const b of bolts){const m=b.pts[b.pts.length>>1];hole(m[0]-camX,m[1],40,.8);}
   for(const b of beams)hole((b.x1+b.x2)/2-camX,(b.y1+b.y2)/2,120,.8*b.t/.3);
   for(const g of goos)hole(g.x-camX,GY-10,22,.3);
+  for(const s of strikes){const k=1-s.t/s.max;hole(s.x-camX,GY-6,22+10*k,.35+.45*k);}
   for(const w of waves){const k=Math.min(1,w.t/w.max),R=w.r*(1-Math.pow(1-k,3));for(const s of [-1,1])hole(w.x-camX+s*R,GY-4,20,.55*(1-k));if(k<.2)hole(w.x-camX,GY-6,30,.7);}
   for(const q of pulses){const k=Math.min(1,q.t/q.max),hx=q.x1+(q.x2-q.x1)*k-camX,hy=q.y1+(q.y2-q.y1)*k;hole(hx,hy,q.big?30+q.big*14:18,.85);}
   if(sole&&sole.t>.6&&sole.t<2.3){L.fillStyle='rgba(0,0,0,'+Math.min(.85,(sole.t-.6)*2,(2.3-sole.t)*2)+')';L.fillRect(0,0,W,H);}
@@ -2281,6 +2296,8 @@ function drawWorld(){
     G.globalAlpha=a*.55;G.strokeStyle='#fff8e0';G.lineWidth=1;G.beginPath();G.ellipse(x,GY-1,Math.max(1,R*.68),Math.max(1,R*.1),0,0,Math.PI*2);G.stroke();
     G.globalAlpha=a;for(const s of [-1,1]){const fx=Math.round(x+s*R),hgt=3+Math.round(9*(1-k));R0(fx-1,GY-hgt,2,hgt,'#c9b08a');R0(fx-s*3-1,GY-Math.round(hgt*.6),1,Math.round(hgt*.6),'#8a7a5a');}
     G.globalAlpha=1;G.lineWidth=1;}
+  for(const s of strikes){const k=1-s.t/s.max,x=s.x-camX,fl=(T*(10+20*k)%2)<1;G.globalAlpha=(fl?.55:.3)+.4*k;G.strokeStyle=fl?'#e8fbff':'#9fe8ff';G.lineWidth=1;G.beginPath();G.ellipse(x,GY-1,18,3.5,0,0,Math.PI*2);G.stroke();
+    G.globalAlpha=.25+.35*k;G.fillStyle='#9fe8ff';G.beginPath();G.ellipse(x,GY-1,18*k,3.5*k,0,0,Math.PI*2);G.fill();G.globalAlpha=1;}
   for(const pg of pigs)drawPig(pg);
   for(const b of pigeons)drawPigeon(b);
   drawPet();
@@ -2931,7 +2948,7 @@ function showNews(from){
 function loadNews(){
   try{fetch('novedades.txt',{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
     newsData=parseNews(t);if(!newsData.length)return;
-    if(mode==='title'){titleCard();if(store.get('newsSeen','')!==newsSig()&&winfo.hidden)showNews();}
+    if(mode==='title'){titleCard();if(winfo.hidden)showNews();}
   }).catch(()=>{});}catch(e){}
 }
 

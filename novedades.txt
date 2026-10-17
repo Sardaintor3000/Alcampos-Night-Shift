@@ -6,5 +6,7 @@
         *Las cajas ahora tienen barra de vida
         *Llamas verdes del lanzallamas más débiles
         *Mascotas más débiles
-        *Lonchera más cara
+        *Lonchera mucho más cara ($24,000)
         *El mazo ahora lanza una onda expansiva
+        *En la tormenta caen rayos que pueden darte a ti o a los zombis (apártate cuando veas el brillo azul en el suelo)
+        *Minigun un poco más débil
