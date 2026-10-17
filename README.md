@@ -22,7 +22,7 @@ No hace falta instalar nada. Funciona en ordenador, en móvil y en tableta. La p
 | **F** o **clic derecho** | Golpe cuerpo a cuerpo |
 | **1–0**, **Q / E** o **rueda** | Cambiar de arma |
 | **Z X C V** | Colocar caja, pinchos, propano o torreta |
-| **G / K / L / J / H** | Libro Tere Profe, pienso COPASA, fiambrera, Hermana Sole, botiquín |
+| **G / K / L / J / H** | Libro Tere Profe, pienso COPASA, lonchera, Hermana Sole, botiquín |
 | **Tab / B / P / I** | Empezar turno, almacén, pausa, estadísticas |
 
 **En el móvil** aparecen botones en pantalla. Las flechas sirven para andar, y el botón **Disparar** apunta solo al zombi más cercano. También puedes tocar la pantalla para apuntar donde quieras. Tus objetos aparecen debajo de las flechas. Se juega mejor con el móvil en horizontal.
@@ -70,7 +70,7 @@ Son muy raros y muy potentes (+25% de daño, +50 de vida, +60% de daño en la ca
 - **Objetos especiales**:
   - **Libro Tere Profe**: un libro de texto que explota.
   - **Pienso COPASA**: suelta una piara de cerdos que embiste a los zombis.
-  - **Fiambrera**: lo que hay dentro no es comida, y limpia la carretera entera.
+  - **Lonchera**: lo que hay dentro no es comida, y limpia la carretera entera.
   - **Hermana Sole**: una monja que baja del cielo y vaporiza a todos los zombis de la pantalla.
 
 ---
@@ -87,18 +87,6 @@ Son muy raros y muy potentes (+25% de daño, +50 de vida, +60% de daño en la ca
 | **Chuchi** | El cocinero zombi. Lanza paella hirviendo y aplasta tus cajas con la paellera. |
 | **El Sheriff Hueco** | Ráfagas de seis tiros y un lazo que te roba las defensas. |
 | **Patrick** | El fontanero zombi. Su llave inglesa vuelve como un bumerán y revienta tuberías para sacar zombis del suelo. |
-
----
-
-## Curiosidades
-
-- En **luna llena** te conviertes en **hombre lobo**: eres un 35% más rápido y haces el doble de daño cuerpo a cuerpo. Además, una bandada de palomas se pone de tu lado y picotea a los zombis toda la noche.
-- Uno de cada tres zombis con casco de obra lleva **un cono de tráfico** en la cabeza, en homenaje a *Plants vs. Zombies*. De ahí viene también el **saltador de pértiga**, que te salta por encima y va directo a por las puertas.
-- La **Pulsargun** convierte las balas de tu pistola en **agujeros de luz**: cada impacto tiene un 20% de probabilidad de borrar a un zombi de golpe.
-- Los **camiones** que pasan por el fondo no hacen nada. Solo están ahí para darle ambiente.
-- Wally no se deja montar. Lo intentamos.
-- Hay un **panel secreto** escondido en el juego. Pista: un código clásico de los videojuegos... o tocar varias veces cierto cartel de neón. Si lo usas, esa partida no cuenta para tu récord.
-- Tu partida se guarda sola en el navegador. Para llevártela a otro dispositivo, copia tu **código de guardado** desde *Tus estadísticas* y pégalo en la pantalla de inicio.
 
 ---
 
