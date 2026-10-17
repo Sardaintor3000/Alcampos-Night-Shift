@@ -1,24 +1,3 @@
-// ==================================================================
-//  NOVEDADES: lo que escribas aquí aparece en el juego al abrirlo.
-// ==================================================================
-//
-//  Cómo escribir:
-//   - Cada versión empieza con una línea que empieza por "## ", por ejemplo:
-//       ## Versión 1.6 · 17 de octubre
-//   - Debajo, cada novedad en su propia línea empezando por "- ", por ejemplo:
-//       - Los zombis normales son más rápidos.
-//   - Si quieres una palabra en negrita, escríbela **así**.
-//   - Pon lo más nuevo arriba del todo.
-//   - Las líneas que empiezan por // (como estas) no se ven en el juego,
-//     así que NO pongas // delante de lo que quieras que se vea.
-//
-//  La ventana sale sola la primera vez que alguien abre el juego después
-//  de que cambies la versión de arriba del todo. Los jugadores pueden
-//  volver a verla con el botón "Novedades" de arriba de la página.
-//
-//  Escribe debajo de esta línea:
-// ==================================================================
-
-  ## Version 1.6
+## Version 1.6
      -Larisa Update
         *Caballo Wally y poco mas
