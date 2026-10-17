@@ -1,10 +1,10 @@
-# 🧟 Graveyard Shift: Turno de noche en el Alcampo
+# Graveyard Shift: Turno de noche en el Alcampo
 
 **Un juego de defensa contra zombis en pixel art, de desplazamiento lateral, que se juega directamente en el navegador.**
 
 Trabajas en el turno de noche del Alcampo perdido en mitad del desierto, en la Ruta 9. Cada noche llegan más muertos arrastrándose desde las dunas. Tu trabajo es aguantar hasta que acabe el turno: que no te muerdan y que no tiren las puertas correderas de la tienda. Cuando sale el sol vuelves dentro, cobras las propinas y te gastas el dinero en el almacén en armas, armaduras, mascotas y algunas cosas que nadie debería vender.
 
-## ▶️ Jugar ahora
+## Jugar ahora
 
 ### **[madagascarmm.github.io/Alcampos-Night-Shift](https://madagascarmm.github.io/Alcampos-Night-Shift/)**
 
@@ -12,7 +12,7 @@ No hace falta instalar nada. Funciona en ordenador, en móvil y en tableta. La p
 
 ---
 
-## 🎮 Controles
+## Controles
 
 | Ordenador | Acción |
 |---|---|
@@ -31,37 +31,37 @@ No hace falta instalar nada. Funciona en ordenador, en móvil y en tableta. La p
 
 ---
 
-## ⚙️ Mecánicas
+## Mecánicas
 
-### 🌙 Turnos y compras
+### Turnos y compras
 - Cada turno trae más zombis que el anterior, y **cada cuatro turnos aparece un jefe**.
 - Entre turnos solo puedes hacer **4 compras**. Las mejoras no cuentan para ese límite, pero cada una solo sube **un nivel por fase de compra**.
 - Si te muerden o tiran las puertas, la partida se acaba y vuelves a empezar desde el turno 1.
 
-### 🎯 Dónde disparar
+### Dónde disparar
 - **Cabeza:** doble de daño. Los cascos y los conos de tráfico bloquean por completo los disparos a la cabeza.
 - **Pecho:** daño normal. El chaleco de los soldados lo reduce un 25%.
 - **Piernas:** el daño se va sumando. Si metes un tercio de su vida en las piernas, **se les rompen**: caen al suelo, se arrastran y pierden el casco.
 
-### 💪 Fuerza
+### Fuerza
 Las armas cuerpo a cuerpo y el arco empiezan muy flojos, al 30% de su daño. Con la mejora de **Fuerza** llegan hasta el 200%.
 
-### 🔧 Mods y ventajas de estilo
+### Mods y ventajas de estilo
 Cada arma tiene su botón de **Mods** para mejorar el daño, el cargador y la cadencia. Además, cada una tiene una **ventaja de estilo** que cambia por completo cómo se juega, pero siempre con su pega:
 - **Llamas verdes** para el lanzallamas: un 80% más de daño contra zombis normales, pero solo un 30% contra jefes.
 - **Akimbo** para la pistola: dos balas por disparo, a cambio de mucha más dispersión.
 - **Bombas pegajosas** para el lanzababas: se pegan al zombi y explotan, pero se acabaron los muros de moco que frenan.
 - **Trípode** para la minigun: +60% de daño, pero no puedes moverte mientras disparas.
 
-### 🌦️ Tiempo
+### Tiempo
 Noche despejada, día abrasador, tormenta (el fuego dura la mitad), tormenta de arena (solo ves lo que tienes cerca) y la rarísima **luna llena** (1 turno de cada 20).
 
-### 📿 Amuletos
+### Amuletos
 Son muy raros y muy potentes (+25% de daño, +50 de vida, +60% de daño en la cabeza...), pero **se deshacen a los 3 turnos**. Cada jefe suelta uno.
 
 ---
 
-## 📦 En el almacén
+## En el almacén
 
 - **13 armas de fuego**: desde la pistola de la caja registradora hasta el cañón de riel, pasando por el trabuco, el lanzababas alienígena y el **PIR**, un AK-47 futurista que dispara un 5% más rápido con cada zombi que mata, **sin límite**.
 - **9 armas cuerpo a cuerpo**: el machete **El Patrón**, una pata de jamón que te cura a cada golpe, una paellera que se lanza como el escudo del Capitán América y vuelve a tu mano, y un **capote** de torero que confunde a los zombis y los hace caminar hacia atrás.
@@ -75,7 +75,7 @@ Son muy raros y muy potentes (+25% de daño, +50 de vida, +60% de daño en la ca
 
 ---
 
-## 🧟 Los jefes
+## Los jefes
 
 | Jefe | Qué hace |
 |---|---|
@@ -90,19 +90,19 @@ Son muy raros y muy potentes (+25% de daño, +50 de vida, +60% de daño en la ca
 
 ---
 
-## 🤓 Curiosidades
+## Curiosidades
 
-- 🌕 En **luna llena** te conviertes en **hombre lobo**: eres un 35% más rápido y haces el doble de daño cuerpo a cuerpo. Además, una bandada de palomas se pone de tu lado y picotea a los zombis toda la noche.
-- 🚧 Uno de cada tres zombis con casco de obra lleva **un cono de tráfico** en la cabeza, en homenaje a *Plants vs. Zombies*. De ahí viene también el **saltador de pértiga**, que te salta por encima y va directo a por las puertas.
-- ✨ La **Pulsargun** convierte las balas de tu pistola en **agujeros de luz**: cada impacto tiene un 20% de probabilidad de borrar a un zombi de golpe.
-- 🚛 Los **camiones** que pasan por el fondo no hacen nada. Solo están ahí para darle ambiente.
-- 🐴 Wally no se deja montar. Lo intentamos.
-- 🕹️ Hay un **panel secreto** escondido en el juego. Pista: un código clásico de los videojuegos... o tocar varias veces cierto cartel de neón. Si lo usas, esa partida no cuenta para tu récord.
-- 💾 Tu partida se guarda sola en el navegador. Para llevártela a otro dispositivo, copia tu **código de guardado** desde *Tus estadísticas* y pégalo en la pantalla de inicio.
+- En **luna llena** te conviertes en **hombre lobo**: eres un 35% más rápido y haces el doble de daño cuerpo a cuerpo. Además, una bandada de palomas se pone de tu lado y picotea a los zombis toda la noche.
+- Uno de cada tres zombis con casco de obra lleva **un cono de tráfico** en la cabeza, en homenaje a *Plants vs. Zombies*. De ahí viene también el **saltador de pértiga**, que te salta por encima y va directo a por las puertas.
+- La **Pulsargun** convierte las balas de tu pistola en **agujeros de luz**: cada impacto tiene un 20% de probabilidad de borrar a un zombi de golpe.
+- Los **camiones** que pasan por el fondo no hacen nada. Solo están ahí para darle ambiente.
+- Wally no se deja montar. Lo intentamos.
+- Hay un **panel secreto** escondido en el juego. Pista: un código clásico de los videojuegos... o tocar varias veces cierto cartel de neón. Si lo usas, esa partida no cuenta para tu récord.
+- Tu partida se guarda sola en el navegador. Para llevártela a otro dispositivo, copia tu **código de guardado** desde *Tus estadísticas* y pégalo en la pantalla de inicio.
 
 ---
 
-## 🙏 Inspiración
+## Inspiración
 
 Es un homenaje original de fan a **[They Are Coming: Zombie Defense](https://apps.apple.com/us/app/they-are-coming-zombie-defense/id1576645378)** de OnHit Developments, un juego en el que defiendes un orfanato de oleadas de zombis. La ambientación, el arte y el código de este juego son nuevos.
 
