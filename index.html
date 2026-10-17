@@ -2140,7 +2140,7 @@ function burstStorm(x){for(let i=0;i<12;i++)part(x,GY-rnd(0,20),rnd(-80,80),rnd(
 function pickAmb(n){if(n<=1)return 'night';if(n>=3&&Math.random()<.05)return 'moon';const pool=['night','night','day','day','rain','sand'];let a=pick(pool);if(a===run.amb&&Math.random()<.5)a=pick(pool);return a;}
 function bossPlan(n){if(n%5)return [];const c=n>=60?3:n>=30?2:1,o=[];for(let i=0;i<c;i++)o.push(BOSS_ORDER[((run.bossNext||0)+i)%BOSS_ORDER.length]);return o;}
 function buildQueue(n){
-  const total=Math.round(16+8*n/(1+n/35));
+  const total=Math.round(16+12*n/(1+n/40));
   const w={walker:10,vaulter:n>=3?1+n*.35:0,fireman:n>=4?.8+n*.25:0,soldier:n>=5?1+n*.3:0,gunner:n>=7?.3+n*.04:0,runner:n>=2?2+n*.7:0,hardhat:n>=3?1.5+n*.5:0,bloater:n>=4?1+n*.35:0,digger:n>=4?1+n*.3:0,jetpack:n>=5?1+n*.25:0,brute:n>=6?.2+n*.06:0};
   const sum=Object.values(w).reduce((a,b)=>a+b,0),q=[];
   for(let i=0;i<total;i++){let r=Math.random()*sum;for(const k in w){r-=w[k];if(r<=0){q.push(k);break;}}}

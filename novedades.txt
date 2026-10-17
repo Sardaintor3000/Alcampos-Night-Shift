@@ -17,5 +17,5 @@
         *Lanzallamas un poco más débil
         *Cañón de riel mucho más débil (mucho menos daño, carga más lenta y ya no atraviesa a todos)
         *Motosierra más débil
-        *Muchos menos zombis por turno en los turnos avanzados (el turno 60 pasa de unos 2.260 a unos 190)
+        *Muchos menos zombis por turno en los turnos avanzados (el turno 60 pasa de unos 2.260 a unos 300)
         *Cada zombi da más propinas cuanto más avanzado es el turno, para compensar

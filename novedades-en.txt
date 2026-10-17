@@ -20,5 +20,5 @@
         *Flamethrower slightly weaker
         *Rail driver much weaker (much less damage, slower charge and it no longer goes through everything)
         *Chainsaw weaker
-        *Far fewer zombies per shift later on (shift 60 goes from about 2,260 to about 190)
+        *Far fewer zombies per shift later on (shift 60 goes from about 2,260 to about 300)
         *Each zombie pays more tips the further you get, to make up for it
