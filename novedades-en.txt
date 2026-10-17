@@ -1,7 +1,7 @@
 // English version of novedades.txt. The game shows this one when it is in English.
 // Lines starting with // are hidden.
 
-  ## Version 1.6
+  ## Update 2.0
      -Larisa Update
         *Wally the horse and a bit more
         *You can only carry one gun and one melee weapon at a time (swap them in the stockroom)

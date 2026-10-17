@@ -1,4 +1,4 @@
-## Version 1.6
+## Actualización 2.0
      -Larisa Update
         *Caballo Wally y poco mas
         *Solo puedes llevar un arma y un arma cuerpo a cuerpo a la vez (se cambian en el almacén)
