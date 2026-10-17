@@ -1545,7 +1545,7 @@ function damage(z,d,head,dir,kb,src,o){
 function dropAmulet(x){pickups.push({id:pick(Object.keys(AMULETS)),x:clamp(x,PMIN+20,WORLD-20),t:rnd(0,6)});}
 function kill(z,head,dir){
   if(z.dead)return;z.dead=true;z.flash=0;
-  const t=ZT[z.type],cash=Math.max(1,Math.round((t.cash+(head?2:0))*cashMult()*(1+.05*(run.night-1))));
+  const t=ZT[z.type],cash=Math.max(1,Math.round((t.cash+(head?2:0))*cashMult()*(1+.12*(run.night-1))));
   run.cash+=cash;run.kills++;if(head)run.heads++;
   if(z.lastSrc==='pir'){run.pirStacks=(run.pirStacks||0)+1;if(run.pirStacks%10===0)flt(p.x,p.y-36,_t('PIR +{0}% FIRE RATE',run.pirStacks*(trOn('pir','hyper')?10:5)),'#7fe8ff');}
   if(night){night.killed++;night.earned+=cash;if(head)night.heads++;}
@@ -2140,7 +2140,7 @@ function burstStorm(x){for(let i=0;i<12;i++)part(x,GY-rnd(0,20),rnd(-80,80),rnd(
 function pickAmb(n){if(n<=1)return 'night';if(n>=3&&Math.random()<.05)return 'moon';const pool=['night','night','day','day','rain','sand'];let a=pick(pool);if(a===run.amb&&Math.random()<.5)a=pick(pool);return a;}
 function bossPlan(n){if(n%5)return [];const c=n>=60?3:n>=30?2:1,o=[];for(let i=0;i<c;i++)o.push(BOSS_ORDER[((run.bossNext||0)+i)%BOSS_ORDER.length]);return o;}
 function buildQueue(n){
-  const total=Math.round(14+n*7.5+n*n*.5);
+  const total=Math.round(16+8*n/(1+n/35));
   const w={walker:10,vaulter:n>=3?1+n*.35:0,fireman:n>=4?.8+n*.25:0,soldier:n>=5?1+n*.3:0,gunner:n>=7?.3+n*.04:0,runner:n>=2?2+n*.7:0,hardhat:n>=3?1.5+n*.5:0,bloater:n>=4?1+n*.35:0,digger:n>=4?1+n*.3:0,jetpack:n>=5?1+n*.25:0,brute:n>=6?.2+n*.06:0};
   const sum=Object.values(w).reduce((a,b)=>a+b,0),q=[];
   for(let i=0;i<total;i++){let r=Math.random()*sum;for(const k in w){r-=w[k];if(r<=0){q.push(k);break;}}}
