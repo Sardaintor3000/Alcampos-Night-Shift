@@ -292,7 +292,7 @@ body.touch button{touch-action:manipulation}
         <dt>Mouse</dt><dd>Aim. Hold left click to shoot. Aim high for headshots, low for the legs.</dd>
         <dt>R</dt><dd>Reload</dd>
         <dt>F / right click</dt><dd>Melee. Hold it with the chainsaw.</dd>
-        <dt>1&ndash;0 / Q E / wheel</dt><dd>Switch guns</dd>
+        <dt>Weapons</dt><dd>You carry one gun and one melee weapon. Equip them in the stockroom between shifts.</dd>
         <dt>I</dt><dd>Your stats: strength, speed and the rest</dd>
         <dt>Z X C V</dt><dd>Place crate, spikes, propane, turret</dd>
         <dt>G</dt><dd>Throw the Libro Tere Profe</dd>
@@ -880,7 +880,7 @@ const ES_HTML={
   lede:'Trabajas en el Alcampo del desierto, en la Ruta 9, y cada turno llegan más muertos arrastrándose desde las dunas. Mantenlos lejos de ti y de las puertas correderas hasta que acabe el turno, y luego gástate las propinas en el almacén en armas, armaduras, mascotas y algunas cosas que nadie debería vender.',
   hShift:'Turno',hRoad:'En la carretera',hTips:'Propinas',hYou:'Tú',hDoors:'Puertas',
   mHow:'<h2>Cómo funciona un turno</h2><ol class="steps"><li>Antes de que abran las puertas, coloca cajas, tiras de pinchos, bombonas de propano y torretas en la carretera.</li><li>Llegan desde las dunas por la derecha. Mantenlos lejos de ti y de las puertas correderas.</li><li>Si caes o las puertas ceden, la partida se acaba y vuelves a empezar desde el turno 1.</li><li>Cuando acaba el turno vuelves corriendo dentro, cobras las propinas más un extra y repones. Las defensas se quedan donde las dejaste.</li><li>Entre turnos puedes hacer 4 compras. Las mejoras no cuentan, pero cada mejora solo sube un nivel por fase de compra.</li><li>Las armas cuerpo a cuerpo y el arco empiezan muy flojos. La mejora de Fuerza hace que peguen más.</li><li>Cada cuarto turno termina con un jefe.</li></ol>',
-  mCtl:'<h2>Controles</h2><dl class="keys"><dt>A D / &larr; &rarr;</dt><dd>Andar</dd><dt>Ratón</dt><dd>Apuntar. Mantén el clic izquierdo para disparar. Apunta alto para la cabeza, bajo para las piernas.</dd><dt>R</dt><dd>Recargar</dd><dt>F / clic derecho</dt><dd>Cuerpo a cuerpo. Mantenlo con la motosierra.</dd><dt>1&ndash;0 / Q E / rueda</dt><dd>Cambiar de arma</dd><dt>I</dt><dd>Tus estadísticas: fuerza, velocidad y lo demás</dd><dt>Z X C V</dt><dd>Colocar caja, pinchos, propano, torreta</dd><dt>G</dt><dd>Lanzar el Libro Tere Profe</dd><dt>K</dt><dd>Lanzar un saco de pienso COPASA</dd><dt>L</dt><dd>Abrir la lonchera</dd><dt>J</dt><dd>Llamar a la Hermana Sole</dd><dt>H</dt><dd>Usar un botiquín</dd><dt>Tab / B / P</dt><dd>Empezar turno / almacén / pausa</dd><dt>Móvil o tableta</dt><dd>Aparecen botones en pantalla: flechas para andar, Disparar apunta solo al zombi más cercano, o toca la pantalla para apuntar y disparar. Tus objetos están debajo de las flechas.</dd></dl>',
+  mCtl:'<h2>Controles</h2><dl class="keys"><dt>A D / &larr; &rarr;</dt><dd>Andar</dd><dt>Ratón</dt><dd>Apuntar. Mantén el clic izquierdo para disparar. Apunta alto para la cabeza, bajo para las piernas.</dd><dt>R</dt><dd>Recargar</dd><dt>F / clic derecho</dt><dd>Cuerpo a cuerpo. Mantenlo con la motosierra.</dd><dt>Armas</dt><dd>Llevas una sola arma y un arma cuerpo a cuerpo. Se equipan en el almacén entre turnos.</dd><dt>I</dt><dd>Tus estadísticas: fuerza, velocidad y lo demás</dd><dt>Z X C V</dt><dd>Colocar caja, pinchos, propano, torreta</dd><dt>G</dt><dd>Lanzar el Libro Tere Profe</dd><dt>K</dt><dd>Lanzar un saco de pienso COPASA</dd><dt>L</dt><dd>Abrir la lonchera</dd><dt>J</dt><dd>Llamar a la Hermana Sole</dd><dt>H</dt><dd>Usar un botiquín</dd><dt>Tab / B / P</dt><dd>Empezar turno / almacén / pausa</dd><dt>Móvil o tableta</dt><dd>Aparecen botones en pantalla: flechas para andar, Disparar apunta solo al zombi más cercano, o toca la pantalla para apuntar y disparar. Tus objetos están debajo de las flechas.</dd></dl>',
   mWhere:'<h2>Dónde disparar</h2><ul class="plain"><li><b>Cabeza.</b> Doble de daño. Los cascos y los conos de tráfico bloquean por completo los disparos a la cabeza.</li><li><b>Pecho.</b> Daño normal. El chaleco de los soldados lo reduce un 25%.</li><li><b>Piernas.</b> Daño normal, y se va sumando. Mete en las piernas un tercio de la vida de un zombi y se le rompen. Cae al suelo, se arrastra a un tercio de su velocidad y pierde el casco o el cono. A los jefes no se les puede lisiar.</li></ul>',
   mWeather:'<h2>Tiempo</h2><ul class="plain"><li><b>Noche despejada.</b> Oscuro más allá de las farolas. Tu linterna sigue a donde apuntas.</li><li><b>Día abrasador.</b> Se ve todo. Hay plantas rodadoras.</li><li><b>Tormenta.</b> Oscuro y mojado. El fuego dura la mitad, y a veces un rayo cae sobre uno de ellos.</li><li><b>Luna llena.</b> Rara (1 turno de cada 20), desde el turno 3. Te conviertes en hombre lobo: 35% más rápido, doble de daño cuerpo a cuerpo y 20% menos de daño recibido. Una bandada de palomas picotea a los zombis toda la noche.</li><li><b>Tormenta de arena.</b> Solo ves lo que tienes cerca. Todo camina un 15% más lento.</li></ul><p>El almacén muestra la previsión del siguiente turno.</p>',
   news:'Novedades',mField:'Guía de campo',mBoss:'Jefes',
@@ -914,7 +914,7 @@ const ES={
   'Crumbled to dust after {0} shifts: {1}.':'Convertidos en polvo tras {0} turnos: {1}.','Forecast for shift {0}: {1} · {2} to {3}':'Previsión del turno {0}: {1} · de {2} a {3}','BOSS TONIGHT: {0}':'JEFE ESTA NOCHE: {0}',
   'Purchases this buy phase: {0} of {1}':'Compras en esta fase: {0} de {1}','. Come back after the next shift.':'. Vuelve después del siguiente turno.',
   'Upgrades don\'t count, but each one only goes up one level per buy phase.':'Las mejoras no cuentan, pero cada una solo sube un nivel por fase de compra.',
-  'Equipped':'Equipada','Equip':'Equipar','owned':'tuya','yours':'tuya',
+  'Equipped':'Equipada','gun':'arma','You carry one gun and one melee weapon into each shift. Pick them here with Equip.':'A cada turno llevas una sola arma y un arma cuerpo a cuerpo. Elígelas aquí con Equipar.','Equip':'Equipar','owned':'tuya','yours':'tuya',
   'Every gun has mods behind its Mods button, including a playstyle perk that changes how it plays. You can look before you buy.':'Cada arma tiene mods en su botón Mods, incluida una ventaja de estilo que cambia cómo se juega. Puedes mirarlos antes de comprar.',
   'In hand':'En la mano','{0} dmg':'{0} de daño','Melee damage scales with your Strength upgrade. Right now you hit at {0}% of full damage.':'El daño cuerpo a cuerpo depende de tu mejora de Fuerza. Ahora mismo pegas al {0}% del daño completo.',
   'Wearing':'Puesta','Wear':'Ponértela','Leave home':'Dejar en casa','Bring along':'Traer','Adopt':'Adoptar',
@@ -1220,6 +1220,7 @@ function drawStruct(s,x,gy,icon){
       if(k<.66){R0(cx+3,cy+2,1,3,'#26170c');R0(cx+4,cy+4,2,1,'#26170c');}if(k<.35){R0(cx+11,cy+5,1,4,'#26170c');R0(cx+12,cy+3,2,1,'#26170c');}};
     if(icon){crate(x-8,gy-11);return;}
     crate(x-8+sh,gy-10);crate(x-8+sh+(k<.35?2:0),gy-20);
+    R0(x-9,gy-25,18,4,'#14121f');R0(x-8,gy-24,Math.max(0,Math.round(16*k)),2,k>.6?'#93b27a':k>.3?'#f5a443':'#cf4450');
   }else if(s.kind==='spikes'){
     const k=icon?1:s.dur/s.max;R0(x-11,gy-2,22,2,'#2b2834');R0(x-11,gy-2,22,1,'#45404f');
     for(let i=0;i<22;i+=3){if(k<.5&&(i%6===0))continue;R0(x-11+i,gy-4,1,2,'#cfc9d6');}
@@ -1515,7 +1516,7 @@ function kill(z,head,dir){
   else if(z.type!=='larva'){corpses.push({z,x:z.x,cy:z.y-z.h/2,vx:dir*rnd(30,80)/Math.sqrt(z.mass)+z.kbv*.3,vy:-rnd(50,120)/Math.sqrt(z.mass),rot:0,vr:dir*rnd(5,10)/Math.sqrt(z.mass),t:0,ground:false});if(corpses.length>45)corpses.shift();}
   blood(z.x,z.y-z.h*.6,dir,z.boss?24:8);sfx('kill');
   if(z.boss){dropAmulet(z.x);banner={text:_t('BOSS DOWN'),sub:_t('{0} is finished. +{1}',t.name,money(cash)),t:2.4,max:2.4};shake=8;if(bossRef===z)bossRef=null;explode(z.x,z.y-z.h/2,40,{z:200,p:0,s:0},'fire');}
-  else if(Math.random()<.004)dropAmulet(z.x);
+  else if(Math.random()<.0025)dropAmulet(z.x);
   if(z.type==='bloater')explode(z.x,z.y-10,46,{z:180,p:30,s:40},'gas');
   if(z.type==='jetpack')explode(z.x,z.y-12,26,{z:110,p:10,s:10},'pop');
   if(z.type==='brood'){spawnLarva(z.x,6);explode(z.x,z.y-12,44,{z:120,p:20,s:30},'gas');}
@@ -2094,7 +2095,7 @@ function startNight(){
   const q=buildQueue(run.night),am=AMB[run.amb];
   night={queue:q,killed:0,spawnT:1.2,heads:0,earned:0};
   mode='night';paused=false;run.pirStacks=0;run.expired=null;
-  if(Math.random()<.25)dropAmulet(rnd(420,WORLD-60));
+  if(Math.random()<.15)dropAmulet(rnd(420,WORLD-60));
   banner={text:_t('SHIFT {0}',run.night),sub:_t('{0} · {1} · Hold the store until {2}',am.name,fmtT(am.start),am.end),t:2.6,max:2.6};
   boltT=rnd(3,6);sfx('start');renderTray();hideOverlay();
   if(run.amb==='moon'){spawnPigeons(30);banner={text:_t('FULL MOON'),sub:_t('You turn into a werewolf. The pigeons are on your side tonight.'),t:3,max:3};sfx('howl');}
@@ -2419,7 +2420,7 @@ function buildPads(){
   if(!padL)return;
   if(!touchOn){padL.innerHTML='';padR.innerHTML='';return;}
   padL.innerHTML='<div class="prow"><button class="pb" data-hold="left" aria-label="'+_t('Walk left')+'">&#9664;</button><button class="pb" data-hold="right" aria-label="'+_t('Walk right')+'">&#9654;</button></div><div class="pitems" id="padI"></div>';
-  padR.innerHTML='<div class="pfight"><div class="prow"><button class="pb sm" data-tap="swap" id="pSwap"></button><button class="pb sm" data-tap="reload">'+_t('Reload')+'</button><button class="pb sm" data-tap="pause" id="pPause">II</button></div>'+
+  padR.innerHTML='<div class="pfight"><div class="prow"><button class="pb sm" data-tap="reload">'+_t('Reload')+'</button><button class="pb sm" data-tap="pause" id="pPause">II</button></div>'+
     '<div class="prow"><button class="pb" data-hold="melee">'+_t('Hit')+'</button><button class="pb fire" data-hold="fire">'+_t('Fire')+'</button></div></div>'+
     '<div class="pprep"><button class="pb wide" data-tap="stock">'+_t('Stockroom')+'</button><button class="pb wide go" data-tap="start">'+_t('Start shift')+'</button></div>';
   renderPads();
@@ -2427,7 +2428,6 @@ function buildPads(){
 function renderPads(){
   if(!touchOn||!padL)return;
   stage.dataset.mode=mode;
-  const sw=$('#pSwap');if(sw)sw.textContent=gunShort(run.weapon);
   const pp=$('#pPause');if(pp){pp.textContent=paused?'▶':'II';pp.setAttribute('aria-label',_t(paused?'Resume':'Pause'));}
   const pi=$('#padI');if(!pi)return;
   pi.innerHTML='';const live=mode==='prep'||mode==='night';
@@ -2435,8 +2435,7 @@ function renderPads(){
     b.appendChild(iconCanvas(()=>drawStruct({kind:id},12,16,true)));b.insertAdjacentHTML('beforeend','<span>'+run.inv[id]+'</span>');pi.appendChild(b);}
 }
 function padTap(a){
-  if(a==='swap'){if(mode==='night'||mode==='prep')cycleWeapon(1);}
-  else if(a==='reload'){if(!paused)startReload();}
+  if(a==='reload'){if(!paused)startReload();}
   else if(a==='pause')togglePause();
   else if(a==='stock'){if(mode==='prep')openStock();}
   else if(a==='start'){if(mode==='prep'&&!paused)startNight();}
@@ -2467,7 +2466,7 @@ function gunShort(id){return id==='pistol'&&run.mods&&run.mods.pistol&&run.mods.
 function renderTray(){
   tray.innerHTML='';
   const gw=document.createElement('div');gw.className='group';
-  ownedGuns().forEach((id,i)=>{gw.appendChild(slot(run.weapon===id?'on':'',{w:id},iconCanvas(()=>drawGun(GUNS[id].len>13?4:6,8,0,id)),gunShort(id),touchOn?'':(i<10?String((i+1)%10):'')));});
+  {const id=run.weapon;gw.appendChild(slot('on',{info:'gun:'+id},iconCanvas(()=>drawGun(GUNS[id].len>13?4:6,8,0,id)),gunShort(id),touchOn?'':_t('gun')));}
   const mw=document.createElement('div');mw.className='group';
   mw.appendChild(slot('',{act:'melee'},iconCanvas(()=>drawGun(4,8,0,run.melee)),MELEE[run.melee].short,touchOn?'':'F'));
   tray.append(gw,mw);
@@ -2529,7 +2528,7 @@ function renderStock(){
     for(const id of ORDER){const g=GUNS[id],own=run.owned[id];
       const main=own?(run.weapon===id?bbtn('',_t('Equipped'),true,true):bbtn('equip:'+id,_t('Equip'),false,true)):buyB('gun:'+id,g.price);
       body+=row(wn('gun',id,id==='pistol'&&modOf(id).sp2?'Pulsargun':g.name),own?_t(g.price?'owned':'yours'):money(g.price),g.desc,pair(main,modsBtn('gun',id)));}
-    body+='</ul><p class="note">'+_t('Every gun has mods behind its Mods button, including a playstyle perk that changes how it plays. You can look before you buy.')+'</p>';
+    body+='</ul><p class="note">'+_t('You carry one gun and one melee weapon into each shift. Pick them here with Equip.')+'</p><p class="note">'+_t('Every gun has mods behind its Mods button, including a playstyle perk that changes how it plays. You can look before you buy.')+'</p>';
   }else if(stockTab==='melee'){
     body+='<ul class="rows">'+MORDER.map(id=>{const M=MELEE[id],own=run.meleeOwned[id];const main=own?(run.melee===id?bbtn('',_t('In hand'),true,true):bbtn('melee:'+id,_t('Equip'),false,true)):buyB('melee:'+id,M.price);
       return row(wn('melee',id,M.name)+' <small>'+_t('{0} dmg',Math.round(M.dmg*strMult()))+'</small>',own?_t('owned'):money(M.price),M.desc,pair(main,modsBtn('melee',id)));}).join('')+'</ul><p class="note">'+_t('Melee damage scales with your Strength upgrade. Right now you hit at {0}% of full damage.',Math.round(strMult()*100))+'</p>';
@@ -2863,14 +2862,12 @@ addEventListener('keydown',e=>{
   if(paused)return;
   if(k==='r')startReload();
   else if(k==='f'){keys.melee=true;if(!e.repeat)melee();}
-  else if(/^[0-9]$/.test(k)){const own=ownedGuns(),i=k==='0'?9:+k-1;if(own[i])switchWeapon(own[i]);}
   else if(IKEYS[k])placeItem(IKEYS[k]);
   else if(k==='g')throwBook();
   else if(k==='j')useSole();
   else if(k==='k')throwSack();
   else if(k==='l')useLunch();
   else if(k==='h')useMedkit();
-  else if(k==='q')cycleWeapon(-1);else if(k==='e')cycleWeapon(1);
   else if(k==='b'&&mode==='prep')openStock();
 });
 addEventListener('keyup',e=>{const k=e.key.toLowerCase();if(k==='a'||k==='arrowleft')keys.left=false;if(k==='d'||k==='arrowright')keys.right=false;if(k==='f')keys.melee=false;});
@@ -2889,7 +2886,6 @@ const endPtr=e=>{if(e&&e.pointerId!=null&&canvasPtr!=null&&e.pointerId!==canvasP
 cv.addEventListener('pointerup',endPtr);cv.addEventListener('pointercancel',endPtr);addEventListener('pointerup',endPtr);
 addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&!touchOn&&touchPref==null)setTouch(true,false);},{capture:true});
 cv.addEventListener('contextmenu',e=>e.preventDefault());
-cv.addEventListener('wheel',e=>{if(mode!=='night'&&mode!=='prep')return;e.preventDefault();cycleWeapon(e.deltaY>0?1:-1);},{passive:false});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){saveGame();releaseHolds();if(mode==='night'&&!paused)togglePause();}});
 addEventListener('pagehide',saveGame);
 

@@ -1,3 +1,6 @@
 ## Version 1.6
      -Larisa Update
         *Caballo Wally y poco mas
+        *Solo puedes llevar un arma y un arma cuerpo a cuerpo a la vez (se cambian en el almacén)
+        *Amuletos un poco más raros
+        *Las cajas ahora tienen barra de vida

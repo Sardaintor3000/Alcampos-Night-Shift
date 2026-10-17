@@ -20,7 +20,6 @@ No hace falta instalar nada. Funciona en ordenador, en móvil y en tableta. La p
 | **Ratón** | Apuntar y disparar (mantén el clic) |
 | **R** | Recargar |
 | **F** o **clic derecho** | Golpe cuerpo a cuerpo |
-| **1–0**, **Q / E** o **rueda** | Cambiar de arma |
 | **Z X C V** | Colocar caja, pinchos, propano o torreta |
 | **G / K / L / J / H** | Libro Tere Profe, pienso COPASA, lonchera, Hermana Sole, botiquín |
 | **Tab / B / P / I** | Empezar turno, almacén, pausa, estadísticas |
@@ -35,6 +34,7 @@ No hace falta instalar nada. Funciona en ordenador, en móvil y en tableta. La p
 
 ### Turnos y compras
 - Cada turno trae más zombis que el anterior, y **cada cuatro turnos aparece un jefe**.
+- A cada turno llevas **una sola arma y un arma cuerpo a cuerpo**. Se eligen en el almacén con *Equipar*.
 - Entre turnos solo puedes hacer **4 compras**. Las mejoras no cuentan para ese límite, pero cada una solo sube **un nivel por fase de compra**.
 - Si te muerden o tiran las puertas, la partida se acaba y vuelves a empezar desde el turno 1.
 
