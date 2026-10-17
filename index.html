@@ -643,7 +643,8 @@ function reloadOf(id){return (run.amb==='heat'&&mode==='night'?1.15:1)*GUNS[id].
 function dmgMult(){return (1+.12*run.up.dmg)*(1+.25*amu('might'));}
 const isWolf=()=>!!run&&run.amb==='moon'&&(mode==='night'||mode==='over');
 function petMult(){return AR().pet||1;}
-function speedOf(){return 72*(run.amb==='snow'&&mode==='night'?.85:1)*(AR().speed||1)*(1+.2*amu('swift'))*(isWolf()?1.35:1);}
+const SPEED_MAX=120;
+function speedOf(){return Math.min(SPEED_MAX,72*(run.amb==='snow'&&mode==='night'?.85:1)*(AR().speed||1)*(1+.2*amu('swift'))*(isWolf()?1.35:1));}
 function strMult(){return .3+.17*(run.up.str||0);}
 function cashMult(){return (AR().cash||1)*(1+.3*amu('midas'));}
 function nightScale(){return 1+.1*(run.night-1);}
@@ -2876,7 +2877,7 @@ function showSheet(from){
   const pct=n=>Math.round(n*100)+'%',lv=run.up.str||0;
   const M=MELEE[run.melee],mm=mmodOf(run.melee),hit=M.dmg*dmgMult()*(AR().melee||1)*(1+.15*mm.dmg)*strMult(),cd=M.cd/(1+.15*mm.spd);
   const rows=[
-    ['Walking speed',_t('{0} · {1} of normal',fx1(speedOf()),pct(speedOf()/72))],
+    ['Walking speed',_t('{0} · {1} of normal',fx1(speedOf()),pct(speedOf()/72))+(speedOf()>=SPEED_MAX?' · '+_t('max'):'')],
     ['Health',_t('{0} of {1}',Math.ceil(Math.max(0,p.hp)),run.hpMax)],
     ['Damage you take',pct(AR().taken||1)],
     ['Damage bonus',_t('+{0}% (guns and melee)',Math.round((dmgMult()-1)*100))],
