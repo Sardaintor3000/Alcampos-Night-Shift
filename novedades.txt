@@ -15,3 +15,4 @@
         *Muy avanzada la partida pueden salir 2 o 3 jefes en el mismo turno, uno detrás de otro
         *Nueva pestaña Base en el almacén: torreta en el tejado, puertas electrificadas, lanzacarritos y pasillo de congelados
         *Lanzallamas un poco más débil
+        *Cañón de riel más débil (menos daño y tarda más en cargar)
