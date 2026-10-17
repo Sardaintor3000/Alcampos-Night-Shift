@@ -6,3 +6,5 @@
         *Las cajas ahora tienen barra de vida
         *Llamas verdes del lanzallamas más débiles
         *Mascotas más débiles
+        *Lonchera más cara
+        *El mazo ahora lanza una onda expansiva

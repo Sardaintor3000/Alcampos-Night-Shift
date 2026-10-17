@@ -420,7 +420,7 @@ const MELEE={
   paella:{name:'Paella pan',short:'Paella',dmg:60,cd:.6,reach:17,kb:300,shield:.5,rice:true,thrown:true,price:1300,desc:'Throw it like a shield: it flies out, hits everything in its path and comes back to you. While it is in your hand it blocks half the damage from the front.'},
   capote:{name:'Capote',short:'Capote',dmg:12,cd:.5,reach:22,kb:40,confuse:3,price:1600,desc:'A bullfighter\'s cape. Barely hurts, but whatever you sweep with it gets confused and walks backwards for 3 seconds.'},
   prod:{name:'Cattle prod',short:'Prod',dmg:40,cd:.5,reach:20,kb:60,stun:1.5,price:1500,desc:'Stuns whatever it touches for 1.5 seconds.'},
-  sledge:{name:'Sledgehammer',short:'Sledge',dmg:150,cd:1.1,reach:20,kb:320,slam:44,price:1800,desc:'Slow. Every swing also slams the ground and hits everything nearby.'},
+  sledge:{name:'Sledgehammer',short:'Sledge',dmg:150,cd:1.1,reach:20,kb:320,slam:44,price:1800,desc:'Slow. Every swing sends a shockwave along the ground that hits and briefly staggers everything nearby.'},
   chainsaw:{name:'Chainsaw',short:'Chainsaw',dmg:14,cd:.07,reach:19,kb:18,hold:true,price:3000,desc:'Hold the melee button. Shreds anything in front of you.'}
 };
 const MORDER=Object.keys(MELEE);
@@ -513,7 +513,7 @@ const ITEMS={
   medkit:{name:'First-aid kit',short:'First aid',key:'H',price:60,desc:'Heals 50 when you use it.'},
   libro:{name:'Libro Tere Profe',short:'Libro',key:'G',price:350,desc:'One-time throw. The textbook explodes on impact and flattens everything nearby.'},
   copasa:{name:'COPASA pig feed',short:'COPASA',key:'K',price:1400,desc:'One-time throw. The feed sack bursts where it lands and four pigs charge out to ram the zombies for 7 seconds.'},
-  lunch:{name:'Lunch box',short:'Lunch',key:'L',price:8000,desc:'One-time use. Whatever is in this lunch box is not food. Open it and the whole road is wiped clean: every zombie, every boss, and the rest of the wave.'},
+  lunch:{name:'Lunch box',short:'Lunch',key:'L',price:12000,desc:'One-time use. Whatever is in this lunch box is not food. Open it and the whole road is wiped clean: every zombie, every boss, and the rest of the wave.'},
   hermana:{name:'Hermana Sole',short:'H. Sole',key:'J',price:1500,desc:'One-time use. A nun descends from the sky and vaporizes every zombie on screen with a beam of light. Bosses lose half their health.'}
 };
 const BUY_LIMIT=4;
@@ -584,7 +584,7 @@ const AMB={
 
 /* ---------- state ---------- */
 let run,p,night=null,pet=null,sole=null;
-let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[],pigeons=[],trucks=[],pulses=[];
+let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[],pigeons=[],trucks=[],pulses=[],waves=[];
 let truckT=6;
 let mode='title',paused=false,camX=0,shake=0,T=0,banner=null,overT=0,overReason='',lastSummary=null,muzT=0,doorHit=0;
 let flashW=0,boltT=4,lightning=null,thunderT=0,weedT=3,bossRef=null,stockTab='guns',flameS=0,sawS=0;
@@ -688,6 +688,7 @@ const SFX={
   coo(){tone(430,380,.14,.04,'sine');},
   howl(){tone(320,620,.5,.1,'sawtooth');tone(620,360,.9,.09,'sawtooth',.5);},
   nuke(){noise(2.6,120,.4,.9,'lowpass');tone(70,20,2.2,.45,'sine');},
+  quake(){tone(85,28,.45,.32,'sine');noise(.35,260,.6,.22,'lowpass');},
   pulse(){tone(1800,300,.12,.06,'sine');noise(.08,5000,2,.05,'highpass');},
   oink(){tone(520,300,.12,.07,'square');tone(460,260,.1,.06,'square',.1);},
   squelch(){tone(200,80,.2,.12,'sine');noise(.2,500,2,.1);},
@@ -752,7 +753,7 @@ MELEE:{
   paella:{name:'Paellera',short:'Paellera',desc:'Lánzala como un escudo: sale volando, golpea todo lo que encuentra y vuelve a ti. Mientras la tienes en la mano bloquea la mitad del daño de frente.'},
   capote:{desc:'Un capote de torero. Apenas hace daño, pero lo que barres con él se confunde y camina hacia atrás 3 segundos.'},
   prod:{name:'Picana de ganado',short:'Picana',desc:'Aturde lo que toca durante 1,5 segundos.'},
-  sledge:{name:'Mazo',short:'Mazo',desc:'Lento. Cada golpe también sacude el suelo y daña todo lo que hay cerca.'},
+  sledge:{name:'Mazo',short:'Mazo',desc:'Lento. Cada golpe lanza una onda expansiva por el suelo que daña y aturde un momento a todo lo que hay cerca.'},
   chainsaw:{name:'Motosierra',short:'Motosierra',desc:'Mantén pulsado el botón de cuerpo a cuerpo. Destroza todo lo que tenga delante.'}
 },
 MMODS:{
@@ -934,7 +935,7 @@ const ES={
   'Lightning':'Rayo','no chain · fries everything within 50':'no salta · fríe todo en 50','jumps to {0}':'salta a {0}','Spin-up time':'Tiempo de giro','Charge time':'Tiempo de carga','Kill stacks':'Acumulación por muertes','+{0}% fire rate per kill · now +{1}%':'+{0}% de cadencia por muerte · ahora +{1}%',
   'Special':'Especial','fitted':'montado','not bought':'sin comprar','fitted · 20% instant kills, bosses lose 10% (every 25 s)':'montado · 20% de muertes instantáneas, los jefes pierden un 10% (cada 25 s)','Playstyle perk':'Ventaja de estilo','none in use':'ninguna en uso',
   'Price':'Precio','you own it':'es tuya','free':'gratis','Strength':'Fuerza','level {0} · arrows hit at {1}%':'nivel {0} · las flechas pegan al {1}%','hold to use':'mantén para usar','Hits per second':'Golpes por segundo','level {0} · hits at {1}%':'nivel {0} · pegas al {1}%',
-  'Reach':'Alcance','Knockback':'Empuje','huge':'enorme','strong':'fuerte','light':'ligero','heals {0} per hit':'cura {0} por golpe','breaks helmets and cones':'rompe cascos y conos','blocks {0}% from the front':'bloquea el {0}% de frente','scatters rice':'esparce arroz','stuns {0} s':'aturde {0} s','ground slam':'golpe al suelo','thrown, comes back':'se lanza y vuelve','confuses for {0} s':'confunde {0} s','Effect':'Efecto',
+  'Reach':'Alcance','Knockback':'Empuje','huge':'enorme','strong':'fuerte','light':'ligero','heals {0} per hit':'cura {0} por golpe','breaks helmets and cones':'rompe cascos y conos','blocks {0}% from the front':'bloquea el {0}% de frente','scatters rice':'esparce arroz','stuns {0} s':'aturde {0} s','shockwave: hits and staggers everything within {0}':'onda expansiva: golpea y aturde todo lo que esté a {0}','thrown, comes back':'se lanza y vuelve','confuses for {0} s':'confunde {0} s','Effect':'Efecto',
   'One-time use':'Un solo uso','Place on the road':'Se coloca en la carretera','key {0}':'tecla {0}','Health':'Vida','170 per stack':'170 por montón','tap it to drop it where you stand':'tócala para soltarla donde estás','press Z to drop it where you stand':'pulsa Z para soltarla donde estás',
   'Damage':'Daño','70 a second to anything on it':'70 por segundo a lo que esté encima','Lasts':'Dura','about 9 seconds of traffic':'unos 9 segundos de tráfico','slows them down':'los frena','Blast':'Explosión','360 damage, radius 52':'360 de daño, radio 52','Careful':'Cuidado','also hurts you and your crates':'también te daña a ti y a tus cajas',
   'Damage per shot':'Daño por disparo','Ammo':'Munición','{0}, refilled every shift':'{0}, se recarga cada turno','250, down the road':'250, carretera abajo','Heals':'Cura','50 health':'50 de vida','tap it any time':'tócalo cuando quieras','press H any time':'pulsa H cuando quieras',
@@ -1647,7 +1648,9 @@ function melee(){
     if(M.rice)rice(z.x,z.y-14,12);
     if(M.confuse&&!z.dead){z.confused=Math.max(z.confused||0,M.confuse*(sp&&run.melee==='capote'?2:1)*(z.boss?.3:1));for(let i=0;i<5;i++)part(z.x,z.y-z.h,rnd(-30,30),rnd(-50,-10),.4,pick(['#d23a6e','#e8c25a']),1,100);}
     if(M.stun)for(let i=0;i<4;i++)part(z.x,z.y-14,rnd(-40,40),rnd(-60,0),.25,'#9fe8ff',1,0);}}
-  if(M.slam){shake=Math.max(shake,3);dirt(p.x+p.face*14,8);for(const z of zombies){if(!live(z)||hitList.includes(z)||z.y<GY-16)continue;if(Math.abs(z.x-p.x)<M.slam*(sp?1.6:1))damage(z,d*.5,false,Math.sign(z.x-p.x)||1,M.kb*.6,'melee');}}
+  if(M.slam){const R=M.slam*(sp?1.6:1),wx=p.x+p.face*10;shake=Math.max(shake,5);dirt(wx,12);sfx('quake');waves.push({x:wx,t:0,max:.45,r:R+14});
+    for(let i=0;i<7;i++)decals.push({x:wx+rnd(-R*.5,R*.5),y:GY+((Math.random()*4)|0),w:2+((Math.random()*5)|0),c:'#2a2433',t:5});
+    for(const z of zombies){if(!live(z)||z.y<GY-16)continue;if(Math.abs(z.x-wx)<R){if(!hitList.includes(z))damage(z,d*.5,false,Math.sign(z.x-wx)||1,M.kb*.6,'melee');if(!z.dead)z.stun=Math.max(z.stun||0,z.boss?.08:.35);}}}
   if(M.rice&&!hitList.length)rice(p.x+p.face*12,p.y-14,3);
 }
 function switchWeapon(id){
@@ -2186,6 +2189,8 @@ function updateFx(dt){
   for(const f of floaters){f.life-=dt;f.y-=16*dt;}floaters=floaters.filter(f=>f.life>0);
   for(const t of tracers)t.t-=dt;tracers=tracers.filter(t=>t.t>0);
   for(const q of pulses)q.t+=dt;pulses=pulses.filter(q=>q.t<q.end);
+  for(const w of waves){w.t+=dt;const k=Math.min(1,w.t/w.max),R=w.r*(1-Math.pow(1-k,3));if(Math.random()<dt*40)for(const s of [-1,1])part(w.x+s*R,GY-1,s*rnd(10,40),rnd(-70,-20),rnd(.25,.5),pick(['#8a7a5a','#c9b08a','#6b5338']),pick([1,1,2]),260);}
+  waves=waves.filter(w=>w.t<w.max);
   for(const b of booms)b.t+=dt;booms=booms.filter(b=>b.t<b.max);
   for(const b of bolts)b.t-=dt;bolts=bolts.filter(b=>b.t>0);
   for(const b of beams)b.t-=dt;beams=beams.filter(b=>b.t>0);
@@ -2233,6 +2238,7 @@ function drawLighting(sx,sy,am){
   for(const b of bolts){const m=b.pts[b.pts.length>>1];hole(m[0]-camX,m[1],40,.8);}
   for(const b of beams)hole((b.x1+b.x2)/2-camX,(b.y1+b.y2)/2,120,.8*b.t/.3);
   for(const g of goos)hole(g.x-camX,GY-10,22,.3);
+  for(const w of waves){const k=Math.min(1,w.t/w.max),R=w.r*(1-Math.pow(1-k,3));for(const s of [-1,1])hole(w.x-camX+s*R,GY-4,20,.55*(1-k));if(k<.2)hole(w.x-camX,GY-6,30,.7);}
   for(const q of pulses){const k=Math.min(1,q.t/q.max),hx=q.x1+(q.x2-q.x1)*k-camX,hy=q.y1+(q.y2-q.y1)*k;hole(hx,hy,q.big?30+q.big*14:18,.85);}
   if(sole&&sole.t>.6&&sole.t<2.3){L.fillStyle='rgba(0,0,0,'+Math.min(.85,(sole.t-.6)*2,(2.3-sole.t)*2)+')';L.fillRect(0,0,W,H);}
   else if(sole)hole(sole.x-camX,40,60,.6);
@@ -2269,6 +2275,12 @@ function drawWorld(){
   for(const z of zombies){if(z.type!=='sheriff'||!z.ab)continue;const a=z.ab,hx=z.x-camX+z.face*9,hy=z.y-15;
     if(a.aim>0){G.strokeStyle='rgba(255,70,70,'+(.4+.4*Math.sin(T*30))+')';G.setLineDash([3,3]);G.beginPath();G.moveTo(hx,hy);G.lineTo(a.ax-camX+(a.ax-z.x)*.6,a.ay+(a.ay-hy)*.6);G.stroke();G.setLineDash([]);}
     if(a.rope){const tx=a.rope.s?a.rope.s.x:p.x,ty=a.rope.s?GY-8:p.y-12,k=1-a.rope.t/.6;G.strokeStyle='#c9a26a';G.beginPath();G.moveTo(hx,hy-3);G.quadraticCurveTo((hx+tx-camX)/2,Math.min(hy,ty)-20,tx-camX,ty);G.stroke();G.strokeStyle='#c9a26a';G.beginPath();G.arc(tx-camX,ty,4+k*2,0,Math.PI*2);G.stroke();}}
+  for(const w of waves){const k=Math.min(1,w.t/w.max),R=w.r*(1-Math.pow(1-k,3)),x=w.x-camX,a=1-k;
+    if(w.t<.07){G.globalAlpha=.8;G.fillStyle='#fff1c9';G.beginPath();G.ellipse(x,GY-1,14,4,0,0,Math.PI*2);G.fill();}
+    G.globalAlpha=a*.9;G.strokeStyle='#e8d6a8';G.lineWidth=2;G.beginPath();G.ellipse(x,GY-1,Math.max(1,R),Math.max(1,R*.15),0,0,Math.PI*2);G.stroke();
+    G.globalAlpha=a*.55;G.strokeStyle='#fff8e0';G.lineWidth=1;G.beginPath();G.ellipse(x,GY-1,Math.max(1,R*.68),Math.max(1,R*.1),0,0,Math.PI*2);G.stroke();
+    G.globalAlpha=a;for(const s of [-1,1]){const fx=Math.round(x+s*R),hgt=3+Math.round(9*(1-k));R0(fx-1,GY-hgt,2,hgt,'#c9b08a');R0(fx-s*3-1,GY-Math.round(hgt*.6),1,Math.round(hgt*.6),'#8a7a5a');}
+    G.globalAlpha=1;G.lineWidth=1;}
   for(const pg of pigs)drawPig(pg);
   for(const b of pigeons)drawPigeon(b);
   drawPet();
@@ -2663,7 +2675,7 @@ function showInfo(kind,id,from){
     S('Strength',_t('level {0} · hits at {1}%',run.up.str||0,Math.round(strMult()*100)));
     S('Reach',String(M.reach));
     S('Knockback',_t(M.kb>=240?'huge':M.kb>=140?'strong':M.kb>=60?'medium':'light'));
-    const sp=[];if(M.heal)sp.push(_t('heals {0} per hit',M.heal));if(M.armorPierce)sp.push(_t('breaks helmets and cones'));if(M.shield)sp.push(_t('blocks {0}% from the front',Math.round(M.shield*100)));if(M.rice)sp.push(_t('scatters rice'));if(M.stun)sp.push(_t('stuns {0} s',fx1(M.stun)));if(M.slam)sp.push(_t('ground slam'));if(M.thrown)sp.push(_t('thrown, comes back'));if(M.confuse)sp.push(_t('confuses for {0} s',fx1(M.confuse)));
+    const sp=[];if(M.heal)sp.push(_t('heals {0} per hit',M.heal));if(M.armorPierce)sp.push(_t('breaks helmets and cones'));if(M.shield)sp.push(_t('blocks {0}% from the front',Math.round(M.shield*100)));if(M.rice)sp.push(_t('scatters rice'));if(M.stun)sp.push(_t('stuns {0} s',fx1(M.stun)));if(M.slam)sp.push(_t('shockwave: hits and staggers everything within {0}',M.slam));if(M.thrown)sp.push(_t('thrown, comes back'));if(M.confuse)sp.push(_t('confuses for {0} s',fx1(M.confuse)));
     if(sp.length)S('Effect',sp.join(' · '));
     S('Mods',MM.dmg[0]+' '+mm.dmg+'/'+MMODMAX+' · '+MM.spd[0]+' '+mm.spd+'/'+MMODMAX);S('Special',MM.sp.name+' ('+_t(mm.sp?'fitted':'not bought')+'): '+MM.sp.desc);
     S('Price',M.price?money(M.price)+(run.meleeOwned[id]?' · '+_t('you own it'):''):_t('free')+' · '+_t('you own it'));
