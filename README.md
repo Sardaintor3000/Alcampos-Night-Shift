@@ -27,7 +27,7 @@ No hace falta instalar nada. Funciona en ordenador, en móvil y en tableta. La p
 
 **En el móvil** aparecen botones en pantalla. Las flechas sirven para andar, y el botón **Disparar** apunta solo al zombi más cercano. También puedes tocar la pantalla para apuntar donde quieras. Tus objetos aparecen debajo de las flechas. Se juega mejor con el móvil en horizontal.
 
-**Idioma:** el juego está en inglés y en español. Cámbialo con el botón **EN | ES** de arriba del todo.
+**Idioma:** el juego empieza en español y también está en inglés. Cámbialo con el botón **EN | ES** de arriba del todo.
 
 ---
 
