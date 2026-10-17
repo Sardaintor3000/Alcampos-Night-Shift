@@ -22,3 +22,4 @@
         *Las defensas del suelo son más débiles: cajas con menos vida, pinchos y propano hacen menos daño, y la torreta dispara más lento, hace menos daño y tiene menos munición
         *Los pinchos y las torretas tienen barra de vida, y los zombis se paran a destrozar las torretas
         *Hermana Sole más débil: quita la mitad de la vida a los zombis y un 7,5% a los jefes, pero cuesta menos ($1,300)
+        *Nuevos tiempos: luna roja (zombis más rápidos pero el doble de propinas), ola de calor, lluvia de meteoritos y nieve en el desierto

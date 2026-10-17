@@ -322,6 +322,10 @@ body.touch button{touch-action:manipulation}
         <li><b>Thunderstorm.</b> Dark and wet. Fire burns half as long, and lightning strikes the road: when you see a blue glow crackling on the ground, get out of the way. It wrecks zombies, but it hurts you too.</li>
         <li><b>Full moon.</b> Rare (1 shift in 20), from shift 3. You turn into a werewolf: 35% faster, double melee damage, 20% less damage taken. A flock of pigeons pecks at the zombies all night.</li>
         <li><b>Sandstorm.</b> You only see what is near you. Everything walks 15% slower.</li>
+        <li><b>Red moon.</b> Rare, from shift 6. Zombies are 25% faster and hit 20% harder, but every kill pays double tips.</li>
+        <li><b>Heatwave.</b> Burns deal 50% more and last longer, zombies walk 10% slower, and you reload 15% slower.</li>
+        <li><b>Meteor shower.</b> From shift 4. Meteors crash onto the road; a fiery streak and an orange glow on the ground show where. They wreck zombies, but they hurt you and your crates too.</li>
+        <li><b>Desert snow.</b> From shift 5. You walk 15% slower and zombies 20% slower, they sometimes slip and fall, and fire burns half as long.</li>
       </ul>
       <p>The stockroom shows the forecast for the next shift.</p>
     </section>
@@ -590,12 +594,18 @@ const AMB={
   day:{name:'Scorching day',start:12*60,end:'19:00',dark:0,far:0,sun:true,weeds:true,sky:['#4f97d0','#97c6e4','#f2d3a1'],mesa:['#b8673f','#d98d5c'],dune:'#d0a26c',cactus:'#4f7034',pole:'#5a4636',sand:'#c79a64',road:'#4a4450',dash:'#e8d27a'},
   rain:{name:'Thunderstorm',start:23*60,end:'06:00',dark:.55,far:.3,rain:true,clouds:true,sky:['#13151c','#232733','#363b48'],mesa:['#232733','#2c3140'],dune:'#1c1f29',cactus:'#14161d',pole:'#13151b',sand:'#30303a',road:'#1b1c23',dash:'#5a5640'},
   moon:{name:'Full moon',start:23*60,end:'06:00',dark:.45,far:.22,stars:true,moon:true,bigMoon:true,sky:['#0d0c22','#22204a','#47365e'],mesa:['#2a2346','#352c58'],dune:'#201b3c',cactus:'#141130',pole:'#1b1834',sand:'#433a52',road:'#26222f',dash:'#7a6f4a'},
+  redmoon:{name:'Red moon',start:23*60,end:'06:00',dark:.5,far:.2,stars:true,bigMoon:true,redMoon:true,tint:'38,4,10',sky:['#1a0608','#3a0c12','#5e1a1e'],mesa:['#2e0e14','#3c151b'],dune:'#240a10',cactus:'#160608',pole:'#1c080c',sand:'#4a2428',road:'#24161a',dash:'#7a4a3a'},
+  heat:{name:'Heatwave',start:13*60,end:'19:00',dark:0,far:0,sun:true,heat:true,weeds:true,sky:['#e89a48','#f3c47a','#fbe6b4'],mesa:['#c8703a','#e09a5e'],dune:'#e0b070',cactus:'#5a7034',pole:'#5a4636',sand:'#d8a86a',road:'#55484a',dash:'#f0dc8a'},
+  meteor:{name:'Meteor shower',start:23*60,end:'06:00',dark:.6,far:.3,stars:true,moon:true,meteors:true,sky:['#06071a','#14163a','#2c2552'],mesa:['#1e1a38','#28224a'],dune:'#171430',cactus:'#0f0d22',pole:'#14122a',sand:'#38304a',road:'#1f1c2a',dash:'#6b5f3e'},
+  snow:{name:'Desert snow',start:23*60,end:'06:00',dark:.38,far:.2,clouds:true,snow:true,sky:['#262b40','#454b64','#767b93'],mesa:['#6a6e84','#9a9fb4'],dune:'#9a9fb4',cactus:'#3a4a3a',pole:'#2a2c3a',sand:'#d8dce8',road:'#3a3c48',dash:'#9a9070'},
   sand:{name:'Sandstorm',start:12*60,end:'19:00',dark:.1,far:0,sun:true,dimSun:true,sandstorm:true,weeds:true,sky:['#9e5f34','#c4854b','#d9a874'],mesa:['#8a5333','#9c6440'],dune:'#ad7b4a',cactus:'#5a5632',pole:'#583e2a',sand:'#b8885a',road:'#4a3e3e',dash:'#c9a86a'}
 };
 
 /* ---------- state ---------- */
 let run,p,night=null,pet=null,sole=null;
-let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[],pigeons=[],trucks=[],pulses=[],waves=[],strikes=[],carts=[];
+let zombies=[],corpses=[],structs=[],parts=[],decals=[],floaters=[],tracers=[],booms=[],projs=[],goos=[],bolts=[],beams=[],pickups=[],eggs=[],weeds=[],pigs=[],pigeons=[],trucks=[],pulses=[],waves=[],strikes=[],carts=[],shooters=[],meteorsF=[];
+let meteorT=4;
+const wSpd=()=>run.amb==='sand'?.85:run.amb==='snow'?.8:run.amb==='heat'?.9:1;
 const baseFx={roofCd:0,roofAng:Math.PI*.9,roofFlash:0,cartCd:3};
 let truckT=6;
 let mode='title',paused=false,camX=0,shake=0,T=0,banner=null,overT=0,overReason='',lastSummary=null,muzT=0,doorHit=0;
@@ -629,15 +639,15 @@ function magOf(id){return GUNS[id].mag+MODS[id].mag[1]*modOf(id).mag;}
 function rateOf(id){let r=GUNS[id].rate/(1+.15*modOf(id).rate);if(id==='bow'&&AR().bowRate)r*=AR().bowRate;
   if(id==='nailgun'&&trOn(id,'staple'))r*=1.43;if(id==='bow'&&trOn(id,'boom'))r*=1.4;if(id==='rifle'&&trOn(id,'bump'))r/=1.8;
   if(id==='pir')r/=1+(run.pirStacks||0)*(trOn(id,'hyper')?.1:.05);return r;}
-function reloadOf(id){return GUNS[id].reload*Math.pow(.85,run.up.reload)*(AR().reload||1)*Math.pow(.75,amu('quick'))*(id==='pistol'&&trOn('pistol','akimbo')?1.4:1)*(id==='pir'&&modOf('pir').sp?.6:1);}
+function reloadOf(id){return (run.amb==='heat'&&mode==='night'?1.15:1)*GUNS[id].reload*Math.pow(.85,run.up.reload)*(AR().reload||1)*Math.pow(.75,amu('quick'))*(id==='pistol'&&trOn('pistol','akimbo')?1.4:1)*(id==='pir'&&modOf('pir').sp?.6:1);}
 function dmgMult(){return (1+.12*run.up.dmg)*(1+.25*amu('might'));}
 const isWolf=()=>!!run&&run.amb==='moon'&&(mode==='night'||mode==='over');
 function petMult(){return AR().pet||1;}
-function speedOf(){return 72*(AR().speed||1)*(1+.2*amu('swift'))*(isWolf()?1.35:1);}
+function speedOf(){return 72*(run.amb==='snow'&&mode==='night'?.85:1)*(AR().speed||1)*(1+.2*amu('swift'))*(isWolf()?1.35:1);}
 function strMult(){return .3+.17*(run.up.str||0);}
 function cashMult(){return (AR().cash||1)*(1+.3*amu('midas'));}
 function nightScale(){return 1+.1*(run.night-1);}
-function burnDps(){return 22*nightScale()*(AR().burn||1)*(1+.75*amu('ember'));}
+function burnDps(){return 22*nightScale()*(run.amb==='heat'?1.5:1)*(AR().burn||1)*(1+.75*amu('ember'));}
 function guardMult(){return 1/(1+.667*amu('bulwark'));}
 
 /* ---------- audio ---------- */
@@ -894,7 +904,7 @@ BASE:{
   carts:{name:'Lanzacarritos',desc:'Cada pocos segundos sale disparado un carrito de la compra por las puertas y arrolla a los zombis carretera abajo.'},
   cold:{name:'Pasillo de congelados',desc:'Las puertas echan el aire frío del pasillo de congelados. Los zombis que se acercan a la tienda van más lentos.'}
 },
-AMB:{night:{name:'Noche despejada'},day:{name:'Día abrasador'},rain:{name:'Tormenta'},moon:{name:'Luna llena'},sand:{name:'Tormenta de arena'}}
+AMB:{redmoon:{name:'Luna roja'},heat:{name:'Ola de calor'},meteor:{name:'Lluvia de meteoritos'},snow:{name:'Nieve en el desierto'},night:{name:'Noche despejada'},day:{name:'Día abrasador'},rain:{name:'Tormenta'},moon:{name:'Luna llena'},sand:{name:'Tormenta de arena'}}
 };
 const ES_HTML={
   eb1:'Alcampo &middot; Sucursal del desierto, Ruta 9',eb2:'Abierto 24 h',eb3:'Se busca encargado de turno',
@@ -903,7 +913,7 @@ const ES_HTML={
   mHow:'<h2>Cómo funciona un turno</h2><ol class="steps"><li>Antes de que abran las puertas, coloca cajas, tiras de pinchos, bombonas de propano y torretas en la carretera.</li><li>Llegan desde las dunas por la derecha. Mantenlos lejos de ti y de las puertas correderas.</li><li>Si caes o las puertas ceden, la partida se acaba y vuelves a empezar desde el turno 1.</li><li>Cuando acaba el turno vuelves corriendo dentro, cobras las propinas más un extra y repones. Las defensas se quedan donde las dejaste.</li><li>Entre turnos puedes hacer 4 compras. Las mejoras no cuentan, pero cada mejora solo sube un nivel por fase de compra.</li><li>Las armas cuerpo a cuerpo y el arco empiezan muy flojos. La mejora de Fuerza hace que peguen más.</li><li>Cada cinco turnos termina con un jefe. La primera vez que te encuentras a un jefe es más débil, y cada vez que vuelve tiene más vida. Muy avanzada la partida, en un turno de jefe pueden salir dos o tres, uno detrás de otro.</li><li>En la pestaña Base del almacén puedes mejorar la propia tienda: una torreta en el tejado, puertas electrificadas, un lanzacarritos y aire de los congeladores.</li><li>Empiezas solo con tu pistola, el bate y dos cajas.</li></ol>',
   mCtl:'<h2>Controles</h2><dl class="keys"><dt>A D / &larr; &rarr;</dt><dd>Andar</dd><dt>Ratón</dt><dd>Apuntar. Mantén el clic izquierdo para disparar. Apunta alto para la cabeza, bajo para las piernas.</dd><dt>R</dt><dd>Recargar</dd><dt>F / clic derecho</dt><dd>Cuerpo a cuerpo. Mantenlo con la motosierra.</dd><dt>Armas</dt><dd>Llevas una sola arma y un arma cuerpo a cuerpo. Se equipan en el almacén entre turnos.</dd><dt>I</dt><dd>Tus estadísticas: fuerza, velocidad y lo demás</dd><dt>Z X C V</dt><dd>Colocar caja, pinchos, propano, torreta</dd><dt>G</dt><dd>Lanzar el Libro Tere Profe</dd><dt>K</dt><dd>Lanzar un saco de pienso COPASA</dd><dt>L</dt><dd>Abrir la lonchera</dd><dt>J</dt><dd>Llamar a la Hermana Sole</dd><dt>H</dt><dd>Usar un botiquín</dd><dt>Tab / B / P</dt><dd>Empezar turno / almacén / pausa</dd><dt>Móvil o tableta</dt><dd>Aparecen botones en pantalla: flechas para andar, Disparar apunta solo al zombi más cercano, o toca la pantalla para apuntar y disparar. Tus objetos están debajo de las flechas.</dd></dl>',
   mWhere:'<h2>Dónde disparar</h2><ul class="plain"><li><b>Cabeza.</b> Doble de daño. Los cascos y los conos de tráfico bloquean por completo los disparos a la cabeza.</li><li><b>Pecho.</b> Daño normal. El chaleco de los soldados lo reduce un 25%.</li><li><b>Piernas.</b> Daño normal, y se va sumando. Mete en las piernas un tercio de la vida de un zombi y se le rompen. Cae al suelo, se arrastra a un tercio de su velocidad y pierde el casco o el cono. A los jefes no se les puede lisiar.</li></ul>',
-  mWeather:'<h2>Tiempo</h2><ul class="plain"><li><b>Noche despejada.</b> Oscuro más allá de las farolas. Tu linterna sigue a donde apuntas.</li><li><b>Día abrasador.</b> Se ve todo. Hay plantas rodadoras.</li><li><b>Tormenta.</b> Oscuro y mojado. El fuego dura la mitad, y caen rayos en la carretera: cuando veas un brillo azul chisporroteando en el suelo, apártate. Los rayos destrozan a los zombis, pero a ti también te hacen daño.</li><li><b>Luna llena.</b> Rara (1 turno de cada 20), desde el turno 3. Te conviertes en hombre lobo: 35% más rápido, doble de daño cuerpo a cuerpo y 20% menos de daño recibido. Una bandada de palomas picotea a los zombis toda la noche.</li><li><b>Tormenta de arena.</b> Solo ves lo que tienes cerca. Todo camina un 15% más lento.</li></ul><p>El almacén muestra la previsión del siguiente turno.</p>',
+  mWeather:'<h2>Tiempo</h2><ul class="plain"><li><b>Noche despejada.</b> Oscuro más allá de las farolas. Tu linterna sigue a donde apuntas.</li><li><b>Día abrasador.</b> Se ve todo. Hay plantas rodadoras.</li><li><b>Tormenta.</b> Oscuro y mojado. El fuego dura la mitad, y caen rayos en la carretera: cuando veas un brillo azul chisporroteando en el suelo, apártate. Los rayos destrozan a los zombis, pero a ti también te hacen daño.</li><li><b>Luna llena.</b> Rara (1 turno de cada 20), desde el turno 3. Te conviertes en hombre lobo: 35% más rápido, doble de daño cuerpo a cuerpo y 20% menos de daño recibido. Una bandada de palomas picotea a los zombis toda la noche.</li><li><b>Tormenta de arena.</b> Solo ves lo que tienes cerca. Todo camina un 15% más lento.</li><li><b>Luna roja.</b> Rara, desde el turno 6. Los zombis van un 25% más rápido y pegan un 20% más, pero cada muerte paga el doble de propinas.</li><li><b>Ola de calor.</b> Las quemaduras hacen un 50% más y duran más, los zombis van un 10% más lentos y tú recargas un 15% más lento.</li><li><b>Lluvia de meteoritos.</b> Desde el turno 4. Caen meteoritos en la carretera: una estela de fuego y un brillo naranja en el suelo avisan de dónde. Arrasan a los zombis, pero también te hacen daño a ti y a tus cajas.</li><li><b>Nieve en el desierto.</b> Desde el turno 5. Tú vas un 15% más lento y los zombis un 20%, a veces resbalan y se caen, y el fuego dura la mitad.</li></ul><p>El almacén muestra la previsión del siguiente turno.</p>',
   news:'Novedades',mField:'Guía de campo',mBoss:'Jefes',
   credit:'Un homenaje original de fan a <a href="https://apps.apple.com/us/app/they-are-coming-zombie-defense/id1576645378" target="_blank" rel="noopener">They Are Coming: Zombie Defense</a> de OnHit Developments, un juego de supervivencia de desplazamiento lateral en el que defiendes un orfanato de oleadas diarias de zombis y compras armas, barricadas y trampas entre días. La ambientación, el arte y el código de aquí son nuevos.'
 };
@@ -911,7 +921,7 @@ const ES={
   /* canvas and floaters */
   'NONE LEFT':'NO QUEDA','NO ROOM':'NO HAY SITIO','FULL HEALTH':'VIDA AL MÁXIMO','WAIT FOR THE SHIFT':'ESPERA AL TURNO','NO SACKS LEFT':'NO QUEDAN SACOS','COPASA!':'¡COPASA!',
   'LUNCH BREAK!':'¡HORA DE COMER!','NO BOOKS LEFT':'NO QUEDAN LIBROS','LIBRO TERE PROFE!':'¡LIBRO TERE PROFE!','CONE OFF':'FUERA CONO','HELMET OFF':'FUERA CASCO','LEGS BROKEN':'PIERNAS ROTAS',
-  'VOID':'VACÍO','LIGHT HOLE -10%':'AGUJERO DE LUZ -10%','BLOCKED':'BLOQUEADO','ZAPPED!':'¡CALAMBRAZO!','PIR +{0}% FIRE RATE':'PIR +{0}% CADENCIA','HEADSHOT':'A LA CABEZA','BOSS DOWN':'JEFE ABATIDO',
+  'VOID':'VACÍO','LIGHT HOLE -10%':'AGUJERO DE LUZ -10%','BLOCKED':'BLOQUEADO','ZAPPED!':'¡CALAMBRAZO!','SLIP!':'¡RESBALÓN!','RED MOON':'LUNA ROJA','They are faster and angrier tonight, but every kill pays double tips.':'Esta noche son más rápidos y más rabiosos, pero cada muerte paga el doble de propinas.','HEATWAVE':'OLA DE CALOR','Fire burns hotter and longer, zombies drag their feet, and your sweaty hands reload slower.':'El fuego quema más y dura más, los zombis arrastran los pies y con las manos sudadas recargas más lento.','METEOR SHOWER':'LLUVIA DE METEORITOS','Watch the sky. When a fiery streak points at the road, get out of the way.':'Mira al cielo. Cuando una estela de fuego apunte a la carretera, apártate.','SNOW IN THE DESERT':'NIEVE EN EL DESIERTO','Everyone is slower on the ice, zombies slip, and fire goes out fast.':'Sobre el hielo todo el mundo va más lento, los zombis resbalan y el fuego se apaga enseguida.','PIR +{0}% FIRE RATE':'PIR +{0}% CADENCIA','HEADSHOT':'A LA CABEZA','BOSS DOWN':'JEFE ABATIDO',
   '{0} is finished. +{1}':'{0}, fuera de combate. +{1}','SILENCE IN CLASS!':'¡SILENCIO EN CLASE!','STACKS LOST':'ACUMULACIÓN PERDIDA','ENRAGED':'FURIOSA','OVERCHARGE':'SOBRECARGA',
   'IT LIVES!':'¡ESTÁ VIVO!','CATCH!':'¡AHÍ VA!','RISE, SUBJECTS!':'¡ALZAOS, SÚBDITOS!','YOINK':'¡MÍO!','LASSOED':'ATRAPADO','HOP!':'¡HOP!','May the light take you.':'Que la luz os lleve.',
   'CLASS IS IN SESSION':'EMPIEZA LA CLASE','DINNER IS SERVED':'LA CENA ESTÁ SERVIDA','PIPE BURST!':'¡REVIENTA LA TUBERÍA!','SHIFT {0}':'TURNO {0}',
@@ -1512,7 +1522,7 @@ function breakLegs(z,dir){
   z.speed*=.35;if(z.walkSpeed)z.walkSpeed*=.35;
   flt(z.x,GY-18,'LEGS BROKEN','#cf4450');blood(z.x,GY-3,dir,10);sfx('thud');
 }
-function applyBurn(z,dur,green){if(z.type==='fireman')return;z.burn=Math.max(z.burn||0,dur*(run.amb==='rain'?.5:1));if(green)z.gburn=true;}
+function applyBurn(z,dur,green){if(z.type==='fireman')return;z.burn=Math.max(z.burn||0,dur*(run.amb==='rain'||run.amb==='snow'?.5:run.amb==='heat'?1.5:1));if(green)z.gburn=true;}
 function voidKill(z,dir){z.voided=true;const cy=z.y-z.h*.55;pulses.push({x1:z.x,y1:cy,x2:z.x,y2:cy,t:.05,max:.05,end:.6,big:1});flt(z.x,z.y-z.h-6,'VOID','#ffffff');sfx('pulse');kill(z,false,dir);}
 function damage(z,d,head,dir,kb,src,o){
   if(z.dead||z.under||z.demo)return;
@@ -1546,7 +1556,7 @@ function damage(z,d,head,dir,kb,src,o){
 function dropAmulet(x){pickups.push({id:pick(Object.keys(AMULETS)),x:clamp(x,PMIN+20,WORLD-20),t:rnd(0,6)});}
 function kill(z,head,dir){
   if(z.dead)return;z.dead=true;z.flash=0;
-  const t=ZT[z.type],cash=Math.max(1,Math.round((t.cash+(head?2:0))*cashMult()*(1+.12*(run.night-1))));
+  const t=ZT[z.type],cash=Math.max(1,Math.round((t.cash+(head?2:0))*cashMult()*(1+.12*(run.night-1))*(run.amb==='redmoon'?2:1)));
   run.cash+=cash;run.kills++;if(head)run.heads++;
   if(z.lastSrc==='pir'){run.pirStacks=(run.pirStacks||0)+1;if(run.pirStacks%10===0)flt(p.x,p.y-36,_t('PIR +{0}% FIRE RATE',run.pirStacks*(trOn('pir','hyper')?10:5)),'#7fe8ff');}
   if(night){night.killed++;night.earned+=cash;if(head)night.heads++;}
@@ -1876,6 +1886,7 @@ function spawnZombie(type,x,demo){
     case 'patrick':z.skin='#9aa58a';z.shirt='#c8402e';z.pants='#2f4f86';break;
     case 'sheriff':z.skin='#c9c3a8';z.shirt='#7a5232';z.pants='#3a3040';break;
   }
+  if(run.amb==='redmoon'&&!t.boss&&!demo){z.speed*=1.25;z.dmg*=1.2;}
   if(t.boss&&!demo){if(!run.bossSeen)run.bossSeen={};const k=run.bossSeen[type]||0;run.bossSeen[type]=k+1;z.hp=z.max=t.hp*hs*(k===0?.7:1+.25*(k-1));
     bossRef=z;run.bosses++;banner={text:t.name.toUpperCase(),sub:k?_t('Back for round {0}, and tougher.',k+1):t.title,t:3.4,max:3.4};sfx('roar');shake=4;}
   zombies.push(z);return z;
@@ -1963,7 +1974,7 @@ function vaultAI(z,dt){
   for(const s of structs){if(s.kind!=='barricade'||s.dead)continue;const d=z.x-s.x;if(d>0&&d<s.w/2+z.w/2+12&&(obs==null||s.x>obs))obs=s.x;}
   if(obs!=null){const land=Math.max(PMIN-26,obs-34);z.vault={t:0,dur:.75,x0:z.x,x1:land,px:(z.x+land)/2};flt(z.x,z.y-z.h-6,'HOP!','#e8c25a');sfx('whip');return true;}
   if(z.x-z.w/2<=DOOR_X+1+z.gap){z.pole=false;z.speed=z.walkSpeed;z.doorOnly=true;return false;}
-  let sp=z.speed*(z.slow?.5:1)*(z.volt>0?1.6:1)*(run.amb==='sand'?.85:1)*coldMult(z)*offBoost(z);if(inGoo(z))sp*=.3;
+  let sp=z.speed*(z.slow?.5:1)*(z.volt>0?1.6:1)*wSpd()*coldMult(z)*offBoost(z);if(inGoo(z))sp*=.3;
   z.x-=sp*dt;z.walkT+=dt*sp*.22;z.slow=false;return true;
 }
 function gunnerAI(z,dt){
@@ -2075,7 +2086,7 @@ function updateZombies(dt){
           else if(target==='door'){hurtDoor(dm);if(run.base&&run.base.zap)doorZap(z);}
           else{target.hp-=dm*(z.type==='brute'||z.type==='butcher'?3:z.type==='fireman'?2:1)*guardMult();target.hit=.12;sfx('hit');if(target.hp<=0)breakStruct(target);}}}
     }else{
-      let sp=z.speed*(z.slow?.5:1)*(z.volt>0?1.6:1)*(run.amb==='sand'?.85:1)*coldMult(z)*offBoost(z);
+      let sp=z.speed*(z.slow?.5:1)*(z.volt>0?1.6:1)*wSpd()*coldMult(z)*offBoost(z);
       if(gz)sp*=z.boss?.8:.3;
       z.x+=dir*sp*dt;z.walkT+=dt*sp*.22;
     }
@@ -2104,6 +2115,7 @@ function updateStructs(dt){
 
 /* ---------- weather ---------- */
 const rainD=[];for(let i=0;i<170;i++)rainD.push({x:rnd(0,W+60),y:rnd(0,H),s:rnd(.7,1.2)});
+const snowD=[];for(let i=0;i<140;i++)snowD.push({x:rnd(0,W+40),y:rnd(0,H),s:rnd(.6,1.4),ph:rnd(0,6)});
 const sandD=[];for(let i=0;i<90;i++)sandD.push({x:rnd(0,W),y:rnd(60,H),l:rnd(4,14),s:rnd(.6,1.4)});
 function updateAmbient(dt){
   const am=AMB[run.amb];
@@ -2122,6 +2134,17 @@ function updateAmbient(dt){
     for(const s of strikes){s.t-=dt;if(Math.random()<dt*25)part(s.x+rnd(-14,14),GY-1,rnd(-10,10),rnd(-60,-20),.25,pick(['#9fe8ff','#e8fbff']),1,0);if(s.t<=0){s.done=true;strikeAt(s.x);}}
     strikes=strikes.filter(s=>!s.done);
   }
+  if(am.snow){for(const d of snowD){d.y+=24*d.s*dt;d.x+=(Math.sin(T*1.3+d.ph)*12-10)*dt;if(d.y>GY+rnd(0,30)){d.y=rnd(-10,0);d.x=rnd(0,W+40);}if(d.x<-5)d.x+=W+40;}
+    if(mode==='night')for(const z of zombies){if(!live(z)||z.boss||z.y<GY-2||z.stun>0||z.crawl)continue;if(Math.random()<dt*.035){z.stun=.9;if(Math.random()<.4)flt(z.x,z.y-z.h-6,'SLIP!','#e8f6ff');for(let i=0;i<6;i++)part(z.x+rnd(-5,5),GY-2,rnd(-30,30),rnd(-50,-15),.4,'#f2f6ff',1,200);}}}
+  if(am.meteors){
+    if(Math.random()<dt*1.2)shooters.push({x:rnd(40,W+80),y:rnd(5,70),vx:-rnd(160,260),vy:rnd(40,90),t:rnd(.4,.8),max:.8});
+    for(const s of shooters){s.t-=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;}shooters=shooters.filter(s=>s.t>0);
+    if(mode==='night'){meteorT-=dt;if(meteorT<=0){meteorT=rnd(5,9);
+      const c=zombies.filter(q=>live(q)&&q.x>camX&&q.x<camX+W);let x;
+      if(p.alive&&(Math.random()<.25||!c.length))x=clamp(p.x+rnd(-30,30),PMIN,WORLD-8);else x=pick(c).x+rnd(-10,10);
+      meteorsF.push({x,t:1.3,max:1.3});sfx('crackle');}}
+    for(const m of meteorsF){m.t-=dt;if(m.t<=0){m.done=true;meteorHit(m.x);}}
+    meteorsF=meteorsF.filter(m=>!m.done);}
   if(am.sandstorm)for(const d of sandD){d.x-=260*d.s*dt;if(d.x<-20){d.x=W+rnd(0,40);d.y=rnd(60,H);}}
   if(am.weeds&&(mode==='night'||mode==='prep'||mode==='title')){weedT-=dt;if(weedT<=0){weedT=rnd(4,9);weeds.push({x:camX+W+20,y:GY-6,vx:-rnd(60,110)*(am.sandstorm?1.6:1),vy:0,r:rnd(4,7),rot:0});}}
   for(const w of weeds){w.x+=w.vx*dt;w.vy+=300*dt;w.y+=w.vy*dt;w.rot+=w.vx*dt/w.r;if(w.y>GY-w.r){w.y=GY-w.r;w.vy=-rnd(40,110);}}
@@ -2136,10 +2159,17 @@ function strikeAt(x){
   if(p.alive&&Math.abs(p.x-x)<18){hurtPlayer(25,x);p.root=Math.max(p.root,.35);flt(p.x,p.y-34,'ZAPPED!','#9fe8ff');}
   for(const s of structs)if(s.kind==='barricade'&&!s.dead&&Math.abs(s.x-x)<20){s.hp-=40*guardMult();s.hit=.2;if(s.hp<=0)breakStruct(s);}
 }
+function meteorHit(x){
+  flashW=Math.max(flashW,.35);shake=Math.max(shake,7);sfx('quake');
+  explode(x,GY-6,42,{z:220*nightScale(),p:30,s:40},'fire');
+  for(const z of zombies)if(live(z)&&Math.abs(z.x-x)<42+z.w/2)applyBurn(z,2);
+  for(let i=0;i<8;i++)decals.push({x:x-12+i*3,y:GY+((Math.random()*4)|0),w:3,c:i%2?'#2a1a14':'#17141f',t:10});
+  for(let i=0;i<18;i++)part(x+rnd(-14,14),GY-rnd(2,10),rnd(-40,40),rnd(-90,-30),rnd(.6,1.2),pick(['#ff6a2a','#f5a443','#ffd27a','#4a4556']),pick([1,2]),-20,{flame:Math.random()<.5});
+}
 function burstStorm(x){for(let i=0;i<12;i++)part(x,GY-rnd(0,20),rnd(-80,80),rnd(-140,-30),.5,pick(['#e8fbff','#9fe8ff','#ffffff']),1,300);}
 
 /* ---------- shifts ---------- */
-function pickAmb(n){if(n<=1)return 'night';if(n>=3&&Math.random()<.05)return 'moon';const pool=['night','night','day','day','rain','sand'];let a=pick(pool);if(a===run.amb&&Math.random()<.5)a=pick(pool);return a;}
+function pickAmb(n){if(n<=1)return 'night';const r=Math.random();if(n>=3&&r<.05)return 'moon';if(n>=6&&r<.11)return 'redmoon';if(n>=4&&r<.18)return 'meteor';if(n>=5&&r<.24)return 'snow';const pool=['night','night','day','day','rain','sand','heat'];let a=pick(pool);if(a===run.amb&&Math.random()<.5)a=pick(pool);return a;}
 function bossPlan(n){if(n%5)return [];const c=n>=60?3:n>=30?2:1,o=[];for(let i=0;i<c;i++)o.push(BOSS_ORDER[((run.bossNext||0)+i)%BOSS_ORDER.length]);return o;}
 function buildQueue(n){
   const total=Math.round(16+12*n/(1+n/40));
@@ -2158,6 +2188,9 @@ function startNight(){
   if(Math.random()<.15)dropAmulet(rnd(420,WORLD-60));
   banner={text:_t('SHIFT {0}',run.night),sub:_t('{0} · {1} · Hold the store until {2}',am.name,fmtT(am.start),am.end),t:2.6,max:2.6};
   boltT=rnd(3,6);sfx('start');renderTray();hideOverlay();
+  const wb={redmoon:['RED MOON','They are faster and angrier tonight, but every kill pays double tips.'],heat:['HEATWAVE','Fire burns hotter and longer, zombies drag their feet, and your sweaty hands reload slower.'],meteor:['METEOR SHOWER','Watch the sky. When a fiery streak points at the road, get out of the way.'],snow:['SNOW IN THE DESERT','Everyone is slower on the ice, zombies slip, and fire goes out fast.']}[run.amb];
+  if(wb){banner={text:_t(wb[0]),sub:_t(wb[1]),t:3.2,max:3.2};}
+  meteorT=rnd(3,6);meteorsF=[];
   if(run.amb==='moon'){spawnPigeons(30);banner={text:_t('FULL MOON'),sub:_t('You turn into a werewolf. The pigeons are on your side tonight.'),t:3,max:3};sfx('howl');}
 }
 function spawnTick(dt){
@@ -2177,7 +2210,7 @@ function dawn(){
   if(!run.cheated){best=Math.max(best,run.night);store.set(BEST_KEY,best);}
   for(const s of structs)if(s.kind==='turret')s.ammo=s.ammoMax=Math.round(120*(1+amu('tinker')));
   run.nextAmb=pickAmb(run.night+1);
-  projs=[];pigeons=[];pigs=[];strikes=[];carts=[];bossRef=null;p.pull=null;p.root=0;p.reloadT=0;trig.mouse=trig.auto=false;
+  projs=[];pigeons=[];pigs=[];strikes=[];carts=[];meteorsF=[];bossRef=null;p.pull=null;p.root=0;p.reloadT=0;trig.mouse=trig.auto=false;
   banner={text:AMB[run.amb].end,sub:_t('Shift {0} survived. Heading back inside.',run.night),t:2.4,max:2.4,dawnT:2.4};
   sfx('dawn');renderTray();
 }
@@ -2293,7 +2326,7 @@ function panOut(){return projs.some(q=>q.kind==='pan'&&!q.dead);}
 /* ---------- render ---------- */
 function drawLighting(sx,sy,am){
   L.globalCompositeOperation='source-over';L.clearRect(0,0,W,H);
-  L.fillStyle='rgba(6,5,22,'+am.dark+')';L.fillRect(0,0,W,H);
+  L.fillStyle='rgba('+(am.tint||'6,5,22')+','+am.dark+')';L.fillRect(0,0,W,H);
   if(am.far){const fx=400-camX,gr=L.createLinearGradient(fx,0,fx+320,0);gr.addColorStop(0,'rgba(4,3,16,0)');gr.addColorStop(1,'rgba(4,3,16,'+am.far+')');L.fillStyle=gr;L.fillRect(Math.max(0,fx),0,W,H);}
   L.globalCompositeOperation='destination-out';
   const hole=(x,y,r,a)=>{const g=L.createRadialGradient(x+sx,y+sy,0,x+sx,y+sy,r);g.addColorStop(0,'rgba(0,0,0,'+a+')');g.addColorStop(1,'rgba(0,0,0,0)');L.fillStyle=g;L.fillRect(x+sx-r,y+sy-r,r*2,r*2);};
@@ -2314,6 +2347,7 @@ function drawLighting(sx,sy,am){
   for(const b of bolts){const m=b.pts[b.pts.length>>1];hole(m[0]-camX,m[1],40,.8);}
   for(const b of beams)hole((b.x1+b.x2)/2-camX,(b.y1+b.y2)/2,120,.8*b.t/.3);
   for(const g of goos)hole(g.x-camX,GY-10,22,.3);
+  for(const m of meteorsF){const k=1-m.t/m.max,e=k*k,hx=m.x+170*(1-e)-camX,hy=-14+(GY+8)*e;hole(hx,hy,26,.85);hole(m.x-camX,GY-4,18+16*k,.3+.5*k);}
   for(const s of strikes){const k=1-s.t/s.max;hole(s.x-camX,GY-6,22+10*k,.35+.45*k);}
   for(const w of waves){const k=Math.min(1,w.t/w.max),R=w.r*(1-Math.pow(1-k,3));for(const s of [-1,1])hole(w.x-camX+s*R,GY-4,20,.55*(1-k));if(k<.2)hole(w.x-camX,GY-6,30,.7);}
   for(const q of pulses){const k=Math.min(1,q.t/q.max),hx=q.x1+(q.x2-q.x1)*k-camX,hy=q.y1+(q.y2-q.y1)*k;hole(hx,hy,q.big?30+q.big*14:18,.85);}
@@ -2363,6 +2397,11 @@ function drawWorld(){
   for(const s of strikes){const k=1-s.t/s.max,x=s.x-camX,fl=(T*(10+20*k)%2)<1;G.globalAlpha=(fl?.55:.3)+.4*k;G.strokeStyle=fl?'#e8fbff':'#9fe8ff';G.lineWidth=1;G.beginPath();G.ellipse(x,GY-1,18,3.5,0,0,Math.PI*2);G.stroke();
     G.globalAlpha=.25+.35*k;G.fillStyle='#9fe8ff';G.beginPath();G.ellipse(x,GY-1,18*k,3.5*k,0,0,Math.PI*2);G.fill();G.globalAlpha=1;}
   for(const c of carts)drawCart(c);
+  for(const m of meteorsF){const k=1-m.t/m.max,x=m.x-camX,fl=(T*(8+16*k)%2)<1;G.globalAlpha=(fl?.6:.35)+.3*k;G.strokeStyle=fl?'#ffd27a':'#ff6a2a';G.lineWidth=1;G.beginPath();G.ellipse(x,GY-1,20,4,0,0,Math.PI*2);G.stroke();
+    G.globalAlpha=.2+.4*k;G.fillStyle='#ff6a2a';G.beginPath();G.ellipse(x,GY-1,20*k,4*k,0,0,Math.PI*2);G.fill();
+    const e=k*k,hx=m.x+170*(1-e)-camX,hy=-14+(GY+8)*e,tg=G.createLinearGradient(hx,hy,hx+40,hy-34);tg.addColorStop(0,'rgba(255,230,160,.95)');tg.addColorStop(.4,'rgba(255,120,40,.6)');tg.addColorStop(1,'rgba(255,80,20,0)');
+    G.globalAlpha=1;G.strokeStyle=tg;G.lineWidth=3;G.beginPath();G.moveTo(hx,hy);G.lineTo(hx+40,hy-34);G.stroke();G.lineWidth=1;G.fillStyle='#fff3c4';G.fillRect(Math.round(hx)-2,Math.round(hy)-2,4,4);G.fillStyle='#ff9a3c';G.fillRect(Math.round(hx)-1,Math.round(hy)+2,3,1);}
+  G.globalAlpha=1;
   for(const pg of pigs)drawPig(pg);
   for(const b of pigeons)drawPigeon(b);
   drawPet();
@@ -2424,8 +2463,9 @@ function render(){
   G=ctx;G.setTransform(1,0,0,1,0,0);G.globalAlpha=1;
   const am=AMB[run.amb],bg=getBG(run.amb);
   G.drawImage(bg.sky,0,0);
+  if(am.meteors){G.lineWidth=1;for(const s of shooters){const a=Math.min(1,s.t/s.max*1.6);G.strokeStyle='rgba(255,250,230,'+(.8*a)+')';G.beginPath();G.moveTo(s.x,s.y);G.lineTo(s.x-s.vx*.08,s.y-s.vy*.08);G.stroke();}}
   if(am.stars){for(const s of stars){const x=((s.x-camX*.05)%(W+60)+W+60)%(W+60);G.globalAlpha=s.b*(.6+.4*Math.sin(T*1.3+s.tw));G.fillStyle='#e9e4ff';G.fillRect(x|0,s.y|0,1,1);}G.globalAlpha=1;}
-  if(am.bigMoon){const mx=360-camX*.04,g=G.createRadialGradient(mx,52,0,mx,52,70);g.addColorStop(0,'rgba(240,235,210,.45)');g.addColorStop(1,'rgba(240,235,210,0)');G.fillStyle=g;G.fillRect(mx-70,0,140,130);G.fillStyle='#f3eedb';G.beginPath();G.arc(mx,52,22,0,Math.PI*2);G.fill();G.fillStyle='#ddd5b8';G.fillRect(mx-9|0,44,5,5);G.fillRect(mx+6|0,56,4,4);G.fillRect(mx-2|0,62,3,3);}
+  if(am.bigMoon){const rm=!!am.redMoon,mx=360-camX*.04,g=G.createRadialGradient(mx,52,0,mx,52,rm?90:70);g.addColorStop(0,rm?'rgba(230,50,40,.55)':'rgba(240,235,210,.45)');g.addColorStop(1,'rgba(240,235,210,0)');G.fillStyle=g;G.fillRect(mx-90,0,180,150);G.fillStyle=rm?'#c8342c':'#f3eedb';G.beginPath();G.arc(mx,52,rm?26:22,0,Math.PI*2);G.fill();G.fillStyle=rm?'#962220':'#ddd5b8';G.fillRect(mx-9|0,44,5,5);G.fillRect(mx+6|0,56,4,4);G.fillRect(mx-2|0,62,3,3);}
   else if(am.moon){const mx=390-camX*.04;G.fillStyle='#e6dfc6';G.beginPath();G.arc(mx,42,10,0,Math.PI*2);G.fill();G.fillStyle='#cfc6a8';G.fillRect(mx-4|0,38,3,3);G.fillRect(mx+3|0,44,2,2);}
   if(am.sun){const sxp=110-camX*.03,syp=am.dimSun?60:46,r=am.dimSun?18:13;const g=G.createRadialGradient(sxp,syp,0,sxp,syp,r*3);g.addColorStop(0,am.dimSun?'rgba(255,220,160,.45)':'rgba(255,245,200,.7)');g.addColorStop(1,'rgba(255,240,200,0)');G.fillStyle=g;G.fillRect(sxp-r*3,syp-r*3,r*6,r*6);G.fillStyle=am.dimSun?'rgba(250,215,160,.7)':'#fff4cf';G.beginPath();G.arc(sxp,syp,r,0,Math.PI*2);G.fill();}
   const sx=shake?Math.round(rnd(-shake,shake)):0,sy=shake?Math.round(rnd(-shake,shake)*.6):0;
@@ -2434,6 +2474,8 @@ function render(){
   G.restore();
   if(am.dark>.2)drawLighting(sx,sy,am);
   else if(am.dark>0){G.fillStyle='rgba(60,30,10,'+am.dark+')';G.fillRect(0,0,W,H);}
+  if(am.snow){G.fillStyle='#f2f6ff';for(const d of snowD){G.globalAlpha=.55+.4*(d.s-.6);G.fillRect(d.x|0,d.y|0,d.s>1.1?2:1,d.s>1.1?2:1);}G.globalAlpha=1;}
+  if(am.heat){for(let y=GY-46;y<GY+6;y+=2){const o=Math.round(Math.sin(T*7+y*.35)*1.4);if(o)G.drawImage(cv,0,y,W,2,o,y,W,2);}G.fillStyle='rgba(255,150,60,.07)';G.fillRect(0,0,W,H);}
   if(am.rain){G.strokeStyle='rgba(170,185,220,.45)';G.beginPath();for(const d of rainD){G.moveTo(d.x,d.y);G.lineTo(d.x-3*d.s,d.y+8*d.s);}G.stroke();}
   if(am.sandstorm){
     G.fillStyle='rgba(200,140,80,.18)';G.fillRect(0,0,W,H);

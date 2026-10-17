@@ -55,7 +55,7 @@ Cada arma tiene su botón de **Mods** para mejorar el daño, el cargador y la ca
 - **Trípode** para la minigun: +60% de daño, pero no puedes moverte mientras disparas.
 
 ### Tiempo
-Noche despejada, día abrasador, tormenta (el fuego dura la mitad y caen rayos que te pueden dar a ti o a los zombis), tormenta de arena (solo ves lo que tienes cerca) y la rarísima **luna llena** (1 turno de cada 20).
+Noche despejada, día abrasador, tormenta (el fuego dura la mitad y caen rayos que te pueden dar a ti o a los zombis), tormenta de arena (solo ves lo que tienes cerca) la rarísima **luna llena** (te conviertes en hombre lobo), la **luna roja** (zombis más rápidos y rabiosos, pero el doble de propinas), la **ola de calor** (el fuego quema más y tú recargas más lento), la **lluvia de meteoritos** (caen meteoritos en la carretera; apártate cuando veas la estela) y la **nieve en el desierto** (todos más lentos y los zombis resbalan).
 
 ### Amuletos
 Son muy raros y muy potentes (+25% de daño, +50 de vida, +60% de daño en la cabeza...), pero **se deshacen a los 3 turnos**. Cada jefe suelta uno.

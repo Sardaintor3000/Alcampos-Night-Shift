@@ -25,3 +25,4 @@
         *Floor defenses are weaker: crates have less health, spikes and propane do less damage, and the turret shoots slower, hits softer and has less ammo
         *Spikes and turrets now have a health bar, and zombies stop to smash turrets
         *Hermana Sole is weaker: zombies lose half their health and bosses 7.5%, but she costs less ($1,300)
+        *New weather: red moon (faster zombies but double tips), heatwave, meteor shower and desert snow
