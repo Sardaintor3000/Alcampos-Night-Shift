@@ -6,7 +6,7 @@ Trabajas en el turno de noche del Alcampo perdido en mitad del desierto, en la R
 
 ## Jugar ahora
 
-### **[madagascarmm.github.io/Alcampos-Night-Shift](https://madagascarmm.github.io/Alcampos-Night-Shift/)**
+### **[madagascarmm.github.io/ Alcampos-Night-Shift](https://madagascarmm.github .io/Alcampos-Night-Shift/)**
 
 No hace falta instalar nada. Funciona en ordenador, en móvil y en tableta. La partida se guarda sola en tu navegador.
 
