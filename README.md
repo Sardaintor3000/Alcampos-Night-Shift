@@ -64,7 +64,7 @@ Son muy raros y muy potentes (+25% de daño, +50 de vida, +60% de daño en la ca
 
 ## En el almacén
 
-- **13 armas de fuego**: desde la pistola de la caja registradora hasta el cañón de riel, pasando por el trabuco, el lanzababas alienígena y el **PIR**, un AK-47 futurista que dispara un 5% más rápido con cada zombi que mata, **sin límite**.
+- **14 armas de fuego**: desde la pistola de la caja registradora hasta el cañón de riel, pasando por el trabuco, el lanzababas alienígena y el **PIR**, un AK-47 futurista que dispara un 5% más rápido con cada zombi que mata, **sin límite**. La más fuerte (y la más cara) es el **Gubitron3000**, que dispara orbes de plasma que implosionan.
 - **9 armas cuerpo a cuerpo**: el machete **El Patrón**, una pata de jamón que te cura a cada golpe, una paellera que se lanza como el escudo del Capitán América y vuelve a tu mano, y un **capote** de torero que confunde a los zombis y los hace caminar hacia atrás.
 - **9 armaduras**, entre ellas el **uniforme de dictador**, con el que tus mascotas pegan un 75% más fuerte.
 - **10 mascotas**: una gallina que pone huevos explosivos, un conejo gordo que rueda, **America** la cabra zombi, **Wally** el caballo (no se deja montar, pero da unas coces tremendas), un águila roja y un grizzly.

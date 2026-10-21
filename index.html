@@ -382,9 +382,10 @@ const GUNS={
   flamer:{type:'flame',name:'Flamethrower',short:'Flamer',dmg:6,rate:.05,mag:120,reload:3.2,spread:.25,range:95,pierce:0,kb:6,price:1800,shake:.2,len:13,snd:'flame',desc:'Short range. Sets everything in the cone on fire.'},
   arc:{type:'arc',name:'Arc caster',short:'Arc',dmg:45,rate:.5,mag:8,reload:2.4,spread:0,range:260,pierce:0,kb:20,price:2300,shake:1,len:12,chains:4,snd:'zap',desc:'Lightning that jumps to four more of them and stuns each one.'},
   minigun:{type:'hit',name:'Minigun',short:'Minigun',dmg:14,rate:.043,mag:200,reload:5.2,spread:.09,pellets:1,range:400,pierce:0,kb:24,price:3200,shake:.8,spin:.45,len:15,snd:'minigun',desc:'Spins up for half a second, then never stops.'},
-  rail:{type:'rail',name:'Rail driver',short:'Rail',dmg:150,rate:1.6,mag:3,reload:3.4,spread:0,range:700,pierce:5,kb:160,price:4500,shake:4,len:17,charge:.8,snd:'rail',desc:'Hold to charge for a moment. The beam goes through six of them in a line.'}
+  rail:{type:'rail',name:'Rail driver',short:'Rail',dmg:150,rate:1.6,mag:3,reload:3.4,spread:0,range:700,pierce:5,kb:160,price:4500,shake:4,len:17,charge:.8,snd:'rail',desc:'Hold to charge for a moment. The beam goes through six of them in a line.'},
+  gubi:{type:'gubi',name:'Gubitron3000',short:'Gubitron',dmg:300,rate:.6,mag:6,reload:2.6,spread:0,range:520,pierce:99,kb:120,price:30000,shake:3,len:17,snd:'rail',desc:'The strongest weapon in the game. Fires slow plasma orbs that pass through every zombie, zap everything near them, and at the end implode, pulling zombies in before a huge blast.'}
 };
-const ORDER=['pistol','nailgun','shotgun','bow','hunter','blunder','rifle','pir','goo','flamer','arc','minigun','rail'];
+const ORDER=['pistol','nailgun','shotgun','bow','hunter','blunder','rifle','pir','goo','flamer','arc','minigun','rail','gubi'];
 const MODS={
   pistol:{mag:['Extended mag',6,220],rate:['Hair trigger',260],dmg:['+P rounds',240],sp:{name:'Hollow points',desc:'+30% pistol damage.',price:650},
     sp2:{name:'Pulsargun',desc:'Bullets become holes of light. Every hit has a 20% chance to erase a normal zombie outright, and a 5% chance to tear 10% off a boss\'s health (once every 25 seconds).',price:8000},
@@ -413,7 +414,9 @@ const MODS={
   minigun:{mag:['Longer belt',50,620],rate:['Overclocked motor',650],dmg:['Heavy rounds',700],sp:{name:'Hot start',desc:'Starts firing almost instantly, without waiting for the barrels to spin up.',price:2000},
     tr:[{id:'tripod',name:'Tripod',desc:'+60% damage and much tighter spread.',down:'You cannot walk while firing.',price:2200}]},
   rail:{mag:['Extra cell',1,800],rate:['Supercooled rails',750],dmg:['Twin coils',850],sp:{name:'Overcharge',desc:'The beam stuns everything it passes through for a second.',price:2500},
-    tr:[{id:'split',name:'Splitter',desc:'Every shot fires three beams in a fan.',down:'Each beam does 45% damage.',price:2600}]}
+    tr:[{id:'split',name:'Splitter',desc:'Every shot fires three beams in a fan.',down:'Each beam does 45% damage.',price:2600}]},
+  gubi:{mag:['Gubi cell',2,1500],rate:['Flux coil',1600],dmg:['Overclocked core',1700],sp:{name:'Event horizon',desc:'The implosion pulls from 50% further and the blast is 50% wider.',price:5000},
+    tr:[{id:'unstable',name:'Unstable core',desc:'The orb blows up on the first zombie it touches, for double blast damage.',down:'No passing through or zapping on the way: one orb, one blast.',price:4000}]}
 };
 const MODMAX=3;
 
@@ -480,6 +483,7 @@ const LORE={
   flamer:'Built from a propane tank and a garden hose. Not exactly certified.',
   arc:'A copper-coil prototype that never stops humming. The manual is in a language nobody recognizes.',
   minigun:'Six spinning barrels. Weighs as much as a shopping cart full of water jugs.',
+  gubi:'Arrived in a crate addressed to someone called Gubi. It has three buttons, a countdown nobody understands, and the number 3000 engraved on the side. The shelves rattle when it fires.',
   rail:'Magnets, capacitors and a lot of faith. When it fires, every street lamp on the road flickers.',
   bat:'Dented aluminum with tape on the grip. A customer left it behind and never came back for it.',
   machete:'They call it El Patron. Nobody remembers why, and nobody argues with it.',
@@ -499,7 +503,7 @@ const LORE2={
   up:{str:'Lifting crates of water all day finally pays off.',dmg:'Fewer shaky hands, more holes in the right places.',hp:'A thicker jacket from the staff locker. Teeth slip right off it.',reload:'Practice in the break room with an empty magazine.',door:'More planks, more nails and a bigger lock.'},
   amu:{quick:'A cord tied in seven knots. Your hands remember things they never learned.',might:'A bone carved with marks nobody can read. It is heavier than it looks.',swift:'A roadrunner feather. Beep beep.',bulwark:'A stone that never moves, no matter how hard you push.',vital:'A red stone that beats like a heart when you hold it to your ear.',midas:'Everything it touches turns a little more valuable.',leech:'A tooth that still wants to bite.',eagle:'A glass eye that sees through dust and dark.',ember:'Warm to the touch, always.',tinker:'A gear from a machine that fixed itself.'}
 };
-const GTYPE={hit:'Bullets',arrow:'Arrows',goo:'Mucus shot',flame:'Flames',arc:'Chain lightning',rail:'Charged beam'};
+const GTYPE={hit:'Bullets',arrow:'Arrows',goo:'Mucus shot',flame:'Flames',arc:'Chain lightning',rail:'Charged beam',gubi:'Plasma orb'};
 const AMULETS={
   quick:{name:'Quickhand charm',desc:'Reload 25% faster',c:'#7fd3ff'},
   might:{name:'Bone of might',desc:'+25% damage',c:'#ff6a5a'},
@@ -733,6 +737,7 @@ GUNS:{
   hunter:{name:'Rifle de caza',short:'Caza',desc:'Atraviesa a cuatro de ellos en fila.'},
   blunder:{name:'Trabuco',short:'Trabuco',desc:'Una campana de latón llena de chatarra. Un disparo enorme y luego una recarga larga.'},
   rifle:{name:'Fusil de asalto',short:'Fusil',desc:'Treinta balas, totalmente automático.'},
+  gubi:{desc:'El arma más fuerte del juego. Dispara orbes de plasma lentos que atraviesan a todos los zombis, electrocutan todo lo que tienen cerca y al final implosionan: atraen a los zombis y estallan con una explosión enorme.'},
   pir:{desc:'Un AK-47 futurista. Cada zombi que mata le hace disparar un 5% más rápido durante el resto del turno, sin límite.'},
   goo:{name:'Lanzababas xeno',short:'Babas',desc:'Tecnología alienígena. Lanza muros de moco que duran 12 segundos. Los zombis los cruzan al 30% de velocidad, los jefes al 80%.'},
   flamer:{name:'Lanzallamas',short:'Llamas',desc:'Poco alcance. Prende fuego a todo lo que hay en el cono.'},
@@ -768,7 +773,9 @@ MODS:{
   minigun:{mag:{0:'Cinta más larga'},rate:{0:'Motor forzado'},dmg:{0:'Balas pesadas'},sp:{name:'Arranque en caliente',desc:'Empieza a disparar casi al instante, sin esperar a que giren los cañones.'},
     tr:{0:{name:'Trípode',desc:'+60% de daño y mucha menos dispersión.',down:'No puedes andar mientras disparas.'}}},
   rail:{mag:{0:'Celda extra'},rate:{0:'Rieles superenfriados'},dmg:{0:'Bobinas gemelas'},sp:{name:'Sobrecarga',desc:'El rayo aturde durante un segundo todo lo que atraviesa.'},
-    tr:{0:{name:'Divisor',desc:'Cada disparo lanza tres rayos en abanico.',down:'Cada rayo hace un 45% del daño.'}}}
+    tr:{0:{name:'Divisor',desc:'Cada disparo lanza tres rayos en abanico.',down:'Cada rayo hace un 45% del daño.'}}},
+  gubi:{mag:{0:'Celda Gubi'},rate:{0:'Bobina de flujo'},dmg:{0:'Núcleo forzado'},sp:{name:'Horizonte de sucesos',desc:'La implosión atrae desde un 50% más lejos y la explosión es un 50% más grande.'},
+    tr:{0:{name:'Núcleo inestable',desc:'El orbe estalla con el primer zombi que toca y hace el doble de daño de explosión.',down:'Ya no atraviesa ni electrocuta por el camino: un orbe, una explosión.'}}}
 },
 MELEE:{
   bat:{name:'Bate de béisbol',short:'Bate',desc:'Los manda para atrás. Viene gratis con el trabajo.'},
@@ -823,6 +830,7 @@ LORE:{
   hunter:'De cerrojo, con mira, de los que se usan para los coyotes. Ahora caza otra cosa.',
   blunder:'Una antigüedad de latón que alguien cambió por vales de descuento. Se carga por la boca con tuercas, clavos y lo que haya por ahí.',
   rifle:'Apareció en el maletero de un coche abandonado en el aparcamiento. Mejor no preguntar.',
+  gubi:'Llegó en una caja dirigida a un tal Gubi. Tiene tres botones, una cuenta atrás que nadie entiende y el número 3000 grabado en un lado. Las estanterías tiemblan cuando dispara.',
   pir:'Nadie sabe quién lo hizo. El número de serie es una fecha que todavía no ha llegado, y la tira cian brilla más cuanto más mata.',
   goo:'Cayó del cielo una noche en un charco de baba verde. Late cuando lo sujetas y huele fatal.',
   flamer:'Hecho con una bombona de propano y una manguera de jardín. No está precisamente homologado.',
@@ -847,7 +855,7 @@ LORE2:{
   up:{str:'Cargar cajas de agua todo el día por fin sirve de algo.',dmg:'Menos temblor de manos, más agujeros en el sitio correcto.',hp:'Una chaqueta más gruesa de la taquilla del personal. Los dientes resbalan.',reload:'Práctica en la sala de descanso con un cargador vacío.',door:'Más tablones, más clavos y un candado más grande.'},
   amu:{quick:'Un cordón con siete nudos. Tus manos recuerdan cosas que nunca aprendieron.',might:'Un hueso tallado con marcas que nadie sabe leer. Pesa más de lo que parece.',swift:'Una pluma de correcaminos. Bip bip.',bulwark:'Una piedra que nunca se mueve, por mucho que empujes.',vital:'Una piedra roja que late como un corazón cuando te la acercas al oído.',midas:'Todo lo que toca vale un poco más.',leech:'Un diente que todavía quiere morder.',eagle:'Un ojo de cristal que ve a través del polvo y la oscuridad.',ember:'Siempre está caliente al tacto.',tinker:'Un engranaje de una máquina que se arreglaba sola.'}
 },
-GTYPE:{hit:'Balas',arrow:'Flechas',goo:'Disparo de moco',flame:'Llamas',arc:'Rayo en cadena',rail:'Rayo cargado'},
+GTYPE:{hit:'Balas',arrow:'Flechas',goo:'Disparo de moco',flame:'Llamas',arc:'Rayo en cadena',rail:'Rayo cargado',gubi:'Orbe de plasma'},
 AMULETS:{
   quick:{name:'Amuleto de manos rápidas',desc:'Recargas un 25% más rápido'},
   might:{name:'Hueso de fuerza',desc:'+25% de daño'},
@@ -964,7 +972,7 @@ const ES={
   'Playstyle perks':'Ventajas de estilo','These change how the gun plays, with a catch. Buying one counts as a purchase. After that, switching it on or off is free. One can be in use at a time.':'Cambian cómo se juega el arma, pero tienen su pega. Comprar una cuenta como compra. Después, ponerla o quitarla es gratis. Solo puede haber una en uso a la vez.',
   '{0} bullets a shot':'{0} balas por disparo','{0} beams':'{0} rayos','{0} pellets':'{0} perdigones','Damage per hit':'Daño por impacto','bosses {0}':'jefes {0}','Shots per second':'Disparos por segundo','Damage per second':'Daño por segundo',
   'Fuel':'Combustible','Arrows in the quiver':'Flechas en el carcaj','Magazine':'Cargador','Range':'Alcance','short':'corto','medium':'medio','long':'largo','Passes through':'Atraviesa','everything':'todo','{0} more enemy':'{0} enemigo más','{0} more enemies':'{0} enemigos más','no':'no',
-  'Lightning':'Rayo','no chain · fries everything within 50':'no salta · fríe todo en 50','jumps to {0}':'salta a {0}','Spin-up time':'Tiempo de giro','Charge time':'Tiempo de carga','Kill stacks':'Acumulación por muertes','+{0}% fire rate per kill · now +{1}%':'+{0}% de cadencia por muerte · ahora +{1}%',
+  'Lightning':'Rayo','no chain · fries everything within 50':'no salta · fríe todo en 50','jumps to {0}':'salta a {0}','Spin-up time':'Tiempo de giro','Charge time':'Tiempo de carga','Kill stacks':'Acumulación por muertes','Implosion':'Implosión','{0} damage, radius {1}, pulls zombies in':'{0} de daño, radio {1}, atrae a los zombis','+{0}% fire rate per kill · now +{1}%':'+{0}% de cadencia por muerte · ahora +{1}%',
   'Special':'Especial','fitted':'montado','not bought':'sin comprar','fitted · 20% instant kills, bosses lose 10% (every 25 s)':'montado · 20% de muertes instantáneas, los jefes pierden un 10% (cada 25 s)','Playstyle perk':'Ventaja de estilo','none in use':'ninguna en uso',
   'Price':'Precio','you own it':'es tuya','free':'gratis','Strength':'Fuerza','level {0} · arrows hit at {1}%':'nivel {0} · las flechas pegan al {1}%','hold to use':'mantén para usar','Hits per second':'Golpes por segundo','level {0} · hits at {1}%':'nivel {0} · pegas al {1}%',
   'Reach':'Alcance','Knockback':'Empuje','huge':'enorme','strong':'fuerte','light':'ligero','heals {0} per hit':'cura {0} por golpe','breaks helmets and cones':'rompe cascos y conos','blocks {0}% from the front':'bloquea el {0}% de frente','scatters rice':'esparce arroz','stuns {0} s':'aturde {0} s','shockwave: hits and staggers everything within {0}':'onda expansiva: golpea y aturde todo lo que esté a {0}','thrown, comes back':'se lanza y vuelve','confuses for {0} s':'confunde {0} s','Effect':'Efecto',
@@ -1229,6 +1237,7 @@ function drawGun(sx,sy,ang,id,noHand){
     case 'flamer':r(-6,-3,4,6,'#c8402e');r(-6,-3,4,1,'#e86a5a');r(-2,-1,12,2,'#4c4d57');r(10,-2,3,3,'#2a2a31');r(13,-1,1,1,'#5ab4ff');r(1,1,2,3,'#2a2a31');break;
     case 'arc':r(-3,-2,9,4,'#3a4a5a');r(5,-2,1,4,'#b87333');r(7,-2,1,4,'#b87333');r(9,-2,1,4,'#b87333');r(11,-1,2,2,(T*10%2)<1?'#9fe8ff':'#e8fbff');r(0,2,2,3,'#2a2a31');break;
     case 'minigun':r(-3,-2,8,5,'#4c4d57');r(5,-2,10,1,'#7a7b85');r(5,0,10,1,'#7a7b85');r(5,2,10,1,'#7a7b85');break;
+    case 'gubi':{const gl=(T*5%2)<1?'#ff6ad5':'#ffa6ea';r(-6,-2,7,5,'#e9e6f2');r(-6,-2,7,1,'#ffffff');r(1,-3,11,6,'#2a2440');r(1,-3,11,1,'#4a3f6a');r(3,-2,7,4,gl);r(5,-1,3,2,'#ffffff');r(12,-2,3,4,'#e9e6f2');r(15,-1,2,2,'#7fe8ff');r(2,3,2,3,'#2a2440');r(-3,3,2,2,'#2a2440');r(6,-5,3,2,'#7fe8ff');break;}
     case 'rail':r(-4,-2,8,4,'#d9dde3');r(4,-2,13,1,'#9aa0aa');r(4,1,13,1,'#9aa0aa');r(4,-1,12,2,p&&p.charge>0?'#bff4ff':'#3aa6d9');r(0,2,2,3,'#3a3b44');break;
     case 'bat':r(0,-1,13,2,'#a8794a');r(9,-1,5,3,'#a8794a');r(0,-1,3,2,'#3a2a1f');break;
     case 'machete':r(0,-1,3,2,'#3a2a1f');r(3,-1,11,2,'#c9ccd4');r(3,-1,11,1,'#eef0f3');r(14,0,1,1,'#c9ccd4');break;
@@ -1582,7 +1591,7 @@ function explode(x,y,r,dmg,kind){
   for(const z of zombies){if(!live(z))continue;const d=Math.hypot(z.x-x,(z.y-z.h/2)-y);if(d<r+z.w/2){const f=1-.6*d/(r+z.w/2),s=z.x>=x?1:-1;z.hp-=dmg.z*f*(DEV.onehit?1e6:1)*(z.type==='fireman'&&kind!=='gas'?.5:1);z.kbv+=s*170*f/z.mass*(z.boss?.25:1);z.flash=.08;z.lastSrc='boom';blood(z.x,z.y-12,s,3);if(z.hp<=0)kill(z,false,s);}}
   if(p.alive&&dmg.p>0&&!AR().fireproof){const d=Math.hypot(p.x-x,(p.y-11)-y);if(d<r+6)hurtPlayer(dmg.p*(1-.5*d/(r+6)),x);}
   if(dmg.s)for(const s of structs)if(s.kind==='barricade'&&!s.dead&&Math.abs(s.x-x)<r+8){s.hp-=dmg.s*guardMult();s.hit=.15;if(s.hp<=0)breakStruct(s);}
-  const cols=kind==='gas'?['#a9c46a','#7f9a4a','#cfd98f']:kind==='egg'?['#f3efe4','#f5a443','#ffd27a']:kind==='book'?['#f3efe4','#ffffff','#f5a443','#b8323a']:['#f5a443','#ffd27a','#c9741f','#fff1c9'];
+  const cols=kind==='gubi'?['#ff6ad5','#7fe8ff','#ffffff','#b46aff']:kind==='gas'?['#a9c46a','#7f9a4a','#cfd98f']:kind==='egg'?['#f3efe4','#f5a443','#ffd27a']:kind==='book'?['#f3efe4','#ffffff','#f5a443','#b8323a']:['#f5a443','#ffd27a','#c9741f','#fff1c9'];
   for(let i=0;i<26;i++){const a=rnd(0,Math.PI*2),sp=rnd(30,150);part(x,y,Math.cos(a)*sp,Math.sin(a)*sp-40,rnd(.3,.8),pick(cols),pick([1,2,2,3]),120);}
   for(let i=0;i<10;i++)part(x+rnd(-10,10),y+rnd(-6,6),rnd(-15,15),rnd(-30,-8),rnd(.9,1.6),'#4a4556',3,-10);
 }
@@ -1648,6 +1657,7 @@ function fire(){
     case 'goo':projs.push({kind:'goo',x:ox,y:oy,vx:Math.cos(ang)*300,vy:Math.sin(ang)*300-30,g:300,dmg:g.dmg*mult,sticky:tr==='sticky',t:0});break;
     case 'flame':flameTick(ox,oy,ang,g,mult,msp?4:2,tr);break;
     case 'arc':arcShot(ox,oy,ang,g,mult,tr==='static');break;
+    case 'gubi':projs.push({kind:'gubi',x:ox,y:oy,vx:Math.cos(ang)*230,vy:Math.sin(ang)*230,g:0,t:0,life:g.range/230,hit:[],dmg:g.dmg*mult,zapT:.1,unstable:tr==='unstable',wide:!!msp,rot:0});break;
     case 'rail':{const angs=tr==='split'?[ang-.09,ang,ang+.09]:[ang],rm=tr==='split'?mult*.45:mult;
       for(const a of angs){const e=hitscan(ox,oy,a,spec,rm,'gun',true);beams.push({x1:ox,y1:oy,x2:e.x,y2:e.y,t:.3});}p.charge=0;break;}
   }
@@ -1734,6 +1744,13 @@ function updateProjs(dt){
       q.fuse-=dt;if(Math.random()<dt*20)part(q.x,q.y,rnd(-15,15),rnd(-25,-5),.3,pick(['#7fe07a','#c9ffb8']),1,60);
       if(q.fuse<=0){q.dead=true;explode(q.x,q.y,30,{z:q.dmg,p:0,s:0},'gas');}
       continue;
+    }else if(q.kind==='gubi'){
+      q.rot+=dt*6;if(Math.random()<dt*40)part(q.x+rnd(-4,4),q.y+rnd(-4,4),-q.vx*.15+rnd(-20,20),rnd(-20,20),.35,pick(['#ff6ad5','#7fe8ff','#ffffff','#b46aff']),pick([1,2]),0);
+      let boom=q.t>=q.life||q.y>=GY-3;
+      for(const z of zombies){if(boom||!live(z)||q.hit.includes(z))continue;if(Math.abs(z.x-q.x)<z.w/2+8&&q.y>z.y-z.h-8&&q.y<z.y+4){q.hit.push(z);if(q.unstable){boom=true;break;}damage(z,q.dmg,false,Math.sign(q.vx)||1,q.vx>0?60:60,'gun');}}
+      if(!boom&&!q.unstable){q.zapT-=dt;if(q.zapT<=0){q.zapT=.15;let n=0;for(const z of zombies){if(n>=4||!live(z))continue;const d=Math.hypot(z.x-q.x,(z.y-z.h/2)-q.y);if(d<48){n++;bolts.push({pts:jag([[q.x,q.y],[z.x,z.y-z.h*.55]]),t:.1,c:'#ff9af0'});damage(z,q.dmg*.2,false,Math.sign(z.x-q.x)||1,10,'gun',{stun:.15});}}}}
+      if(boom){q.dead=true;gubiBlast(q);}
+      continue;
     }else if(q.kind==='sack'){
       q.rot+=dt*8;
       let hit=q.y>=GY-1;for(const z of zombies){if(live(z)&&segHit(px,py,q.x,q.y,z.x-z.w/2,z.y-z.h,z.w,z.h)!==null){hit=true;break;}}
@@ -1772,6 +1789,13 @@ function updateProjs(dt){
     if(q.x<camX-80||q.x>camX+W+80||q.t>4){q.dead=true;if(q.kind==='wrench'&&q.owner&&q.owner.ab)q.owner.ab.wOut=false;}
   }
   projs=projs.filter(q=>!q.dead);
+}
+function gubiBlast(q){
+  const R=q.wide?105:70,BR=q.wide?90:60,x=q.x,y=Math.min(q.y,GY-8);
+  for(const z of zombies){if(!live(z))continue;const dx=x-z.x,d=Math.abs(dx);if(d<R&&Math.abs((z.y-z.h/2)-y)<R)z.kbv+=Math.sign(dx)*Math.min(260,(R-d)*5)/Math.max(1,z.mass*(z.boss?2:1));}
+  explode(x,y,BR,{z:q.dmg*(q.unstable?3.4:1.7),p:0,s:0},'gubi');
+  shake=Math.max(shake,8);flashW=Math.max(flashW,.25);sfx('quake');
+  for(let i=0;i<30;i++){const a=rnd(0,Math.PI*2),r=rnd(R*.6,R);part(x+Math.cos(a)*r,y+Math.sin(a)*r*.6,-Math.cos(a)*r*3,-Math.sin(a)*r*2,.3,pick(['#ff6ad5','#7fe8ff','#ffffff']),pick([1,2]),0);}
 }
 function stick(z,x,y,dmg){projs.push({kind:'sticky',z,dx:z?clamp(x-z.x,-z.w/2,z.w/2):0,x,y,vx:0,vy:0,g:0,t:0,fuse:1.2,dmg:dmg*7});sfx('goo');}
 function makeGoo(x){goos.push({x:clamp(x,PMIN+12,WORLD),w:26,t:12,acid:!!modOf('goo').sp});for(let i=0;i<14;i++)part(x+rnd(-8,8),GY-rnd(2,14),rnd(-60,60),rnd(-100,-20),rnd(.4,.8),pick(['#7fe07a','#c9ffb8','#5ab45a']),pick([1,2]),300);sfx('goo');}
@@ -2351,6 +2375,7 @@ function drawLighting(sx,sy,am){
   for(const b of bolts){const m=b.pts[b.pts.length>>1];hole(m[0]-camX,m[1],40,.8);}
   for(const b of beams)hole((b.x1+b.x2)/2-camX,(b.y1+b.y2)/2,120,.8*b.t/.3);
   for(const g of goos)hole(g.x-camX,GY-10,22,.3);
+  for(const q of projs)if(q.kind==='gubi')hole(q.x-camX,q.y,40,.9);
   for(const m of meteorsF){const k=1-m.t/m.max,e=k*k,hx=m.x+170*(1-e)-camX,hy=-14+(GY+8)*e;hole(hx,hy,26,.85);hole(m.x-camX,GY-4,18+16*k,.3+.5*k);}
   for(const s of strikes){const k=1-s.t/s.max;hole(s.x-camX,GY-6,22+10*k,.35+.45*k);}
   for(const w of waves){const k=Math.min(1,w.t/w.max),R=w.r*(1-Math.pow(1-k,3));for(const s of [-1,1])hole(w.x-camX+s*R,GY-4,20,.55*(1-k));if(k<.2)hole(w.x-camX,GY-6,30,.7);}
@@ -2413,6 +2438,8 @@ function drawWorld(){
   for(const q of projs){const x=q.x-camX;
     if(q.kind==='arrow'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(Math.atan2(q.vy,q.vx));G.fillStyle='#c9b08a';G.fillRect(-7,0,7,1);G.fillStyle='#9aa0aa';G.fillRect(0,-1,2,3);G.fillStyle='#cf4450';G.fillRect(-8,-1,2,1);G.fillRect(-8,1,2,1);if(q.boom){G.fillStyle='#f5a443';G.fillRect(1,-1,2,3);G.fillStyle='#ffd27a';G.fillRect(2,0,1,1);}G.restore();}
     else if(q.kind==='goo'){R0(x-2,q.y-2,4,4,q.sticky?'#b8ff7a':'#7fe07a');R0(x-1,q.y-1,1,1,'#d4ffc9');}
+    else if(q.kind==='gubi'){const gx=Math.round(x),gy=Math.round(q.y),gl=G.createRadialGradient(gx,gy,0,gx,gy,14);gl.addColorStop(0,'rgba(255,255,255,.95)');gl.addColorStop(.35,'rgba(255,106,213,.75)');gl.addColorStop(1,'rgba(127,232,255,0)');G.fillStyle=gl;G.fillRect(gx-14,gy-14,28,28);
+      G.strokeStyle='#7fe8ff';G.lineWidth=1;G.beginPath();G.ellipse(gx,gy,8,4,q.rot,0,Math.PI*2);G.stroke();G.strokeStyle='#ff6ad5';G.beginPath();G.ellipse(gx,gy,8,4,q.rot+Math.PI/2,0,Math.PI*2);G.stroke();R0(gx-2,gy-2,4,4,'#ffffff');}
     else if(q.kind==='sticky'){const bl=(T*(q.fuse<.4?22:8)%2)<1;R0(x-2,q.y-2,5,4,bl?'#b8ff7a':'#4a9a4a');R0(x-1,q.y-1,2,1,'#efffd8');if(bl)R0(x,q.y-3,1,1,'#ff5a4a');}
     else if(q.kind==='sack'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(q.rot);G.fillStyle='#c9a46a';G.fillRect(-4,-5,8,10);G.fillStyle='#2f7a3f';G.fillRect(-4,-2,8,3);G.fillStyle='#7a5a3a';G.fillRect(-1,-6,2,1);G.restore();}
     else if(q.kind==='book'){G.save();G.translate(Math.round(x),Math.round(q.y));G.rotate(q.rot);G.fillStyle='#b8323a';G.fillRect(-4,-3,8,6);G.fillStyle='#f3efe4';G.fillRect(3,-2,1,4);G.restore();}
@@ -2433,7 +2460,7 @@ function drawWorld(){
   G.globalAlpha=1;G.lineWidth=1;
   for(const q of parts){G.globalAlpha=Math.min(1,q.life/q.max*2);R0(q.x-camX,q.y,q.s,q.s,q.c);}
   G.globalAlpha=1;
-  for(const b of booms){const k=b.t/b.max;G.globalAlpha=1-k;G.fillStyle=b.kind==='gas'?'#b6cf72':b.kind==='book'?'#fff1c9':'#ffcf7a';G.beginPath();G.arc(b.x-camX,b.y,b.r*(.3+.7*k),0,Math.PI*2);G.fill();}
+  for(const b of booms){const k=b.t/b.max;G.globalAlpha=1-k;G.fillStyle=b.kind==='gubi'?'#ff9af0':b.kind==='gas'?'#b6cf72':b.kind==='book'?'#fff1c9':'#ffcf7a';G.beginPath();G.arc(b.x-camX,b.y,b.r*(.3+.7*k),0,Math.PI*2);G.fill();}
   G.globalAlpha=1;
   if(weeds.length){G.strokeStyle=am.dark>.2?'#5a4a36':'#8a6a44';for(const w of weeds){const x=w.x-camX;G.beginPath();G.arc(x,w.y,w.r,0,Math.PI*2);G.stroke();G.beginPath();for(let i=0;i<4;i++){const a=w.rot+i*1.6;G.moveTo(x+Math.cos(a)*w.r,w.y+Math.sin(a)*w.r);G.lineTo(x-Math.cos(a+.5)*w.r*.6,w.y-Math.sin(a+.5)*w.r*.6);}G.stroke();}}
   if(lightning){G.globalAlpha=Math.min(1,lightning.t/.1);G.strokeStyle='#e8f0ff';G.lineWidth=2;G.beginPath();lightning.pts.forEach((pt,i)=>i?G.lineTo(pt[0]-camX,pt[1]):G.moveTo(pt[0]-camX,pt[1]));G.stroke();G.lineWidth=1;G.globalAlpha=1;}
@@ -2793,6 +2820,7 @@ function showInfo(kind,id,from){
     if(g.type==='arc')S('Lightning',tr==='static'?_t('no chain · fries everything within 50'):_t('jumps to {0}',m.sp?6:g.chains));
     if(g.spin)S('Spin-up time',fx1(spinOf(id))+' s');
     if(g.charge)S('Charge time',fx1(g.charge)+' s');
+    if(g.type==='gubi')S('Implosion',_t('{0} damage, radius {1}, pulls zombies in',fx1(dm*(tr==='unstable'?3.4:1.7)),m.sp?90:60));
     if(id==='pir')S('Kill stacks',_t('+{0}% fire rate per kill · now +{1}%',trOn('pir','hyper')?10:5,(run.pirStacks||0)*(trOn('pir','hyper')?10:5)));
     S('Mods',M.dmg[0]+' '+(m.dmg||0)+'/'+MODMAX+' · '+M.mag[0]+' '+m.mag+'/'+MODMAX+' · '+M.rate[0]+' '+m.rate+'/'+MODMAX);
     S('Special',M.sp.name+' ('+_t(m.sp?'fitted':'not bought')+'): '+M.sp.desc);

@@ -7,6 +7,7 @@
         *Hunting rifle $650, blunderbuss $800 and assault rifle $1,000
         *The expensive guns come down too: gloop launcher $1,500, flamethrower $1,800, arc caster $2,300, PIR $2,800, minigun $3,200 and rail driver $4,500
         *Cheaper melee weapons: El Patron $250, jamón leg $400, axe $550, paella pan $700, cattle prod $850, capote $900, sledgehammer $1,000 and chainsaw $2,000
+        *New weapon: Gubitron3000, the strongest and most expensive in the game ($30,000). It fires plasma orbs that pass through everything, zap whatever is close and implode at the end
 
   ## Update 2.0
      -Larisa Update
