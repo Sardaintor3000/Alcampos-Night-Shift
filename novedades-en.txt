@@ -1,6 +1,13 @@
 // English version of novedades.txt. The game shows this one when it is in English.
 // Lines starting with // are hidden.
 
+## The Economy Update
+     -Cheaper weapons so you can buy them from the start
+        *Nail gun $250 (was $600), shotgun $350 (was $750) and bow $400 (was $900)
+        *Hunting rifle $650, blunderbuss $800 and assault rifle $1,000
+        *The expensive guns come down too: gloop launcher $1,500, flamethrower $1,800, arc caster $2,300, PIR $2,800, minigun $3,200 and rail driver $4,500
+        *Cheaper melee weapons: El Patron $250, jamón leg $400, axe $550, paella pan $700, cattle prod $850, capote $900, sledgehammer $1,000 and chainsaw $2,000
+
   ## Update 2.0
      -Larisa Update
         *Wally the horse and a bit more

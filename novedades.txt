@@ -1,3 +1,10 @@
+## The Economy Update
+     -Armas más baratas para poder comprarlas desde el principio
+        *Pistola de clavos $250 (antes $600), escopeta $350 (antes $750) y arco $400 (antes $900)
+        *Rifle de caza $650, trabuco $800 y fusil de asalto $1,000
+        *Las armas caras también bajan: lanzababas $1,500, lanzallamas $1,800, lanzarrayos $2,300, PIR $2,800, minigun $3,200 y cañón de riel $4,500
+        *Armas cuerpo a cuerpo más baratas: El Patrón $250, pata de jamón $400, hacha $550, paellera $700, picana $850, capote $900, mazo $1,000 y motosierra $2,000
+
 ## Actualización 2.0
      -Larisa Update
         *Caballo Wally y poco mas

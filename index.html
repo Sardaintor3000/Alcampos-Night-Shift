@@ -371,18 +371,18 @@ let muted=store.get('muted',false);
 /* ---------- guns ---------- */
 const GUNS={
   pistol:{type:'hit',name:'Pistol',short:'Pistol',dmg:22,rate:.24,mag:12,reload:1.8,spread:.02,pellets:1,range:420,pierce:0,kb:40,price:0,shake:0,len:8,snd:'pistol',desc:'Your starter. Reliable, never runs dry.'},
-  nailgun:{type:'hit',name:'Nail gun',short:'Nailer',dmg:11,rate:.075,mag:40,reload:2.0,spread:.07,pellets:1,range:230,pierce:0,kb:12,price:600,shake:.3,len:9,snd:'nail',tracer:'#b9b4c4',desc:'From the hardware aisle. Sprays nails fast at short range.'},
-  shotgun:{type:'hit',name:'Pump shotgun',short:'Shotgun',dmg:13,rate:.72,mag:6,reload:2.8,spread:.17,pellets:7,range:165,pierce:0,kb:70,price:750,shake:2,len:13,snd:'shotgun',desc:'Seven pellets, short range. Shoves the front row back.'},
-  bow:{type:'arrow',name:'Recurve bow',short:'Bow',dmg:75,rate:.65,mag:6,reload:2.0,spread:.01,range:600,pierce:1,kb:60,price:900,shake:0,len:6,snd:'bow',desc:'Silent arrows that drop over distance. Each one passes through two of them. Damage scales with your Strength.'},
-  hunter:{type:'hit',name:'Hunting rifle',short:'Hunting',dmg:95,rate:.85,mag:5,reload:3.1,spread:0,pellets:1,range:520,pierce:3,kb:110,price:1300,shake:2,len:16,snd:'hunter',desc:'Punches through four of them in a line.'},
-  blunder:{type:'hit',name:'Blunderbuss',short:'Blunder',dmg:16,rate:1.2,mag:1,reload:2.3,spread:.32,pellets:12,range:135,pierce:0,kb:150,price:1600,shake:3,len:13,snd:'boomgun',tracer:'#d9c7a0',desc:'A brass bell full of scrap. One enormous blast, then a long reload.'},
-  rifle:{type:'hit',name:'Assault rifle',short:'Rifle',dmg:17,rate:.095,mag:30,reload:2.7,spread:.05,pellets:1,range:420,pierce:0,kb:28,price:1900,shake:.6,len:14,snd:'rifle',desc:'Thirty rounds, fully automatic.'},
-  pir:{type:'hit',name:'PIR',short:'PIR',dmg:16,rate:.11,mag:35,reload:2.6,spread:.04,pellets:1,range:430,pierce:0,kb:26,price:3800,shake:.6,len:15,snd:'rifle',tracer:'#7fe8ff',desc:'A futuristic AK-47. Every zombie it kills makes it fire 5% faster for the rest of the shift, with no limit.'},
-  goo:{type:'goo',name:'Xeno gloop launcher',short:'Gloop',dmg:20,rate:.9,mag:3,reload:2.6,spread:0,range:300,pierce:0,kb:0,price:2400,shake:1,len:12,snd:'goo',desc:'Alien tech. Lobs walls of mucus that last 12 seconds. Zombies wade through at 30% speed, bosses at 80%.'},
-  flamer:{type:'flame',name:'Flamethrower',short:'Flamer',dmg:6,rate:.05,mag:120,reload:3.2,spread:.25,range:95,pierce:0,kb:6,price:2900,shake:.2,len:13,snd:'flame',desc:'Short range. Sets everything in the cone on fire.'},
-  arc:{type:'arc',name:'Arc caster',short:'Arc',dmg:45,rate:.5,mag:8,reload:2.4,spread:0,range:260,pierce:0,kb:20,price:3600,shake:1,len:12,chains:4,snd:'zap',desc:'Lightning that jumps to four more of them and stuns each one.'},
-  minigun:{type:'hit',name:'Minigun',short:'Minigun',dmg:14,rate:.043,mag:200,reload:5.2,spread:.09,pellets:1,range:400,pierce:0,kb:24,price:4500,shake:.8,spin:.45,len:15,snd:'minigun',desc:'Spins up for half a second, then never stops.'},
-  rail:{type:'rail',name:'Rail driver',short:'Rail',dmg:150,rate:1.6,mag:3,reload:3.4,spread:0,range:700,pierce:5,kb:160,price:6500,shake:4,len:17,charge:.8,snd:'rail',desc:'Hold to charge for a moment. The beam goes through six of them in a line.'}
+  nailgun:{type:'hit',name:'Nail gun',short:'Nailer',dmg:11,rate:.075,mag:40,reload:2.0,spread:.07,pellets:1,range:230,pierce:0,kb:12,price:250,shake:.3,len:9,snd:'nail',tracer:'#b9b4c4',desc:'From the hardware aisle. Sprays nails fast at short range.'},
+  shotgun:{type:'hit',name:'Pump shotgun',short:'Shotgun',dmg:13,rate:.72,mag:6,reload:2.8,spread:.17,pellets:7,range:165,pierce:0,kb:70,price:350,shake:2,len:13,snd:'shotgun',desc:'Seven pellets, short range. Shoves the front row back.'},
+  bow:{type:'arrow',name:'Recurve bow',short:'Bow',dmg:75,rate:.65,mag:6,reload:2.0,spread:.01,range:600,pierce:1,kb:60,price:400,shake:0,len:6,snd:'bow',desc:'Silent arrows that drop over distance. Each one passes through two of them. Damage scales with your Strength.'},
+  hunter:{type:'hit',name:'Hunting rifle',short:'Hunting',dmg:95,rate:.85,mag:5,reload:3.1,spread:0,pellets:1,range:520,pierce:3,kb:110,price:650,shake:2,len:16,snd:'hunter',desc:'Punches through four of them in a line.'},
+  blunder:{type:'hit',name:'Blunderbuss',short:'Blunder',dmg:16,rate:1.2,mag:1,reload:2.3,spread:.32,pellets:12,range:135,pierce:0,kb:150,price:800,shake:3,len:13,snd:'boomgun',tracer:'#d9c7a0',desc:'A brass bell full of scrap. One enormous blast, then a long reload.'},
+  rifle:{type:'hit',name:'Assault rifle',short:'Rifle',dmg:17,rate:.095,mag:30,reload:2.7,spread:.05,pellets:1,range:420,pierce:0,kb:28,price:1000,shake:.6,len:14,snd:'rifle',desc:'Thirty rounds, fully automatic.'},
+  pir:{type:'hit',name:'PIR',short:'PIR',dmg:16,rate:.11,mag:35,reload:2.6,spread:.04,pellets:1,range:430,pierce:0,kb:26,price:2800,shake:.6,len:15,snd:'rifle',tracer:'#7fe8ff',desc:'A futuristic AK-47. Every zombie it kills makes it fire 5% faster for the rest of the shift, with no limit.'},
+  goo:{type:'goo',name:'Xeno gloop launcher',short:'Gloop',dmg:20,rate:.9,mag:3,reload:2.6,spread:0,range:300,pierce:0,kb:0,price:1500,shake:1,len:12,snd:'goo',desc:'Alien tech. Lobs walls of mucus that last 12 seconds. Zombies wade through at 30% speed, bosses at 80%.'},
+  flamer:{type:'flame',name:'Flamethrower',short:'Flamer',dmg:6,rate:.05,mag:120,reload:3.2,spread:.25,range:95,pierce:0,kb:6,price:1800,shake:.2,len:13,snd:'flame',desc:'Short range. Sets everything in the cone on fire.'},
+  arc:{type:'arc',name:'Arc caster',short:'Arc',dmg:45,rate:.5,mag:8,reload:2.4,spread:0,range:260,pierce:0,kb:20,price:2300,shake:1,len:12,chains:4,snd:'zap',desc:'Lightning that jumps to four more of them and stuns each one.'},
+  minigun:{type:'hit',name:'Minigun',short:'Minigun',dmg:14,rate:.043,mag:200,reload:5.2,spread:.09,pellets:1,range:400,pierce:0,kb:24,price:3200,shake:.8,spin:.45,len:15,snd:'minigun',desc:'Spins up for half a second, then never stops.'},
+  rail:{type:'rail',name:'Rail driver',short:'Rail',dmg:150,rate:1.6,mag:3,reload:3.4,spread:0,range:700,pierce:5,kb:160,price:4500,shake:4,len:17,charge:.8,snd:'rail',desc:'Hold to charge for a moment. The beam goes through six of them in a line.'}
 };
 const ORDER=['pistol','nailgun','shotgun','bow','hunter','blunder','rifle','pir','goo','flamer','arc','minigun','rail'];
 const MODS={
@@ -420,14 +420,14 @@ const MODMAX=3;
 /* ---------- melee, armor, pets, amulets ---------- */
 const MELEE={
   bat:{name:'Baseball bat',short:'Bat',dmg:55,cd:.45,reach:17,kb:190,price:0,desc:'Knocks them back. Free with the job.'},
-  machete:{name:'El Patron',short:'El Patron',dmg:46,cd:.26,reach:16,kb:70,price:600,desc:'A machete with a reputation. Fast slashes, light knockback.'},
-  jamon:{name:'Jamón leg',short:'Jamón',dmg:70,cd:.55,reach:18,kb:240,heal:3,price:900,desc:'A whole cured ham leg. Heavy hits, and you snack 3 health per hit.'},
-  axe:{name:'Fire axe',short:'Axe',dmg:95,cd:.6,reach:18,kb:140,armorPierce:true,price:1100,desc:'Splits helmets and cones in one chop.'},
-  paella:{name:'Paella pan',short:'Paella',dmg:60,cd:.6,reach:17,kb:300,shield:.5,rice:true,thrown:true,price:1300,desc:'Throw it like a shield: it flies out, hits everything in its path and comes back to you. While it is in your hand it blocks half the damage from the front.'},
-  capote:{name:'Capote',short:'Capote',dmg:12,cd:.5,reach:22,kb:40,confuse:3,price:1600,desc:'A bullfighter\'s cape. Barely hurts, but whatever you sweep with it gets confused and walks backwards for 3 seconds.'},
-  prod:{name:'Cattle prod',short:'Prod',dmg:40,cd:.5,reach:20,kb:60,stun:1.5,price:1500,desc:'Stuns whatever it touches for 1.5 seconds.'},
-  sledge:{name:'Sledgehammer',short:'Sledge',dmg:150,cd:1.1,reach:20,kb:320,slam:44,price:1800,desc:'Slow. Every swing sends a shockwave along the ground that hits and briefly staggers everything nearby.'},
-  chainsaw:{name:'Chainsaw',short:'Chainsaw',dmg:10,cd:.08,reach:19,kb:18,hold:true,price:3000,desc:'Hold the melee button. Shreds anything in front of you.'}
+  machete:{name:'El Patron',short:'El Patron',dmg:46,cd:.26,reach:16,kb:70,price:250,desc:'A machete with a reputation. Fast slashes, light knockback.'},
+  jamon:{name:'Jamón leg',short:'Jamón',dmg:70,cd:.55,reach:18,kb:240,heal:3,price:400,desc:'A whole cured ham leg. Heavy hits, and you snack 3 health per hit.'},
+  axe:{name:'Fire axe',short:'Axe',dmg:95,cd:.6,reach:18,kb:140,armorPierce:true,price:550,desc:'Splits helmets and cones in one chop.'},
+  paella:{name:'Paella pan',short:'Paella',dmg:60,cd:.6,reach:17,kb:300,shield:.5,rice:true,thrown:true,price:700,desc:'Throw it like a shield: it flies out, hits everything in its path and comes back to you. While it is in your hand it blocks half the damage from the front.'},
+  capote:{name:'Capote',short:'Capote',dmg:12,cd:.5,reach:22,kb:40,confuse:3,price:900,desc:'A bullfighter\'s cape. Barely hurts, but whatever you sweep with it gets confused and walks backwards for 3 seconds.'},
+  prod:{name:'Cattle prod',short:'Prod',dmg:40,cd:.5,reach:20,kb:60,stun:1.5,price:850,desc:'Stuns whatever it touches for 1.5 seconds.'},
+  sledge:{name:'Sledgehammer',short:'Sledge',dmg:150,cd:1.1,reach:20,kb:320,slam:44,price:1000,desc:'Slow. Every swing sends a shockwave along the ground that hits and briefly staggers everything nearby.'},
+  chainsaw:{name:'Chainsaw',short:'Chainsaw',dmg:10,cd:.08,reach:19,kb:18,hold:true,price:2000,desc:'Hold the melee button. Shreds anything in front of you.'}
 };
 const MORDER=Object.keys(MELEE);
 const MMODS={
